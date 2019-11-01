@@ -11,11 +11,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { DoctorsComponent } from './doctors/doctors.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    LoginPageComponent,
+    DashboardComponent,
+    DoctorsComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +33,9 @@ import { appRoutes } from './routes';
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
-    })
+    }),
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,7 +8,7 @@
   </button>
 
   <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
-    <ul class="navbar-nav mr-auto">
+    <ul *ngIf="!userStatus" class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-item nav-link">Pacienti <span class="sr-only">(current)</span></a>
       </li>
@@ -20,9 +20,9 @@
         <a class="nav-item nav-link">Doctori</a>
       </li>
     </ul>
-    <ul class="nav justify-content-end">
+    <ul  class="nav justify-content-end">
       <li class="nav-item">
-        <a class="nav-item nav-link">Logout</a>
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
       </li>
     </ul>
   </div>
