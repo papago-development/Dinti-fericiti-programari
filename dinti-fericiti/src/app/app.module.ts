@@ -15,28 +15,32 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DoctorsComponent } from './doctors/doctors.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent,
-    LoginPageComponent,
-    DashboardComponent,
-    DoctorsComponent
-  ],
-  imports: [
-    BrowserModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory
-    }),
-    FormsModule,
-    ReactiveFormsModule
-  ],
+   declarations: [
+      AppComponent,
+      NavbarComponent,
+      LoginPageComponent,
+      DashboardComponent,
+      DoctorsComponent,
+      SignupFormComponent
+   ],
+   imports: [
+      BrowserModule,
+      AngularFireModule.initializeApp(environment.firebase),
+      AngularFirestoreModule,
+      AngularFireAuthModule,
+      BrowserAnimationsModule,
+      RouterModule.forRoot(appRoutes),
+      CalendarModule.forRoot({
+         provide: DateAdapter,
+         useFactory: adapterFactory
+       }),
+       FormsModule,
+       ReactiveFormsModule
+      ],
   providers: [],
   bootstrap: [AppComponent]
 })

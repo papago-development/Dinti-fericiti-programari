@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="signup()" class="login">
+  <h2 class="text-center text-primary">Sign Up</h2>
+  <hr>
+
+  <div class="form-group">
+    <input  type="text"
+            [ngClass]="{'is-invalid': form.get('username').errors && form.get('username').touched}"
+            class="form-control"
+            formControlName="username"
+            placeholder="username">
+    <div class="invalid-feedback">Please insert an username</div>
+  </div>
+
+  <div class="form-group">
+    <input  type="password"
+            [ngClass]="{'is-invalid': form.get('password').errors && form.get('password').touched}"
+            class="form-control"
+            formControlName="password"
+            placeholder="Password">
+    <div class="invalid-feedback"
+         *ngIf="form.get('password').hasError('required') && form.get('password').touched">Password is required</div>
+
+    <div  class="invalid-feedback"
+          *ngIf="form.get('password').hasError('minlength') && form.get('password').touched">
+      Password must be at least 4 characters</div>
+
+    <div class="invalid-feedback"
+         *ngIf="form.get('password').hasError('maxlength') && form.get('password').touched">
+      Password cannot exceed 8 characters</div>
+  </div>
+
+  <div class="form-group text-center">
+    <button class="btn btn-success" type="submit" [disabled]="!form.valid">Login</button>
+  </div>
+</form>

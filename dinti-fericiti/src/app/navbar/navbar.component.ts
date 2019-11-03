@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
@@ -8,13 +9,14 @@ import { AuthService } from '../services/auth.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService, private router: Router) { }
 
   // Property
   navbarOpen = false;
   userStatus = this.authService.userStatus;
 
   ngOnInit() {
+    this.authService.userChanges();
     this.authService.userStatusChages.subscribe(x => this.userStatus = x);
     console.log(this.userStatus);
   }
@@ -27,6 +29,11 @@ export class NavbarComponent implements OnInit {
     localStorage.removeItem('userName');
     localStorage.removeItem('password');
     localStorage.removeItem('role');
+    this.authService.logout();
+  }
+
+  signUp() {
+    this.router.navigate(['/signup']);
   }
 
 }
