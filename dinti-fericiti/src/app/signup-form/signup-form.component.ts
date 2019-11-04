@@ -14,7 +14,7 @@ export class SignupFormComponent implements OnInit {
   // Properties
   form: FormGroup;
   user: Users;
-  
+
   constructor(private authService: AuthService, private fb: FormBuilder, private router: Router) { }
 
   ngOnInit() {
@@ -24,10 +24,10 @@ export class SignupFormComponent implements OnInit {
   createSignUpForm() {
     this.form = this.fb.group(
       {
-        username: ['', Validators.required],
+        username: ['', [Validators.required, Validators.email]],
         password: ['', [
           Validators.required,
-          Validators.minLength(4),
+          Validators.minLength(6),
           Validators.maxLength(32)
         ]
         ]
@@ -40,6 +40,19 @@ export class SignupFormComponent implements OnInit {
       this.user = Object.assign({}, this.form.value);
       this.authService.signUp(this.user.username, this.user.password);
     }
+  }
+
+  getEmailErrorMessage() {
+    return  this.form.controls.username.hasError('required') ? 'You must enter a value' :
+            this.form.controls.username.hasError('email') ? 'Not a valid email' :
+            '';
+  }
+
+  getPasswordErrorMessage() {
+    return  this.form.controls.password.hasError('required') && this.form.controls.password.touched ? 'Password is required' :
+            this.form.controls.password.hasError('minlength') ? 'Password must be at least 6 characters' :
+            this.form.controls.password.hasError('maxlength') ? 'Password cannot exceed 32 characters' :
+            '';
   }
 
 }

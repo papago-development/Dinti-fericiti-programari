@@ -1,0 +1,11 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  margin-left: 35%;
+  margin-right: 35%;
+  margin-top: 25px;
+}
+
+#emailLogin {
+  width: 100%;
+}

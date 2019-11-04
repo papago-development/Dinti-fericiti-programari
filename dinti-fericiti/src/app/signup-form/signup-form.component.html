@@ -1,35 +1,17 @@
-<form [formGroup]="form" (ngSubmit)="signup()" class="login">
-  <h2 class="text-center text-primary">Sign Up</h2>
-  <hr>
+<form [formGroup]="form" (ngSubmit)="signup()" class="signUp">
+  <h2 class="text-center text-primary">Sign up</h2>
 
-  <div class="form-group">
-    <input  type="text"
-            [ngClass]="{'is-invalid': form.get('username').errors && form.get('username').touched}"
-            class="form-control"
-            formControlName="username"
-            placeholder="username">
-    <div class="invalid-feedback">Please insert an username</div>
-  </div>
+  <mat-form-field id="emailSignUp">
+    <input matInput #input formControlName='username' placeholder="Email">
+    <mat-error *ngIf="!this.form.controls.username.valid">{{ getEmailErrorMessage() }}</mat-error>
+  </mat-form-field>
 
-  <div class="form-group">
-    <input  type="password"
-            [ngClass]="{'is-invalid': form.get('password').errors && form.get('password').touched}"
-            class="form-control"
-            formControlName="password"
-            placeholder="Password">
-    <div class="invalid-feedback"
-         *ngIf="form.get('password').hasError('required') && form.get('password').touched">Password is required</div>
-
-    <div  class="invalid-feedback"
-          *ngIf="form.get('password').hasError('minlength') && form.get('password').touched">
-      Password must be at least 4 characters</div>
-
-    <div class="invalid-feedback"
-         *ngIf="form.get('password').hasError('maxlength') && form.get('password').touched">
-      Password cannot exceed 8 characters</div>
-  </div>
+  <mat-form-field id="passwordSignUp">
+    <input matInput #input type="password" formControlName="password" placeholder="Password">
+    <mat-error *ngIf="!this.form.controls.password.valid">{{ getPasswordErrorMessage() }}</mat-error>
+  </mat-form-field>
 
   <div class="form-group text-center">
-    <button class="btn btn-success" type="submit" [disabled]="!form.valid">Login</button>
+    <button mat-raised-button type="submit" [disabled]="!form.valid">Sign In</button>
   </div>
 </form>

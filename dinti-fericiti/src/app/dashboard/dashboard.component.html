@@ -1,3 +1,14 @@
-<p>
-  dashboard works!
-</p>
+<div class="container" id="dashboard">
+  <app-calendar-header [(view)]="view" [(viewDate)]="viewDate"></app-calendar-header>
+  <div *ngFor="let doctor of doctors" class="doctors">
+    <input type="checkbox" (change)="filterData($event, doctor.name)"> {{ doctor.name }}
+  </div>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events">
+    </mwl-calendar-day-view>
+  </div>
+</div>

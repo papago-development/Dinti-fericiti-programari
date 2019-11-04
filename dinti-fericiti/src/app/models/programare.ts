@@ -3,7 +3,7 @@ export interface Programare {
   namePacient: string;
   phonePacient: string;
   subject: string;
-  doctor: string;
+  medic: string;
   room: string;
   oraStart: Date;
   oraEnd: Date;
