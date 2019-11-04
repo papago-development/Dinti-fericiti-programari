@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     if (currentUser) {
 
     console.log(next.data.roles.indexOf(currentUser.role));
-      if (next.data.roles && next.data.roles.indexOf(currentUser.role) === -1) {
+    if (next.data.roles && next.data.roles.indexOf(currentUser.role) === -1) {
         // role not authorized
         this.router.navigate(['/login']);
       } else {

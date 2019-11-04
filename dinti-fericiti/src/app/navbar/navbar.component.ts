@@ -17,8 +17,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.authService.userChanges();
-    this.authService.userStatusChages.subscribe(x => this.userStatus = x);
-    console.log(this.userStatus);
+    this.authService.userStatusChages.subscribe(x => {
+      this.userStatus = x;
+    });
   }
 
   toggleNavbar() {

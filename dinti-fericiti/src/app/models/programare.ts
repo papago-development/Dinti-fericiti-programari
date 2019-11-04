@@ -4,7 +4,7 @@ export interface Programare {
   phonePacient: string;
   subject: string;
   medic: string;
-  room: string;
+  cabinet: string;
   oraStart: Date;
   oraEnd: Date;
 }

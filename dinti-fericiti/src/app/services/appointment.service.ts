@@ -9,7 +9,7 @@ export class AppointmentService {
 
   constructor(private db: AngularFirestore) { }
 
-  // Get appointments from firebase collection 'Programari
+  // Get appointments from firebase collection 'Programari'
   getAppointments() {
     return this.db.collection('Programari').valueChanges().pipe(
       tap(events => console.log(events)),
@@ -20,5 +20,10 @@ export class AppointmentService {
         return data;
       }))
     );
+  }
+
+  // Add appointment to firebase collection 'Programari'
+  addAppointmnet(appointment) {
+    return this.db.collection('Programari').add(appointment);
   }
 }

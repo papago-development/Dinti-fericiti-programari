@@ -7,12 +7,12 @@ pre {
   padding: 15px;
 }
 
-#dashboard {
+#doctor {
   margin-top: 40px;
   margin-left: auto;
 }
 
-.doctors {
+.rooms {
   display: inline;
   margin-right: 10px;
 }

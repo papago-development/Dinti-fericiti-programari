@@ -22,4 +22,9 @@ export class DoctorService {
         )
       );
   }
+
+  // Add doctor to firebase collection 'Doctori'
+  addDoctor(doctor) {
+    return this.db.collection('Doctori').add(doctor);
+  }
 }

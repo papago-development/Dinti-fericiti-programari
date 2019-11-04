@@ -3,6 +3,8 @@ import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
+import { MatDialog } from '@angular/material';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,13 +19,28 @@ export class DashboardComponent implements OnInit {
   events: Programare[] = [];
   doctors: Doctor[] = [];
   doctor: any;
+  dialogRef;
+
+  clickedDate: Date;
+  clickedColumn: number;
+  form: FormGroup;
 
   constructor(private appointmentService: AppointmentService,
-              private doctorService: DoctorService) { }
+              private doctorService: DoctorService, private dialog: MatDialog,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
     this.loadAppointments();
     this.loadDoctors();
+  }
+
+  // Open dialog for adding a new event
+  openDialog(addContent): void {
+    this.dialogRef = this.dialog.open(addContent);
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   // Load all appointments from database
@@ -54,5 +71,15 @@ export class DashboardComponent implements OnInit {
       // otherwise return the whole list of events
       this.loadAppointments();
     }
+  }
+
+  createForm() {
+    this.form = this.fb.group({
+
+    });
+  }
+
+  addAppointment() {
+
   }
 }

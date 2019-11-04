@@ -1,0 +1,13 @@
+#addDoctor {
+  display: flex;
+  flex-direction: row;
+}
+
+#addDoctor > mat-form-field {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.form-group {
+  margin-top: 10px;
+}
