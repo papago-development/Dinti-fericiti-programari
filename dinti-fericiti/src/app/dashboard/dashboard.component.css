@@ -17,3 +17,7 @@ pre {
   margin-right: 10px;
 }
 
+#addAppointment {
+  display: flex;
+  flex-direction: column;
+}

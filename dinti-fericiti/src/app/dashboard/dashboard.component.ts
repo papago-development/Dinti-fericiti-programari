@@ -4,7 +4,7 @@ import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
 import { MatDialog } from '@angular/material';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   view = 'day';
   viewDate: Date = new Date();
   events: Programare[] = [];
+  event: Programare;
   doctors: Doctor[] = [];
   doctor: any;
   dialogRef;
@@ -32,6 +33,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.loadAppointments();
     this.loadDoctors();
+    this.createForm();
   }
 
   // Open dialog for adding a new event
@@ -75,11 +77,21 @@ export class DashboardComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-
+        namePacient: ['', Validators.required],
+        phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+        title: ['', Validators.required],
+        medic: ['', Validators.required],
+        cabinet: ['', Validators.required],
+        start: [this.clickedDate, Validators.required],
+        end: ['', Validators.required]
     });
   }
 
   addAppointment() {
-
+    if (this.form.valid) {
+      this.event = Object.assign({}, this.form.value);
+      console.log('Add event', this.event);
+      this.appointmentService.addAppointment(this.event);
+    }
   }
 }

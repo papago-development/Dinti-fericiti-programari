@@ -11,21 +11,54 @@
     </mwl-calendar-month-view>
     <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
     </mwl-calendar-week-view>
-    <mwl-calendar-day-view  *ngSwitchCase="'day'"
-                            [viewDate]="viewDate"
-                            [events]="events"
-                            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date">
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events"
+      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date">
     </mwl-calendar-day-view>
   </div>
 </div>
 
 <!-- Modal for adding a new appointment -->
 <ng-template #addContent let-modal id="addModal">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Adauga programare </h4>
-      <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Adauga programare </h4>
+    <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
+    <mat-form-field>
+      <mat-label>Nume pacient</mat-label>
+      <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
+      <mat-error *ngIf="!this.form.controls.namePacient.valid"></mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Telefon pacient</mat-label>
+      <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Subiect</mat-label>
+      <input matInput #input formControlName="title" placeholder="Subiect">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Medic</mat-label>
+      <input matInput #input formControlName="medic" placeholder="Medic">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Cabinet</mat-label>
+      <input matInput #input formControlName="cabinet" placeholder="Cabinet">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ora start</mat-label>
+      <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ora end</mat-label>
+      <input matInput type="datetime-local" formControlName="end" [matDatepicker]="picker" placeholder="Choose a date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <div class="form-group">
+      <button mat-raised-button  type="submit" >Add</button>
     </div>
-      <p> You clicked on: {{ clickedDate | date: 'medium' }}</p>
-  </ng-template>
+  </form>
+</ng-template>

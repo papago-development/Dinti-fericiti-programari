@@ -1,11 +1,13 @@
+import { firestore } from 'firebase/app';
+import Timestamp = firestore.Timestamp;
+
 export interface Programare {
   id?: number;
   namePacient: string;
   phonePacient: string;
-  subject: string;
+  title: string;
   medic: string;
   cabinet: string;
-  oraStart: Date;
-  oraEnd: Date;
-  color: string;
+  start: Date;
+  end: Date;
 }

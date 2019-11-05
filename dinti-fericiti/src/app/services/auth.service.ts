@@ -25,12 +25,13 @@ export class AuthService {
   }
 
   // Sign in method with emai; and password
-  signUp(email: string, password: string) {
+  signUp(email: string, password: string, doctorName: string) {
     this.dbAuth.auth.createUserWithEmailAndPassword(email, password)
         .then( (response) => {
 
           // add the user to the 'users' collection
           const user = {
+            name: doctorName,
             username: response.user.email,
             id: response.user.uid,
             role: 'user'
@@ -42,14 +43,14 @@ export class AuthService {
               .then( user => {
                 user.get().then( x => {
                   // return the user data
-                  console.log(x.data());
+                 // console.log(x.data());
 
                   this.currentUser = x.data();
-                  console.log('Current user', this.currentUser);
+                //  console.log('Current user', this.currentUser);
 
                   // Set currentUser status
                   this.setUserStatus(this.currentUser);
-                  this.router.navigate(['/doctor']);
+                  this.router.navigate(['/doctor/', user.id]);
                 });
               });
         }).catch(error => {
@@ -65,7 +66,7 @@ export class AuthService {
           this.db.collection('Users').ref.where('username', '==', username).onSnapshot(snap => {
             snap.forEach( userRef => {
               this.currentUser = userRef.data();
-              console.log('current user', this.currentUser);
+             // console.log('current user', this.currentUser);
 
               // Set the user status
               this.setUserStatus(this.currentUser);
@@ -110,7 +111,7 @@ export class AuthService {
         this.db.collection('Users').ref.where('username', '==', currentUser.email).onSnapshot(snap => {
           snap.forEach( userRef => {
             this.currentUser = userRef.data();
-            console.log('current user', this.currentUser);
+          //  console.log('current user', this.currentUser);
 
             // Set the user status
             this.setUserStatus(this.currentUser);

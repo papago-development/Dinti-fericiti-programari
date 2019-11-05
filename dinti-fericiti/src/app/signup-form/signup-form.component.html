@@ -1,6 +1,11 @@
 <form [formGroup]="form" (ngSubmit)="signup()" class="signUp">
   <h2 class="text-center text-primary">Sign up</h2>
 
+  <mat-form-field id="nameSignup">
+    <input matInput #input formControlName="name" placeholder="Name">
+    <mat-error *ngIf="!this.form.controls.name.valid">{{ getNameErrorMessage() }}</mat-error>
+  </mat-form-field>
+
   <mat-form-field id="emailSignUp">
     <input matInput #input formControlName='username' placeholder="Email">
     <mat-error *ngIf="!this.form.controls.username.valid">{{ getEmailErrorMessage() }}</mat-error>

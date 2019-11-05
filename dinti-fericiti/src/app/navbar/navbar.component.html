@@ -22,7 +22,7 @@
     </ul>
     <ul  class="nav navbar-nav navbar-right">
       <li *ngIf="userStatus && userStatus['role'] === 'user'" class="nav-item">
-        <a class="nav-item nav-link"> {{ this.userStatus['username'] }}</a>
+        <a class="nav-item nav-link"> {{ this.userStatus['name'] }}</a>
       </li>
       <li *ngIf="userStatus" class="nav-item">
         <a class="nav-item nav-link" (click)="logout()">Logout</a>

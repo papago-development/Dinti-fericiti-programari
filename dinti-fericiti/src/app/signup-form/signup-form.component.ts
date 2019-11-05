@@ -24,6 +24,7 @@ export class SignupFormComponent implements OnInit {
   createSignUpForm() {
     this.form = this.fb.group(
       {
+        name: ['', Validators.required],
         username: ['', [Validators.required, Validators.email]],
         password: ['', [
           Validators.required,
@@ -38,7 +39,7 @@ export class SignupFormComponent implements OnInit {
   signup() {
     if (this.form.valid) {
       this.user = Object.assign({}, this.form.value);
-      this.authService.signUp(this.user.username, this.user.password);
+      this.authService.signUp(this.user.username, this.user.password, this.user.name);
     }
   }
 
@@ -55,4 +56,7 @@ export class SignupFormComponent implements OnInit {
             '';
   }
 
+  getNameErrorMessage() {
+    return  this.form.controls.name.hasError('required') ? 'You must enter a value' : '';
+  }
 }

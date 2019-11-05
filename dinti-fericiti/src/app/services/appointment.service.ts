@@ -16,20 +16,19 @@ export class AppointmentService {
       // tap(events => console.log('Events', events)),
       map( events => events.map(event => {
         const data: any = event;
-        // if (data.medic === 'Doctor 1') {
-        //   data.color = colors.red;
-        // }
         switch (data.medic) {
           case 'Doctor 1':
             data.color = colors.red;
             break;
           case 'Doctor 2':
+            data.color = colors.blue;
+            break;
+          case 'Doctor 3':
             data.color = colors.yellow;
             break;
           default:
             break;
         }
-
         data.start = data.start.toDate();
         data.end = data.end.toDate();
         return data;
@@ -38,7 +37,7 @@ export class AppointmentService {
   }
 
   // Add appointment to firebase collection 'Programari'
-  addAppointmnet(appointment) {
+  addAppointment(appointment) {
     return this.db.collection('Programari').add(appointment);
   }
 

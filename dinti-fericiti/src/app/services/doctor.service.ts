@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { colors } from '../models/colors';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +12,10 @@ export class DoctorService {
   // Get doctors from firebase collection 'Doctori'
   getDoctors(): Observable<any> {
     return this.db
-      .collection('Doctori')
+      .collection('Users', ref => ref.where('role', '==', 'user'))
       .valueChanges()
       .pipe(
-        tap(doctors => console.log(doctors)),
+        tap(doctors => console.log('Doctors', doctors)),
         map(doctors =>
           doctors.map(data => {
             return data;
