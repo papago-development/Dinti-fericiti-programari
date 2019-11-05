@@ -3,4 +3,5 @@ export interface Doctor {
   name: string;
   specializare: string;
   cabinet: string;
+  color: string[];
 }

@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Injectable, NgZone } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -13,9 +13,11 @@ export class AuthService {
   public currentUser: any;
   public userStatus: string;
   public userStatusChages: BehaviorSubject<string> = new BehaviorSubject<string>(this.userStatus);
+  public userId: number;
 
   constructor(private db: AngularFirestore, private dbAuth: AngularFireAuth,
-              private router: Router, private ngZone: NgZone) { }
+              private router: Router, private ngZone: NgZone,
+              private route: ActivatedRoute) { }
 
   setUserStatus(userStatus: any): void {
     this.userStatus = userStatus;
@@ -36,6 +38,7 @@ export class AuthService {
 
           // add user newly created to the database
           this.db.collection('Users').add(user)
+              // tslint:disable-next-line: no-shadowed-variable
               .then( user => {
                 user.get().then( x => {
                   // return the user data
@@ -69,8 +72,10 @@ export class AuthService {
 
               // set the current user to local storage
               localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
               if (userRef.data().role !== 'admin') {
-                this.router.navigate(['/doctor']);
+
+                this.router.navigate(['/doctor/', this.currentUser.id]);
               } else {
                 this.router.navigate(['/dashboard']);
               }
@@ -113,7 +118,7 @@ export class AuthService {
             // set the current user to local storage
             // localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             if (userRef.data().role !== 'admin') {
-               this.ngZone.run(() => this.router.navigate(['/doctor']));
+               this.ngZone.run(() => this.router.navigate(['/doctor', this.currentUser.id]));
             } else {
               this.ngZone.run(() => this.router.navigate(['/dashboard']));
             }

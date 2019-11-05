@@ -3,6 +3,9 @@ import { Programare } from '../models/programare';
 import { Room } from '../models/room';
 import { RoomService } from '../services/room.service';
 import { AppointmentService } from '../services/appointment.service';
+import { ActivatedRoute } from '@angular/router';
+import { Users } from '../models/user';
+import { DoctorService } from '../services/doctor.service';
 
 @Component({
   selector: 'app-doctor',
@@ -17,17 +20,26 @@ export class DoctorComponent implements OnInit {
   events: Programare[] = [];
   rooms: Room[] = [];
   room: Room;
+  doctorInfo: Users;
 
-  constructor(private roomService: RoomService, private appointmentService: AppointmentService) { }
+  constructor(private roomService: RoomService, private appointmentService: AppointmentService,
+              private route: ActivatedRoute, private doctorService: DoctorService) { }
 
   ngOnInit() {
     this.loadRooms();
     this.loadAppointments();
+    this.route.params.subscribe(params => {
+      this.doctorService.getDoctorById(params.id).subscribe( i => {
+        this.doctorInfo = i;
+      });
+    });
   }
 
+  // Get appointments for logged in doctor
   loadAppointments() {
-    this.appointmentService.getAppointments(). subscribe(data => {
-      this.events = data;
+    this.appointmentService.getAppointments().subscribe(data => {
+      this.events = data.filter(a => a.medic === this.doctorInfo[0].name);
+      console.log('Events', this.events);
     });
   }
 

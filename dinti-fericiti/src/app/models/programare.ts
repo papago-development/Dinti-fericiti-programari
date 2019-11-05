@@ -7,4 +7,5 @@ export interface Programare {
   cabinet: string;
   oraStart: Date;
   oraEnd: Date;
+  color: string;
 }
