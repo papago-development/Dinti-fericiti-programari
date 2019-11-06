@@ -139,16 +139,23 @@ export class DashboardComponent implements OnInit {
     console.log('Edit event', event);
   }
 
-   updateAppointment() {
-     if (this.updateForm.valid) {
-       this.updateAppointment = Object.assign({}, this.updateForm.value);
-       this.appointmentService.getAppointment(this.updatedEvent.id, this.updateAppointment)
-        .then( res => {
+    // Update an existing appointment
+    updateAppointment() {
+        if (this.updateForm.valid) {
+          this.updateAppointment = Object.assign({}, this.updateForm.value);
+          this.appointmentService.updateAppointment(this.updatedEvent.id, this.updateAppointment)
+            .then( res => {
+            this.dialogRef.close();
+          });
+       }
+    }
+
+    // Delete an appointment
+    cancelEvent() {
+      this.appointmentService.cancelAppointment(this.updatedEvent.id).then( res => {
         this.dialogRef.close();
       });
-     }
-
-   }
+    }
 
   getNamePacientErrorMessage() {
     return this.form.controls.namePacient.hasError('required') ? 'You must enter a value' : '';

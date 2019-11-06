@@ -39,13 +39,22 @@ export class AppointmentService {
   }
 
   // Get appointment form firebase collection
-  getAppointment(id, data) {
+  updateAppointment(id, data) {
     return  this.db.collection('Programari').doc(id).update(data);
   }
 
   // Add appointment to firebase collection 'Programari'
   addAppointment(appointment) {
     return this.db.collection('Programari').add(appointment);
+  }
+
+  // Cancel an appointmnent
+  cancelAppointment(id) {
+    return this.db.collection('Programari').doc(id).delete().then( () => {
+      console.log('Successfully deleted');
+    }).catch( e => {
+      console.log(e);
+    });
   }
 
   // View appointments by id
