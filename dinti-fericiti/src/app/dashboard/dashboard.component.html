@@ -7,12 +7,15 @@
   <hr>
 
   <div [ngSwitch]="view">
-    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+    (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events"
+    (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date">
     </mwl-calendar-week-view>
     <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events"
-      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date">
+      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+      (eventClicked)="openEditDialog($event, editContent)">
     </mwl-calendar-day-view>
   </div>
 </div>
@@ -26,26 +29,33 @@
     </button>
   </div>
   <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
+
+          <input #input formControlName='id' hidden>
+
     <mat-form-field>
       <mat-label>Nume pacient</mat-label>
       <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
-      <mat-error *ngIf="!this.form.controls.namePacient.valid"></mat-error>
+      <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Telefon pacient</mat-label>
-      <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+      <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient">
+      <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Subiect</mat-label>
       <input matInput #input formControlName="title" placeholder="Subiect">
+      <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Medic</mat-label>
       <input matInput #input formControlName="medic" placeholder="Medic">
+      <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Cabinet</mat-label>
       <input matInput #input formControlName="cabinet" placeholder="Cabinet">
+      <mat-error *ngIf="!this.form.controls.cabinet.valid">{{ getCabinetErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Ora start</mat-label>
@@ -56,9 +66,61 @@
       <input matInput type="datetime-local" formControlName="end" [matDatepicker]="picker" placeholder="Choose a date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
     </mat-form-field>
     <div class="form-group">
-      <button mat-raised-button  type="submit" >Add</button>
+      <button mat-raised-button type="submit" [disabled]="!this.form.valid">Add</button>
     </div>
   </form>
 </ng-template>
+
+<!-- Modal for editing an existing appointment -->
+<ng-template #editContent let-modal id="addModal">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Editeaza programare </h4>
+      <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="updateForm" (ngSubmit)="updateAppointment()" id="addAppointment">
+      <mat-form-field>
+        <mat-label>Nume pacient</mat-label>
+        <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
+        <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Telefon pacient</mat-label>
+        <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient">
+        <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Subiect</mat-label>
+        <input matInput #input formControlName="title" placeholder="Subiect">
+        <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Medic</mat-label>
+        <input matInput #input formControlName="medic" placeholder="Medic">
+        <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cabinet</mat-label>
+        <input matInput #input formControlName="cabinet" placeholder="Cabinet">
+        <mat-error *ngIf="!this.form.controls.cabinet.valid">{{ getCabinetErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <!-- <mat-form-field>
+          <mat-label>Ora start</mat-label>
+          <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
+        </mat-form-field> -->
+      <!-- <mat-form-field>
+        <mat-label>Ora end</mat-label>
+        <input matInput type="datetime-local" formControlName="end" [matDatepicker]="picker" placeholder="Choose a date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
+      </mat-form-field> -->
+      <div class="form-group">
+        <button mat-raised-button type="submit" [disabled]="!this.updateForm.valid">Add</button>
+      </div>
+    </form>
+  </ng-template>

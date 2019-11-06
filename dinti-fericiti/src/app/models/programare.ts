@@ -2,9 +2,9 @@ import { firestore } from 'firebase/app';
 import Timestamp = firestore.Timestamp;
 
 export interface Programare {
-  id?: number;
+  id: string;
   namePacient: string;
-  phonePacient: string;
+  phonePacient: number;
   title: string;
   medic: string;
   cabinet: string;

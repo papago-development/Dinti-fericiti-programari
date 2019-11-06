@@ -12,28 +12,35 @@ export class AppointmentService {
 
   // Get appointments from firebase collection 'Programari'
   getAppointments() {
-    return this.db.collection('Programari').valueChanges().pipe(
-      // tap(events => console.log('Events', events)),
+    return this.db.collection('Programari').snapshotChanges().pipe(
       map( events => events.map(event => {
-        const data: any = event;
-        switch (data.medic) {
-          case 'Doctor 1':
-            data.color = colors.red;
-            break;
-          case 'Doctor 2':
-            data.color = colors.blue;
-            break;
-          case 'Doctor 3':
-            data.color = colors.yellow;
-            break;
-          default:
-            break;
-        }
-        data.start = data.start.toDate();
-        data.end = data.end.toDate();
-        return data;
+        return {
+          id: event.payload.doc.id,
+          // tslint:disable-next-line: no-string-literal
+          cabinet: event.payload.doc.data()['cabinet'],
+          // tslint:disable-next-line: no-string-literal
+          end: event.payload.doc.data()['end'].toDate(),
+          // tslint:disable-next-line: no-string-literal
+          medic: event.payload.doc.data()['medic'],
+          // tslint:disable-next-line: no-string-literal
+          start: event.payload.doc.data()['start'].toDate(),
+          // tslint:disable-next-line: no-string-literal
+          title: event.payload.doc.data()['title'],
+          // tslint:disable-next-line: no-string-literal
+          // tslint:disable-next-line: max-line-length
+          color: (event.payload.doc.data()['medic'] === 'Doctor 1') ? colors.red : (event.payload.doc.data()['medic'] === 'Doctor 2') ? colors.blue : colors.yellow,
+          // tslint:disable-next-line: no-string-literal
+          namePacient: event.payload.doc.data()['namePacient'],
+          // tslint:disable-next-line: no-string-literal
+          phonePacient: event.payload.doc.data()['phonePacient']
+        };
       }))
     );
+  }
+
+  // Get appointment form firebase collection
+  getAppointment(id, data) {
+    return  this.db.collection('Programari').doc(id).update(data);
   }
 
   // Add appointment to firebase collection 'Programari'

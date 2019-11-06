@@ -5,6 +5,9 @@ import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { colors } from '../models/colors';
+import { subscribeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,8 +19,10 @@ export class DashboardComponent implements OnInit {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
-  events: Programare[] = [];
+ // events: Programare[] = [];
+ events: any[] = [];
   event: Programare;
+  updatedEvent: any;
   doctors: Doctor[] = [];
   doctor: any;
   dialogRef;
@@ -25,15 +30,17 @@ export class DashboardComponent implements OnInit {
   clickedDate: Date;
   clickedColumn: number;
   form: FormGroup;
+  updateForm: FormGroup;
 
   constructor(private appointmentService: AppointmentService,
               private doctorService: DoctorService, private dialog: MatDialog,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.loadAppointments();
     this.loadDoctors();
     this.createForm();
+    this.createUpdateForm();
   }
 
   // Open dialog for adding a new event
@@ -43,12 +50,14 @@ export class DashboardComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+    this.form.reset();
   }
 
   // Load all appointments from database
   loadAppointments() {
-    this.appointmentService.getAppointments().subscribe( data => {
+    this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
+      console.log('Events', this.events);
     });
   }
 
@@ -77,21 +86,92 @@ export class DashboardComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-        namePacient: ['', Validators.required],
-        phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
-        title: ['', Validators.required],
-        medic: ['', Validators.required],
-        cabinet: ['', Validators.required],
-        start: [this.clickedDate, Validators.required],
-        end: ['', Validators.required]
+      id: [''],
+      namePacient: ['', Validators.required],
+      phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      title: ['', Validators.required],
+      medic: ['', Validators.required],
+      cabinet: ['', Validators.required],
+      start: [this.clickedDate, Validators.required],
+      end: ['', Validators.required]
     });
   }
 
+  createUpdateForm() {
+    this.updateForm = this.fb.group({
+      namePacient: ['', Validators.required],
+      phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      title: ['', Validators.required],
+      medic: ['', Validators.required],
+      cabinet: ['', Validators.required]
+      // start: [this.clickedDate, Validators.required],
+      // end: ['', Validators.required]
+    });
+  }
+
+  // Add appointment to firebase
   addAppointment() {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
       console.log('Add event', this.event);
-      this.appointmentService.addAppointment(this.event);
+      this.appointmentService.addAppointment(this.event)
+        .then(res => {
+          this.dialogRef.close();
+        });
     }
+  }
+
+  // Open dialog for editing
+  openEditDialog({ event }: { event: Programare }, editContent) {
+    this.dialogRef = this.dialog.open(editContent);
+    this.updatedEvent = event;
+
+    // Set values from event to dialog
+    this.updateForm.controls.namePacient.setValue(event.namePacient);
+    this.updateForm.controls.phonePacient.setValue(event.phonePacient);
+    this.updateForm.controls.title.setValue(event.title);
+    this.updateForm.controls.medic.setValue(event.medic);
+    this.updateForm.controls.cabinet.setValue(event.cabinet);
+    // this.updateForm.controls.start.setValue(this.clickedDate);
+    // this.updateForm.controls.end.setValue(event.end);
+
+    console.log('Edit event', event.id);
+    console.log('Edit event', event);
+  }
+
+   updateAppointment() {
+     if (this.updateForm.valid) {
+       this.updateAppointment = Object.assign({}, this.updateForm.value);
+       this.appointmentService.getAppointment(this.updatedEvent.id, this.updateAppointment)
+        .then( res => {
+        this.dialogRef.close();
+      });
+     }
+
+   }
+
+  getNamePacientErrorMessage() {
+    return this.form.controls.namePacient.hasError('required') ? 'You must enter a value' : '';
+  }
+
+  getPhoneErrorMessage() {
+    return this.form.controls.phonePacient.hasError('required') ? 'You must enter a value' :
+      this.form.controls.phonePacient.hasError('maxlength') ? 'Maximum length is 10 character' : '';
+  }
+
+  getSubjectErrorMessage() {
+    return this.form.controls.title.hasError('required') ? 'You must enter a value' : '';
+  }
+
+  getDoctorErrorMessage() {
+    return this.form.controls.medic.hasError('required') ? 'You must enter a value' : '';
+  }
+
+  getCabinetErrorMessage() {
+    return this.form.controls.cabinet.hasError('required') ? 'You must enter a value' : '';
+  }
+
+  getEndErrorMessage() {
+    return this.form.controls.end.hasError('required') ? 'You must enter a value' : '';
   }
 }
