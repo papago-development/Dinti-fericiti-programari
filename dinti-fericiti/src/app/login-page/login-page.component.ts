@@ -41,7 +41,6 @@ export class LoginPageComponent implements OnInit {
     if (this.loginForm.valid) {
       this.user = Object.assign({}, this.loginForm.value);
       this.authService.login(this.user.username, this.user.password);
-      console.log(this.authService.userStatus);
     }
   }
   getEmailErrorMessage() {

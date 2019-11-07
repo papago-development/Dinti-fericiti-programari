@@ -66,7 +66,7 @@ export class AuthService {
           this.db.collection('Users').ref.where('username', '==', username).onSnapshot(snap => {
             snap.forEach( userRef => {
               this.currentUser = userRef.data();
-             // console.log('current user', this.currentUser);
+              console.log('current user from service', this.currentUser);
 
               // Set the user status
               this.setUserStatus(this.currentUser);
@@ -111,7 +111,6 @@ export class AuthService {
         this.db.collection('Users').ref.where('username', '==', currentUser.email).onSnapshot(snap => {
           snap.forEach( userRef => {
             this.currentUser = userRef.data();
-          //  console.log('current user', this.currentUser);
 
             // Set the user status
             this.setUserStatus(this.currentUser);

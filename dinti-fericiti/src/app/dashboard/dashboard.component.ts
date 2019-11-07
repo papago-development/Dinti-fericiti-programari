@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   view = 'day';
   viewDate: Date = new Date();
  // events: Programare[] = [];
- events: any[] = [];
+  events: any[] = [];
   event: Programare;
   updatedEvent: any;
   doctors: Doctor[] = [];

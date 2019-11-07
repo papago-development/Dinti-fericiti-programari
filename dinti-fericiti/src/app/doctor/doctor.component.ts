@@ -6,6 +6,7 @@ import { AppointmentService } from '../services/appointment.service';
 import { ActivatedRoute } from '@angular/router';
 import { Users } from '../models/user';
 import { DoctorService } from '../services/doctor.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-doctor',
@@ -17,29 +18,38 @@ export class DoctorComponent implements OnInit {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
-  events: Programare[] = [];
+  events: any[] = [];
   rooms: Room[] = [];
   room: Room;
   doctorInfo: Users;
+  userName: any;
 
   constructor(private roomService: RoomService, private appointmentService: AppointmentService,
-              private route: ActivatedRoute, private doctorService: DoctorService) { }
+              private route: ActivatedRoute, private doctorService: DoctorService,
+              private authService: AuthService) {
+  }
 
   ngOnInit() {
     this.loadRooms();
     this.loadAppointments();
     this.route.params.subscribe(params => {
-      this.doctorService.getDoctorById(params.id).subscribe( i => {
+      this.doctorService.getDoctorById(params.id).subscribe(i => {
         this.doctorInfo = i;
+        console.log('Doctor id', this.doctorInfo[0].name);
       });
     });
   }
 
   // Get appointments for logged in doctor
   loadAppointments() {
-    this.appointmentService.getAppointments().subscribe(data => {
-      this.events = data.filter(a => a.medic === this.doctorInfo[0].name);
-      console.log('Events', this.events);
+    // userName variable stores the name of current doctor
+    this.userName = this.authService.currentUser.name;
+
+    // Get all the events
+    // Current user will have appointments coloured with red and the other doctors will have assigned the grey colour
+    this.appointmentService.getAppointmentByDoctor(this.userName).subscribe(data => {
+      console.log('Events', data);
+      this.events = data;
     });
   }
 
