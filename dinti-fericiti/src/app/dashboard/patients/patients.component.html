@@ -1,0 +1,26 @@
+<div class="container">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>
+          Nume
+        </th>
+        <th>
+          Telefon
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let item of this.patients">
+      <tr>
+        <td>
+          {{ item.name }}
+        </td>
+        <td>
+          {{ item.phonePacient }}
+        </td>
+        <td><i class="material-icons" [routerLink]="['/patient/', item.id]">edit</i></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,6 +6,8 @@ import { DoctorService } from '../services/doctor.service';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Patient } from '../models/patient';
+import { PatientService } from '../services/patient.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +19,7 @@ export class DashboardComponent implements OnInit {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
- // events: Programare[] = [];
+  // events: Programare[] = [];
   events: any[] = [];
   event: Programare;
   updatedEvent: any;
@@ -29,10 +31,12 @@ export class DashboardComponent implements OnInit {
   clickedColumn: number;
   form: FormGroup;
   updateForm: FormGroup;
+  pacient: Patient;
 
   constructor(private appointmentService: AppointmentService,
               private doctorService: DoctorService, private dialog: MatDialog,
-              private fb: FormBuilder, private route: ActivatedRoute) { }
+              private fb: FormBuilder, private route: ActivatedRoute,
+              private pacientService: PatientService) { }
 
   ngOnInit() {
     this.loadAppointments();
@@ -102,8 +106,6 @@ export class DashboardComponent implements OnInit {
       title: ['', Validators.required],
       medic: ['', Validators.required],
       cabinet: ['', Validators.required]
-      // start: [this.clickedDate, Validators.required],
-      // end: ['', Validators.required]
     });
   }
 
@@ -112,10 +114,20 @@ export class DashboardComponent implements OnInit {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
       console.log('Add event', this.event);
+
+      this.pacient = {
+        name: this.event.namePacient,
+        title: this.event.title,
+        phonePacient: this.event.phonePacient,
+        medic: this.event.medic
+      };
+      console.log('Pacient', this.pacient);
+      this.pacientService.addPacient(this.pacient);
       this.appointmentService.addAppointment(this.event)
-        .then(res => {
+        .then(() => {
           this.dialogRef.close();
         });
+
     }
   }
 
@@ -135,23 +147,23 @@ export class DashboardComponent implements OnInit {
     console.log('Edit event', event);
   }
 
-    // Update an existing appointment
-    updateAppointment() {
-        if (this.updateForm.valid) {
-          this.updateAppointment = Object.assign({}, this.updateForm.value);
-          this.appointmentService.updateAppointment(this.updatedEvent.id, this.updateAppointment)
-            .then( res => {
-            this.dialogRef.close();
-          });
-       }
+  // Update an existing appointment
+  updateAppointment() {
+    if (this.updateForm.valid) {
+      this.updateAppointment = Object.assign({}, this.updateForm.value);
+      this.appointmentService.updateAppointment(this.updatedEvent.id, this.updateAppointment)
+        .then(res => {
+          this.dialogRef.close();
+        });
     }
+  }
 
-    // Delete an appointment
-    cancelEvent() {
-      this.appointmentService.cancelAppointment(this.updatedEvent.id).then( res => {
-        this.dialogRef.close();
-      });
-    }
+  // Delete an appointment
+  cancelEvent() {
+    this.appointmentService.cancelAppointment(this.updatedEvent.id).then(res => {
+      this.dialogRef.close();
+    });
+  }
 
   getNamePacientErrorMessage() {
     return this.form.controls.namePacient.hasError('required') ? 'You must enter a value' : '';

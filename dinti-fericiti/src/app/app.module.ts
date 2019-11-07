@@ -29,6 +29,8 @@ import { DoctorsComponent } from './dashboard/doctors/doctors.component';
 import { AddDoctorComponent } from './dashboard/add-doctor/add-doctor.component';
 import { AddRoomComponent } from './dashboard/add-room/add-room.component';
 import { DoctorComponent } from './doctor/doctor.component';
+import { PatientsComponent } from './dashboard/patients/patients.component';
+import { PatientComponent } from './dashboard/patient/patient.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { DoctorComponent } from './doctor/doctor.component';
       CalendarHeaderComponent,
       AddDoctorComponent,
       AddRoomComponent,
-      DoctorComponent
+      DoctorComponent,
+      PatientsComponent,
+      PatientComponent
    ],
    imports: [
       BrowserModule,

@@ -10,7 +10,7 @@
   <div class="navbar-collapse collapse" [ngClass]="{ 'show': navbarOpen }">
     <ul *ngIf="userStatus && userStatus['role'] === 'admin'" class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['pacienti']">Pacienti</a>
+        <a class="nav-item nav-link" [routerLink]="['patients']">Pacienti</a>
       </li>
       <li class="nav-item">
         <a class="nav-item nav-link" [routerLink]="['dashboard']">Programari</a>
