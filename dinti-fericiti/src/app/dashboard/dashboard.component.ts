@@ -6,8 +6,6 @@ import { DoctorService } from '../services/doctor.service';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { colors } from '../models/colors';
-import { subscribeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -132,8 +130,6 @@ export class DashboardComponent implements OnInit {
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
     this.updateForm.controls.cabinet.setValue(event.cabinet);
-    // this.updateForm.controls.start.setValue(this.clickedDate);
-    // this.updateForm.controls.end.setValue(event.end);
 
     console.log('Edit event', event.id);
     console.log('Edit event', event);

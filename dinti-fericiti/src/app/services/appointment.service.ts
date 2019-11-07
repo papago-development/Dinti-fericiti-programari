@@ -84,13 +84,5 @@ export class AppointmentService {
         };
       }))
     );
-    // return this.db.collection('Programari', ref => ref.where('medic', '==', name)).valueChanges().pipe(
-    //   map(events => events.map(event => {
-    //     const data: any = event;
-    //     data.start = data.start.toDate();
-    //     data.end = data.end.toDate();
-    //     return data;
-    //   }))
-    // );
   }
 }

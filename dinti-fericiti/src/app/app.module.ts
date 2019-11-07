@@ -8,7 +8,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { MatInputModule, MatButtonModule, MatListModule, MatTabsModule, MatDialogModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import {  MatInputModule,
+          MatButtonModule,
+          MatListModule,
+          MatTabsModule,
+          MatDialogModule,
+          MatDatepickerModule,
+          MatNativeDateModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
