@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,16 @@ export class PatientService {
         };
       }))
     );
+  }
+
+
+  // Get patient by id
+  getPatientById(id): Observable<any> {
+    return  this.db.collection('Pacienti').doc(id).valueChanges();
+  }
+
+  // Update patient information
+  updatePatient(id, updatePatient) {
+    return this.db.collection('Pacienti').doc(id).update(updatePatient);
   }
 }

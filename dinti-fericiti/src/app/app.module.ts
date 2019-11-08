@@ -14,7 +14,8 @@ import {  MatInputModule,
           MatTabsModule,
           MatDialogModule,
           MatDatepickerModule,
-          MatNativeDateModule } from '@angular/material';
+          MatNativeDateModule,
+          MatCardModule} from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -69,6 +70,7 @@ import { PatientComponent } from './dashboard/patient/patient.component';
        MatDialogModule,
        MatDatepickerModule,
        MatNativeDateModule,
+       MatCardModule
       ],
   providers: [
   ],

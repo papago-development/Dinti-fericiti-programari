@@ -1,0 +1,9 @@
+#pacient{
+  flex-direction: column;
+  display: flex;
+}
+
+.rightButton {
+  position: absolute;
+  right: 0;
+}

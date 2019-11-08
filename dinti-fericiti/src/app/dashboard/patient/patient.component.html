@@ -1,3 +1,27 @@
-<p>
-  patient works!
-</p>
+<div class="container">
+  <mat-card>
+    <mat-card-title>
+      Detalii pacient {{ this.patient?.name }}
+      <button mat-raised-button class="btn btn-primary" type="button" class="rightButton">Incarca document</button>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <form [formGroup]="form" (ngSubmit)="updatePatient()" id="pacient">
+        <mat-form-field>
+          <mat-label>Nume pacient</mat-label>
+          <input matInput #input formControlName="name" placeholder="Nume pacient">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Telefon pacient</mat-label>
+          <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Interventie</mat-label>
+          <input matInput #input formControlName="title" placeholder="Interventie">
+        </mat-form-field>
+        <div class="form-group">
+          <button mat-raised-button class="btn btn-primary" type="submit">Edit</button>
+        </div>
+      </form>
+    </mat-card-subtitle>
+  </mat-card>
+</div>

@@ -28,7 +28,7 @@ export class AppointmentService {
           title: event.payload.doc.data()['title'],
           // tslint:disable-next-line: no-string-literal
           // tslint:disable-next-line: max-line-length
-          color: (event.payload.doc.data()['medic'] === 'Doctor 1') ? colors.red : (event.payload.doc.data()['medic'] === 'Doctor 2') ? colors.blue : colors.yellow,
+          color: (event.payload.doc.data()['medic'] === 'Laura Prie') ? colors.red : (event.payload.doc.data()['medic'] === 'Erna Dupir') ? colors.blue : colors.yellow,
           // tslint:disable-next-line: no-string-literal
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal
