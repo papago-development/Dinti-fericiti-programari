@@ -56,11 +56,6 @@
       <input matInput #input formControlName="medic" readonly>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Cabinet</mat-label>
-      <input matInput #input formControlName="cabinet" placeholder="Cabinet">
-      <mat-error *ngIf="!this.form.controls.cabinet.valid">{{ getCabinetErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
       <mat-label>Ora start</mat-label>
       <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
     </mat-form-field>
@@ -105,13 +100,8 @@
       <mat-label>Medic</mat-label>
       <input matInput #input formControlName="medic" placeholder="Medic" readonly>
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Cabinet</mat-label>
-      <input matInput #input formControlName="cabinet" placeholder="Cabinet">
-      <mat-error *ngIf="!this.form.controls.cabinet.valid">{{ getCabinetErrorMessage() }}</mat-error>
-    </mat-form-field>
     <div class="form-group">
-      <button mat-raised-button type="submit" class="btn btn-success" [disabled]="!this.updateForm.valid">Add</button>
+      <button mat-raised-button type="submit" class="btn btn-success" [disabled]="!this.updateForm.valid">Editeaza</button>
     </div>
   </form>
   <button mat-raised-button type="submit" class="btn btn-danger" (click)="cancelEvent()">Anuleaza programare</button>

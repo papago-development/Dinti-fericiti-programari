@@ -94,9 +94,6 @@ export class DoctorComponent implements OnInit {
   // The method is used to make events unclickable is doesn't belong to the current user
   eventClicked({ event }: { event: Programare }, addContent): void {
     console.log(event);
-    // if (event.medic === this.authService.currentUser.name) {
-    //   this.dialogRef = this.dialog.open(addContent);
-    // }
   }
 
   // Open dialog
@@ -115,7 +112,6 @@ export class DoctorComponent implements OnInit {
       this.updateForm.controls.phonePacient.setValue(event.phonePacient);
       this.updateForm.controls.title.setValue(event.title);
       this.updateForm.controls.medic.setValue(event.medic);
-      this.updateForm.controls.cabinet.setValue(event.cabinet);
     }
   }
 
@@ -131,7 +127,6 @@ export class DoctorComponent implements OnInit {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
       medic: [this.userName, Validators.required],
-      cabinet: ['', Validators.required],
       start: ['', Validators.required],
       end: ['', Validators.required]
     });
@@ -143,8 +138,7 @@ export class DoctorComponent implements OnInit {
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
-      medic: [this.userName, Validators.required],
-      cabinet: ['', Validators.required]
+      medic: [this.userName, Validators.required]
     });
   }
 
@@ -196,10 +190,6 @@ export class DoctorComponent implements OnInit {
 
   getDoctorErrorMessage() {
     return this.form.controls.medic.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getCabinetErrorMessage() {
-    return this.form.controls.cabinet.hasError('required') ? 'You must enter a value' : '';
   }
 
   getEndErrorMessage() {

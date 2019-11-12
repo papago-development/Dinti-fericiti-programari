@@ -32,6 +32,7 @@ import { AddRoomComponent } from './dashboard/add-room/add-room.component';
 import { DoctorComponent } from './doctor/doctor.component';
 import { PatientsComponent } from './dashboard/patients/patients.component';
 import { PatientComponent } from './dashboard/patient/patient.component';
+import { HistoryAppointmentComponent } from './dashboard/history-appointment/history-appointment.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { PatientComponent } from './dashboard/patient/patient.component';
       AddRoomComponent,
       DoctorComponent,
       PatientsComponent,
-      PatientComponent
+      PatientComponent,
+      HistoryAppointmentComponent
    ],
    imports: [
       BrowserModule,

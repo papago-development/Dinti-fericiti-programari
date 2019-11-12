@@ -39,8 +39,23 @@ export class PatientService {
     return  this.db.collection('Pacienti').doc(id).valueChanges();
   }
 
+  // Get patient by name
+  getPatientByName(name) {
+     this.db.collection('Pacienti', ref => ref.where('name', '==', name)).snapshotChanges().pipe(
+      map(patients => patients.map(patient => {
+        return {
+         id: patient.payload.doc.id
+        };
+      }))
+    );
+  }
+
   // Update patient information
   updatePatient(id, updatePatient) {
     return this.db.collection('Pacienti').doc(id).update(updatePatient);
+  }
+
+  getPatientEventById(id): Observable<any> {
+    return this.db.collection('Pacienti').doc(id).snapshotChanges();
   }
 }

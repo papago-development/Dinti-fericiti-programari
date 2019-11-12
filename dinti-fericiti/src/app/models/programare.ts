@@ -7,7 +7,6 @@ export interface Programare {
   phonePacient: number;
   title: string;
   medic: string;
-  cabinet: string;
   start: Date;
   end: Date;
 }

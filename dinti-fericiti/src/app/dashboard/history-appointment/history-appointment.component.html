@@ -1,0 +1,19 @@
+<div class="container">
+  <mat-card>
+    Istoric interventii pacient
+  </mat-card>
+  <table class="table-bordered">
+    <thead>
+      <tr>
+        <th>Interventie</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let item of this.events">
+      <tr>
+        <td>{{ item.title.value }}</td>
+        <td>{{ item.start }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

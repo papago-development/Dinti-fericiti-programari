@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +20,7 @@ export class DashboardComponent implements OnInit {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
-  // events: Programare[] = [];
+
   events: any[] = [];
   event: Programare;
   updatedEvent: any;
@@ -32,11 +33,13 @@ export class DashboardComponent implements OnInit {
   form: FormGroup;
   updateForm: FormGroup;
   pacient: Patient;
+  public pacientId: string;
+  updatedPacient: any;
+  subsUpdate: Subscription;
 
   constructor(private appointmentService: AppointmentService,
               private doctorService: DoctorService, private dialog: MatDialog,
-              private fb: FormBuilder, private route: ActivatedRoute,
-              private pacientService: PatientService) { }
+              private fb: FormBuilder, private pacientService: PatientService) { }
 
   ngOnInit() {
     this.loadAppointments();
@@ -93,7 +96,6 @@ export class DashboardComponent implements OnInit {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
       medic: ['', Validators.required],
-      cabinet: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
       end: ['', Validators.required]
     });
@@ -104,8 +106,7 @@ export class DashboardComponent implements OnInit {
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
-      medic: ['', Validators.required],
-      cabinet: ['', Validators.required]
+      medic: ['', Validators.required]
     });
   }
 
@@ -117,17 +118,17 @@ export class DashboardComponent implements OnInit {
 
       this.pacient = {
         name: this.event.namePacient,
-        title: this.event.title,
         phonePacient: this.event.phonePacient,
-        medic: this.event.medic
+        medic: this.event.medic,
+        start: this.event.start,
+        title: this.event.title
       };
-      console.log('Pacient', this.pacient);
+
       this.pacientService.addPacient(this.pacient);
       this.appointmentService.addAppointment(this.event)
         .then(() => {
           this.dialogRef.close();
         });
-
     }
   }
 
@@ -136,12 +137,15 @@ export class DashboardComponent implements OnInit {
     this.dialogRef = this.dialog.open(editContent);
     this.updatedEvent = event;
 
+    // tslint:disable-next-line: max-line-length
+    this.updatedPacient = { name: event.namePacient, phonePacient: event.phonePacient, title: event.title, medic: event.medic};
+    console.log(this.updatedPacient);
+
     // Set values from event to dialog
     this.updateForm.controls.namePacient.setValue(event.namePacient);
     this.updateForm.controls.phonePacient.setValue(event.phonePacient);
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
-    this.updateForm.controls.cabinet.setValue(event.cabinet);
 
     console.log('Edit event', event.id);
     console.log('Edit event', event);
@@ -151,8 +155,9 @@ export class DashboardComponent implements OnInit {
   updateAppointment() {
     if (this.updateForm.valid) {
       this.updateAppointment = Object.assign({}, this.updateForm.value);
+
       this.appointmentService.updateAppointment(this.updatedEvent.id, this.updateAppointment)
-        .then(res => {
+        .then(() => {
           this.dialogRef.close();
         });
     }
@@ -160,7 +165,7 @@ export class DashboardComponent implements OnInit {
 
   // Delete an appointment
   cancelEvent() {
-    this.appointmentService.cancelAppointment(this.updatedEvent.id).then(res => {
+    this.appointmentService.cancelAppointment(this.updatedEvent.id).then(() => {
       this.dialogRef.close();
     });
   }
@@ -180,10 +185,6 @@ export class DashboardComponent implements OnInit {
 
   getDoctorErrorMessage() {
     return this.form.controls.medic.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getCabinetErrorMessage() {
-    return this.form.controls.cabinet.hasError('required') ? 'You must enter a value' : '';
   }
 
   getEndErrorMessage() {
