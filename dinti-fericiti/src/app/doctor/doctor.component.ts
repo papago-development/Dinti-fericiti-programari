@@ -9,6 +9,8 @@ import { DoctorService } from '../services/doctor.service';
 import { AuthService } from '../services/auth.service';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Patient } from '../models/patient';
+import { PatientService } from '../services/patient.service';
 
 @Component({
   selector: 'app-doctor',
@@ -19,6 +21,7 @@ export class DoctorComponent implements OnInit {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
+
   events: any[] = [];
   rooms: Room[] = [];
   room: Room;
@@ -35,13 +38,15 @@ export class DoctorComponent implements OnInit {
   event: Programare;
   appointment: any;
   clickedDate: Date;
+  patient: Patient;
 
   constructor(
     private roomService: RoomService,
     private appointmentService: AppointmentService,
-    private route: ActivatedRoute,
     private doctorService: DoctorService,
+    private patientService: PatientService,
     private authService: AuthService,
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private fb: FormBuilder
   ) {
@@ -106,13 +111,15 @@ export class DoctorComponent implements OnInit {
     if (event.medic === this.authService.currentUser.name) {
       this.dialogRef = this.dialog.open(editContent);
       this.appointment = event;
-      console.log('Update', event.cabinet);
+      console.log(event);
+
       // Set values from event to dialog
       this.updateForm.controls.namePacient.setValue(event.namePacient);
       this.updateForm.controls.phonePacient.setValue(event.phonePacient);
       this.updateForm.controls.title.setValue(event.title);
       this.updateForm.controls.medic.setValue(event.medic);
       this.updateForm.controls.cabinet.setValue(event.cabinet);
+      this.updateForm.controls.emailPacient.setValue(event.emailPacient);
     }
   }
 
@@ -126,9 +133,10 @@ export class DoctorComponent implements OnInit {
     this.form = this.fb.group({
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      emailPacient: ['', [Validators.required, Validators.email]],
       title: ['', Validators.required],
       medic: [this.userName, Validators.required],
-      cabient: [''],
+      cabinet: [''],
       start: ['', Validators.required],
       end: ['', Validators.required]
     });
@@ -139,6 +147,7 @@ export class DoctorComponent implements OnInit {
     this.updateForm = this.fb.group({
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      emailPacient: ['', [Validators.required, Validators.email]],
       title: ['', Validators.required],
       medic: [this.userName, Validators.required],
       cabinet: ['']
@@ -149,6 +158,17 @@ export class DoctorComponent implements OnInit {
   addAppointment() {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
+
+      this.patient = {
+        name: this.event.namePacient,
+        phonePacient: this.event.phonePacient,
+        emailPacient: this.event.emailPacient,
+        medic: this.event.medic,
+        start: this.event.start,
+        title: this.event.title
+      };
+
+      this.patientService.addPacient(this.patient);
       this.appointmentService.addAppointment(this.event).then(res => {
         // After adding the appointment into collection
         // we reset the form and close the modal
@@ -198,6 +218,11 @@ export class DoctorComponent implements OnInit {
 
   getEndErrorMessage() {
     return this.form.controls.end.hasError('required') ? 'You must enter a value' : '';
+  }
+
+  getEmailErrorMessage() {
+    return this.form.controls.emailPacient.hasError('required') ? 'You must enter a value' :
+          this.form.controls.emailPacient.hasError('email') ? 'Insert a valid email' : '';
   }
 
 }

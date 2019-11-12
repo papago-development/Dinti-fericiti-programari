@@ -47,6 +47,11 @@
       <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Email pacient</mat-label>
+      <input matInput #input formControlName="emailPacient" type="email" placeholder="Email pacient">
+      <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
       <mat-label>Subiect</mat-label>
       <input matInput #input formControlName="title" placeholder="Subiect">
       <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
@@ -100,6 +105,11 @@
       <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
+        <mat-label>Email pacient</mat-label>
+        <input matInput #input formControlName="emailPacient" type="email" placeholder="Email pacient">
+        <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
+      </mat-form-field>
+    <mat-form-field>
       <mat-label>Subiect</mat-label>
       <input matInput #input formControlName="title" placeholder="Subiect">
       <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
@@ -111,7 +121,7 @@
     <mat-form-field>
       <mat-label>Cabinet</mat-label>
       <mat-select formControlName="cabinet">
-        <mat-option *ngFor="let cabinet of this.rooms">
+        <mat-option *ngFor="let cabinet of this.rooms" [value]="cabinet.name">
           {{ cabinet.name }}
         </mat-option>
       </mat-select>

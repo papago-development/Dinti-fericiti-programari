@@ -110,6 +110,7 @@ export class DashboardComponent implements OnInit {
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
       cabinet: [''],
+      emailPacient: ['', [Validators.required, Validators.email]],
       end: ['', Validators.required]
     });
   }
@@ -118,8 +119,9 @@ export class DashboardComponent implements OnInit {
     this.updateForm = this.fb.group({
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      emailPacient: ['', [Validators.required, Validators.email]],
       title: ['', Validators.required],
-      cabinet: ['', Validators.required],
+      cabinet: [''],
       medic: ['', Validators.required]
     });
   }
@@ -133,6 +135,7 @@ export class DashboardComponent implements OnInit {
       this.pacient = {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
+        emailPacient: this.event.emailPacient,
         medic: this.event.medic,
         start: this.event.start,
         title: this.event.title
@@ -155,7 +158,13 @@ export class DashboardComponent implements OnInit {
     this.updatedEvent = event;
 
     // tslint:disable-next-line: max-line-length
-    this.updatedPacient = { name: event.namePacient, phonePacient: event.phonePacient, title: event.title, medic: event.medic};
+    this.updatedPacient = {
+      name: event.namePacient,
+      phonePacient: event.phonePacient,
+      emailPacient: event.emailPacient,
+      title: event.title,
+      medic: event.medic
+    };
     console.log(this.updatedPacient);
 
     // Set values from event to dialog
@@ -164,6 +173,7 @@ export class DashboardComponent implements OnInit {
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
     this.updateForm.controls.cabinet.setValue(event.cabinet);
+    this.updateForm.controls.emailPacient.setValue(event.emailPacient);
 
     console.log('Edit event', event.id);
     console.log('Edit event', event);
@@ -195,6 +205,11 @@ export class DashboardComponent implements OnInit {
   getPhoneErrorMessage() {
     return this.form.controls.phonePacient.hasError('required') ? 'You must enter a value' :
       this.form.controls.phonePacient.hasError('maxlength') ? 'Maximum length is 10 character' : '';
+  }
+
+  getEmailErrorMessage() {
+    return this.form.controls.emailPacient.hasError('required') ? 'You must enter a value' :
+          this.form.controls.emailPacient.hasError('email') ? 'Insert a valid email' : '';
   }
 
   getSubjectErrorMessage() {

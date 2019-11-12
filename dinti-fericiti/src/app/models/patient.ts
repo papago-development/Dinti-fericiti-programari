@@ -7,4 +7,5 @@ export class Patient {
   phonePacient: number;
   medic: string;
   start: Date;
+  emailPacient: string;
 }

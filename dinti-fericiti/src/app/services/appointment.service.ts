@@ -32,7 +32,8 @@ export class AppointmentService {
           // tslint:disable-next-line: no-string-literal
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal
-          phonePacient: event.payload.doc.data()['phonePacient']
+          phonePacient: event.payload.doc.data()['phonePacient'],
+          emailPacient: event.payload.doc.data()['emailPacient']
         };
       }))
     );
@@ -80,7 +81,8 @@ export class AppointmentService {
           // tslint:disable-next-line: no-string-literal
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal
-          phonePacient: event.payload.doc.data()['phonePacient']
+          phonePacient: event.payload.doc.data()['phonePacient'],
+          emailPacient: event.payload.doc.data()['emailPacient']
         };
       }))
     );
