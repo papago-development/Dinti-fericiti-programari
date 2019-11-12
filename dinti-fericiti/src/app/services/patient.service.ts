@@ -58,4 +58,9 @@ export class PatientService {
   getPatientEventById(id): Observable<any> {
     return this.db.collection('Pacienti').doc(id).snapshotChanges();
   }
+
+  // Check if patient already exists in database by phoneNumber
+  patientExists(phone){
+    return this.db.collection('Pacienti');
+  }
 }

@@ -56,6 +56,14 @@
       <input matInput #input formControlName="medic" readonly>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Cabinet</mat-label>
+      <mat-select formControlName="cabinet">
+        <mat-option *ngFor="let cabinet of this.rooms" [value]="cabinet.name">
+            {{ cabinet.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
       <mat-label>Ora start</mat-label>
       <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
     </mat-form-field>
@@ -99,6 +107,14 @@
     <mat-form-field>
       <mat-label>Medic</mat-label>
       <input matInput #input formControlName="medic" placeholder="Medic" readonly>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Cabinet</mat-label>
+      <mat-select formControlName="cabinet">
+        <mat-option *ngFor="let cabinet of this.rooms">
+          {{ cabinet.name }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <div class="form-group">
       <button mat-raised-button type="submit" class="btn btn-success" [disabled]="!this.updateForm.valid">Editeaza</button>

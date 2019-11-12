@@ -106,12 +106,13 @@ export class DoctorComponent implements OnInit {
     if (event.medic === this.authService.currentUser.name) {
       this.dialogRef = this.dialog.open(editContent);
       this.appointment = event;
-
+      console.log('Update', event.cabinet);
       // Set values from event to dialog
       this.updateForm.controls.namePacient.setValue(event.namePacient);
       this.updateForm.controls.phonePacient.setValue(event.phonePacient);
       this.updateForm.controls.title.setValue(event.title);
       this.updateForm.controls.medic.setValue(event.medic);
+      this.updateForm.controls.cabinet.setValue(event.cabinet);
     }
   }
 
@@ -127,6 +128,7 @@ export class DoctorComponent implements OnInit {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
       medic: [this.userName, Validators.required],
+      cabient: [''],
       start: ['', Validators.required],
       end: ['', Validators.required]
     });
@@ -138,7 +140,8 @@ export class DoctorComponent implements OnInit {
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
-      medic: [this.userName, Validators.required]
+      medic: [this.userName, Validators.required],
+      cabinet: ['']
     });
   }
 
@@ -159,6 +162,7 @@ export class DoctorComponent implements OnInit {
   updateAppointment() {
     if (this.updateForm.valid) {
       this.event = Object.assign({}, this.updateForm.value);
+      console.log('Update event', this.event);
       this.appointmentService.updateAppointment(this.appointment.id, this.event).then( res => {
         this.dialog.closeAll();
         this.updateForm.reset();

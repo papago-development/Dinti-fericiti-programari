@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription } from 'rxjs';
+import { RoomService } from '../services/room.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ export class DashboardComponent implements OnInit {
   updatedEvent: any;
   doctors: Doctor[] = [];
   doctor: any;
+  rooms: any[] = [];
   dialogRef;
 
   clickedDate: Date;
@@ -39,11 +41,13 @@ export class DashboardComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService,
               private doctorService: DoctorService, private dialog: MatDialog,
-              private fb: FormBuilder, private pacientService: PatientService) { }
+              private fb: FormBuilder, private pacientService: PatientService,
+              private roomService: RoomService) { }
 
   ngOnInit() {
     this.loadAppointments();
     this.loadDoctors();
+    this.loadRooms();
     this.createForm();
     this.createUpdateForm();
   }
@@ -63,6 +67,14 @@ export class DashboardComponent implements OnInit {
     this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
       console.log('Events', this.events);
+    });
+  }
+
+  // Load all rooms from database
+  loadRooms() {
+    this.roomService.getRooms().subscribe(data => {
+      this.rooms = data;
+      console.log('Rooms', this.rooms);
     });
   }
 
@@ -97,6 +109,7 @@ export class DashboardComponent implements OnInit {
       title: ['', Validators.required],
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
+      cabinet: [''],
       end: ['', Validators.required]
     });
   }
@@ -106,6 +119,7 @@ export class DashboardComponent implements OnInit {
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       title: ['', Validators.required],
+      cabinet: ['', Validators.required],
       medic: ['', Validators.required]
     });
   }
@@ -123,6 +137,9 @@ export class DashboardComponent implements OnInit {
         start: this.event.start,
         title: this.event.title
       };
+
+      // Check if the patient already exists in database
+      this.pacientService.patientExists(this.pacient.phonePacient);
 
       this.pacientService.addPacient(this.pacient);
       this.appointmentService.addAppointment(this.event)
@@ -146,6 +163,7 @@ export class DashboardComponent implements OnInit {
     this.updateForm.controls.phonePacient.setValue(event.phonePacient);
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
+    this.updateForm.controls.cabinet.setValue(event.cabinet);
 
     console.log('Edit event', event.id);
     console.log('Edit event', event);

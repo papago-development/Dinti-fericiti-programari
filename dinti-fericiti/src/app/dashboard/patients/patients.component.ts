@@ -10,7 +10,7 @@ import { Patient } from 'src/app/models/patient';
 export class PatientsComponent implements OnInit {
 
   // Properties
-  patients:any[] = [];
+  patients: any[] = [];
 
   constructor(private patientService: PatientService) { }
 
