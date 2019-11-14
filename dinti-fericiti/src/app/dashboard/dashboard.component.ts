@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription } from 'rxjs';
@@ -17,7 +16,6 @@ import { RoomService } from '../services/room.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
   // Properties
   view = 'day';
   viewDate: Date = new Date();
@@ -36,13 +34,19 @@ export class DashboardComponent implements OnInit {
   updateForm: FormGroup;
   pacient: Patient;
   public pacientId: string;
-  updatedPacient: any;
+  updatedPacient: Patient;
+  updatedAppointment: Programare;
   subsUpdate: Subscription;
+  pacientExists: boolean;
 
-  constructor(private appointmentService: AppointmentService,
-              private doctorService: DoctorService, private dialog: MatDialog,
-              private fb: FormBuilder, private pacientService: PatientService,
-              private roomService: RoomService) { }
+  constructor(
+    private appointmentService: AppointmentService,
+    private doctorService: DoctorService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private pacientService: PatientService,
+    private roomService: RoomService
+  ) {}
 
   ngOnInit() {
     this.loadAppointments();
@@ -55,6 +59,9 @@ export class DashboardComponent implements OnInit {
   // Open dialog for adding a new event
   openDialog(addContent): void {
     this.dialogRef = this.dialog.open(addContent);
+
+    // Clear local storage
+    localStorage.removeItem('pacientId');
   }
 
   onNoClick(): void {
@@ -74,7 +81,6 @@ export class DashboardComponent implements OnInit {
   loadRooms() {
     this.roomService.getRooms().subscribe(data => {
       this.rooms = data;
-      console.log('Rooms', this.rooms);
     });
   }
 
@@ -82,7 +88,6 @@ export class DashboardComponent implements OnInit {
   loadDoctors() {
     this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
-      console.log('Doctors: ', data);
     });
   }
 
@@ -101,6 +106,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // Create form for adding new event/appointment
   createForm() {
     this.form = this.fb.group({
       id: [''],
@@ -110,16 +116,17 @@ export class DashboardComponent implements OnInit {
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
       cabinet: [''],
-      emailPacient: ['', [Validators.required, Validators.email]],
+      emailPacient: ['', Validators.email],
       end: ['', Validators.required]
     });
   }
 
+  // Create form for updating an existent event/appointment
   createUpdateForm() {
     this.updateForm = this.fb.group({
       namePacient: ['', Validators.required],
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
-      emailPacient: ['', [Validators.required, Validators.email]],
+      emailPacient: ['', Validators.email],
       title: ['', Validators.required],
       cabinet: [''],
       medic: ['', Validators.required]
@@ -130,42 +137,66 @@ export class DashboardComponent implements OnInit {
   addAppointment() {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
-      console.log('Add event', this.event);
 
       this.pacient = {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
         emailPacient: this.event.emailPacient,
-        medic: this.event.medic,
         start: this.event.start,
+        medic: this.event.medic,
         title: this.event.title
       };
 
-      // Check if the patient already exists in database
-      this.pacientService.patientExists(this.pacient.phonePacient);
+      this.pacientService.getPatientByName(this.pacient.name).subscribe(res => {
+        if (res.length > 0) {
+          localStorage.setItem('pacientId', res[0].id);
+        }
+      });
 
-      this.pacientService.addPacient(this.pacient);
-      this.appointmentService.addAppointment(this.event)
-        .then(() => {
-          this.dialogRef.close();
-        });
+      // If patient exists return true, otherwise return false
+      this.pacientService.patientExists(this.event.phonePacient).then(res => {
+        this.pacientExists = res;
+      });
+
+      // Get the patient Id from localstorage
+      this.pacientId = localStorage.getItem('pacientId');
+
+      // If patient exists update values from patient
+      if (this.pacientExists) {
+        console.log(this.pacientId);
+        this.pacientService
+          .updatePatient(this.pacientId, this.pacient)
+          .then()
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        // Otherwise create a new patient in 'Patient' collection
+        this.pacientService.addPacient(this.pacient);
+      }
+
+      // Add event/appointment to 'Programari' collection
+      this.appointmentService.addAppointment(this.event).then(() => {
+        this.dialogRef.close();
+      });
     }
   }
 
   // Open dialog for editing
   openEditDialog({ event }: { event: Programare }, editContent) {
+    // Clear local storage
+    // localStorage.removeItem('pacientId');
+    this.pacientService.getPatientByName(event.namePacient).subscribe(res => {
+      if (res.length > 0) {
+        localStorage.setItem('pacientId', res[0].id);
+        console.log('pacient id', res[0].id);
+      } else {
+        localStorage.removeItem('pacientId');
+      }
+    });
+
     this.dialogRef = this.dialog.open(editContent);
     this.updatedEvent = event;
-
-    // tslint:disable-next-line: max-line-length
-    this.updatedPacient = {
-      name: event.namePacient,
-      phonePacient: event.phonePacient,
-      emailPacient: event.emailPacient,
-      title: event.title,
-      medic: event.medic
-    };
-    console.log(this.updatedPacient);
 
     // Set values from event to dialog
     this.updateForm.controls.namePacient.setValue(event.namePacient);
@@ -174,6 +205,8 @@ export class DashboardComponent implements OnInit {
     this.updateForm.controls.medic.setValue(event.medic);
     this.updateForm.controls.cabinet.setValue(event.cabinet);
     this.updateForm.controls.emailPacient.setValue(event.emailPacient);
+    // this.updateForm.controls.start.setValue(event.start);
+    // this.updateForm.controls.end.setValue(event.end);
 
     console.log('Edit event', event.id);
     console.log('Edit event', event);
@@ -182,11 +215,37 @@ export class DashboardComponent implements OnInit {
   // Update an existing appointment
   updateAppointment() {
     if (this.updateForm.valid) {
-      this.updateAppointment = Object.assign({}, this.updateForm.value);
+      this.updatedAppointment = Object.assign({}, this.updateForm.value);
 
-      this.appointmentService.updateAppointment(this.updatedEvent.id, this.updateAppointment)
+      // tslint:disable-next-line: max-line-length
+      this.updatedPacient = {
+        name: this.updatedAppointment.namePacient,
+        phonePacient: this.updatedAppointment.phonePacient,
+        emailPacient: this.updatedAppointment.emailPacient,
+        title: this.updatedAppointment.title,
+        medic: this.updatedAppointment.medic
+      };
+      console.log(this.updatedPacient);
+
+      console.log(this.updatedPacient);
+      this.pacientId = localStorage.getItem('pacientId');
+      if (this.pacientId !== null) {
+        this.pacientService.updatePatient(this.pacientId, this.updatedPacient)
+        .then()
+        .catch(err => {
+          console.log(err);
+        });
+      } else {
+        this.pacientService.addPacient(this.updatedPacient);
+      }
+
+      this.appointmentService
+        .updateAppointment(this.updatedEvent.id, this.updatedAppointment)
         .then(() => {
           this.dialogRef.close();
+        })
+        .catch(err => {
+          console.log(err);
         });
     }
   }
@@ -199,28 +258,40 @@ export class DashboardComponent implements OnInit {
   }
 
   getNamePacientErrorMessage() {
-    return this.form.controls.namePacient.hasError('required') ? 'You must enter a value' : '';
+    return this.form.controls.namePacient.hasError('required')
+      ? 'You must enter a value'
+      : '';
   }
 
   getPhoneErrorMessage() {
-    return this.form.controls.phonePacient.hasError('required') ? 'You must enter a value' :
-      this.form.controls.phonePacient.hasError('maxlength') ? 'Maximum length is 10 character' : '';
+    return this.form.controls.phonePacient.hasError('required')
+      ? 'You must enter a value'
+      : this.form.controls.phonePacient.hasError('maxlength')
+      ? 'Maximum length is 10 character'
+      : '';
   }
 
   getEmailErrorMessage() {
-    return this.form.controls.emailPacient.hasError('required') ? 'You must enter a value' :
-          this.form.controls.emailPacient.hasError('email') ? 'Insert a valid email' : '';
+    return this.form.controls.emailPacient.hasError('email')
+      ? 'Insert a valid email'
+      : '';
   }
 
   getSubjectErrorMessage() {
-    return this.form.controls.title.hasError('required') ? 'You must enter a value' : '';
+    return this.form.controls.title.hasError('required')
+      ? 'You must enter a value'
+      : '';
   }
 
   getDoctorErrorMessage() {
-    return this.form.controls.medic.hasError('required') ? 'You must enter a value' : '';
+    return this.form.controls.medic.hasError('required')
+      ? 'You must enter a value'
+      : '';
   }
 
   getEndErrorMessage() {
-    return this.form.controls.end.hasError('required') ? 'You must enter a value' : '';
+    return this.form.controls.end.hasError('required')
+      ? 'You must enter a value'
+      : '';
   }
 }

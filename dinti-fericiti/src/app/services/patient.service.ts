@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Patient } from '../models/patient';
 
 @Injectable({
   providedIn: 'root'
@@ -41,13 +42,12 @@ export class PatientService {
 
   // Get patient by name
   getPatientByName(name) {
-     this.db.collection('Pacienti', ref => ref.where('name', '==', name)).snapshotChanges().pipe(
-      map(patients => patients.map(patient => {
-        return {
-         id: patient.payload.doc.id
-        };
-      }))
-    );
+    return this.db.collection('Pacienti', ref => ref.where('name', '==', name)).snapshotChanges().pipe(
+        map(patients => patients.map(patient => {
+          return {
+           id: patient.payload.doc.id
+          };
+        })));
   }
 
   // Update patient information
@@ -60,7 +60,27 @@ export class PatientService {
   }
 
   // Check if patient already exists in database by phoneNumber
-  patientExists(phone){
-    return this.db.collection('Pacienti');
+  patientExists(phone) {
+    return this.db.firestore.collection('Pacienti').where('phonePacient', '==', phone).get()
+                .then(snap => {
+                  if (snap.empty) {
+                      console.log(snap);
+                      return false;
+                  } else {
+                    return true;
+                  }
+                });
+  }
+
+  patientAppointments(name) {
+    return this.db.firestore.collection('Pacienti')
+              .where('name', '==', name)
+              .get()
+              .then( snap => {
+                snap.forEach(doc => {
+                  const data = doc.data() as Patient;
+                  console.log('Data' + JSON.stringify(data));
+                });
+              });
   }
 }

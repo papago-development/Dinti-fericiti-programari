@@ -40,6 +40,8 @@ export class DoctorComponent implements OnInit {
   clickedDate: Date;
   patient: Patient;
 
+  interventiiList;
+
   constructor(
     private roomService: RoomService,
     private appointmentService: AppointmentService,
@@ -163,6 +165,7 @@ export class DoctorComponent implements OnInit {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
         emailPacient: this.event.emailPacient,
+
         medic: this.event.medic,
         start: this.event.start,
         title: this.event.title

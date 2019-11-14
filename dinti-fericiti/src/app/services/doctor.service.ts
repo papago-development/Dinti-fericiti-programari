@@ -15,7 +15,7 @@ export class DoctorService {
       .collection('Users', ref => ref.where('role', '==', 'user'))
       .valueChanges()
       .pipe(
-        tap(doctors => console.log('Doctors', doctors)),
+        // tap(doctors => console.log('Doctors', doctors)),
         map(doctors =>
           doctors.map(data => {
             return data;
