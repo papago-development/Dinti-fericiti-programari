@@ -1,9 +1,11 @@
 <br>
 <div class="container">
+    <input type="file" (change)="onFileSelected($event)">
+
   <mat-card>
     <mat-card-title>
       Detalii pacient {{ this.patient?.name }}
-      <button mat-raised-button class="btn btn-primary" type="button" class="rightButton">Incarca document</button>
+      <!-- <button mat-raised-button class="btn btn-primary" type="button" class="rightButton btn btn-info" (change)="onFileSelected($event)">Incarca document</button> -->
     </mat-card-title>
     <mat-card-subtitle>
       <form [formGroup]="form" (ngSubmit)="updatePatient()" id="pacient">

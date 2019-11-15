@@ -154,14 +154,12 @@ export class DashboardComponent implements OnInit {
         // If patient exists update values from patient
         if (this.pacientExists) {
           this.pacientService.getPatientByName(this.event.namePacient).subscribe(res => {
-            console.log('ress', res);
             if (res.length > 0) {
-              console.log(res[0]);
               localStorage.setItem('pacientId', res[0]);
 
               // Get the patient Id from localstorage
               this.pacientId = localStorage.getItem('pacientId');
-              console.log(this.pacientId);
+
               this.pacientService
                 .updatePatient(this.pacientId, this.pacient)
                 .then(() => {
@@ -180,16 +178,18 @@ export class DashboardComponent implements OnInit {
       });
 
       // Add event/appointment to 'Programari' collection
-      this.appointmentService.addAppointment(this.event).then(() => {
-        this.dialogRef.close();
-      });
+      this.appointmentService.addAppointment(this.event)
+          .then(() => {
+            this.dialogRef.close();
+          })
+          .catch(err => {
+            console.log(err);
+          });
     }
   }
 
   // Open dialog for editing
   openEditDialog({ event }: { event: Programare }, editContent) {
-    // Clear local storage
-    // localStorage.removeItem('pacientId');
     this.pacientService.getPatientByName(event.namePacient).subscribe(res => {
       if (res.length > 0) {
         localStorage.setItem('pacientId', res.toString());
@@ -229,9 +229,7 @@ export class DashboardComponent implements OnInit {
         title: this.updatedAppointment.title,
         medic: this.updatedAppointment.medic
       };
-      console.log(this.updatedPacient);
 
-      console.log(this.updatedPacient);
       this.pacientId = localStorage.getItem('pacientId');
       if (this.pacientId !== null) {
         this.pacientService

@@ -45,7 +45,7 @@ export class PatientComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  // Create form for updating patinet information
+  // Create form for updating patient information
   createForm() {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -57,8 +57,16 @@ export class PatientComponent implements OnInit, OnDestroy {
   // Method for updating the patient information
   updatePatient() {
     this.patientToUpdate = Object.assign({}, this.form.value);
-    this.patientService.updatePatient(this.patientId, this.patientToUpdate).then( res => {
+    this.patientService.updatePatient(this.patientId, this.patientToUpdate)
+    .then( res => {
       console.log('Information updated');
+    })
+    .catch(err => {
+      console.log(err);
     });
+  }
+
+  onFileSelected(event) {
+    console.log(event);
   }
 }

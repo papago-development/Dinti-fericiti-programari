@@ -16,7 +16,10 @@ import {  MatInputModule,
           MatDatepickerModule,
           MatNativeDateModule,
           MatCardModule,
-          MatSelectModule} from '@angular/material';
+          MatSelectModule,
+          MatTableModule,
+          MatPaginatorModule,
+          MatSortModule} from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -74,7 +77,10 @@ import { HistoryAppointmentComponent } from './dashboard/history-appointment/his
        MatDatepickerModule,
        MatNativeDateModule,
        MatCardModule,
-       MatSelectModule
+       MatSelectModule,
+       MatTableModule,
+       MatPaginatorModule,
+       MatSortModule
       ],
   providers: [
   ],
