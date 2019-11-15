@@ -42,12 +42,16 @@ export class PatientService {
 
   // Get patient by name
   getPatientByName(name) {
-    return this.db.collection('Pacienti', ref => ref.where('name', '==', name)).snapshotChanges().pipe(
-        map(patients => patients.map(patient => {
-          return {
-           id: patient.payload.doc.id
-          };
-        })));
+    return this.db.collection('Pacienti', ref => ref.where('name', '==', name))
+              .snapshotChanges()
+               .pipe(
+                 map(patient => {
+                   return patient.map(p => {
+                      const id = p.payload.doc.id;
+                      return id;
+                   });
+                 })
+               );
   }
 
   // Update patient information
@@ -55,8 +59,12 @@ export class PatientService {
     return this.db.collection('Pacienti').doc(id).update(updatePatient);
   }
 
-  getPatientEventById(id): Observable<any> {
-    return this.db.collection('Pacienti').doc(id).snapshotChanges();
+  getPatientEventById(id) {
+    return this.db.collection('Pacienti').doc(id).snapshotChanges().pipe(
+      map(events => {
+        const data = events.payload.data();
+        return data;
+      }));
   }
 
   // Check if patient already exists in database by phoneNumber

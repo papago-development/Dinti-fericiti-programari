@@ -21,9 +21,11 @@ export class PatientComponent implements OnInit, OnDestroy {
   sub: Subscription;
 
   constructor(private patientService: PatientService, private route: ActivatedRoute,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder) {
+               }
 
   ngOnInit() {
+
     this.patientId = this.route.snapshot.paramMap.get('id');
 
     this.createForm();
@@ -35,7 +37,7 @@ export class PatientComponent implements OnInit, OnDestroy {
       // Set values for form field with information about patient
       this.form.controls.name.setValue(this.patient.name);
       this.form.controls.phonePacient.setValue(this.patient.phonePacient);
-     // this.form.controls.title.setValue(this.patient.title);
+      this.form.controls.title.setValue(this.patient.title);
     });
   }
 

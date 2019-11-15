@@ -87,4 +87,17 @@ export class AppointmentService {
       }))
     );
   }
+
+  getAppointmentByPatientName(name) {
+    return this.db.collection('Programari', ref => ref.where('namePacient', '==', name))
+                .snapshotChanges()
+                .pipe(
+                  map(events => events.map(event => {
+                    return {
+                      title: event.payload.doc.data()['title'],
+                      start: event.payload.doc.data()['start'].toDate()
+                    };
+                  }))
+                );
+  }
 }

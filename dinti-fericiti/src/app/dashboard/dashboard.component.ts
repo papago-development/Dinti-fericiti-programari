@@ -147,33 +147,37 @@ export class DashboardComponent implements OnInit {
         title: this.event.title
       };
 
-      this.pacientService.getPatientByName(this.pacient.name).subscribe(res => {
-        if (res.length > 0) {
-          localStorage.setItem('pacientId', res[0].id);
+      // If patient exists return true, otherwise return false
+      this.pacientService.patientExists(this.event.phonePacient).then(data => {
+        this.pacientExists = data;
+
+        // If patient exists update values from patient
+        if (this.pacientExists) {
+          this.pacientService.getPatientByName(this.event.namePacient).subscribe(res => {
+            console.log('ress', res);
+            if (res.length > 0) {
+              console.log(res[0]);
+              localStorage.setItem('pacientId', res[0]);
+
+              // Get the patient Id from localstorage
+              this.pacientId = localStorage.getItem('pacientId');
+              console.log(this.pacientId);
+              this.pacientService
+                .updatePatient(this.pacientId, this.pacient)
+                .then(() => {
+                  console.log('Successfully updated');
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            }
+          });
+        } else {
+          // Otherwise create a new patient in 'Patient' collection
+          this.pacientService.addPacient(this.pacient);
+          console.log('Added');
         }
       });
-
-      // If patient exists return true, otherwise return false
-      this.pacientService.patientExists(this.event.phonePacient).then(res => {
-        this.pacientExists = res;
-      });
-
-      // Get the patient Id from localstorage
-      this.pacientId = localStorage.getItem('pacientId');
-
-      // If patient exists update values from patient
-      if (this.pacientExists) {
-        console.log(this.pacientId);
-        this.pacientService
-          .updatePatient(this.pacientId, this.pacient)
-          .then()
-          .catch(err => {
-            console.log(err);
-          });
-      } else {
-        // Otherwise create a new patient in 'Patient' collection
-        this.pacientService.addPacient(this.pacient);
-      }
 
       // Add event/appointment to 'Programari' collection
       this.appointmentService.addAppointment(this.event).then(() => {
@@ -188,8 +192,8 @@ export class DashboardComponent implements OnInit {
     // localStorage.removeItem('pacientId');
     this.pacientService.getPatientByName(event.namePacient).subscribe(res => {
       if (res.length > 0) {
-        localStorage.setItem('pacientId', res[0].id);
-        console.log('pacient id', res[0].id);
+        localStorage.setItem('pacientId', res.toString());
+        console.log('pacient id', res.toString());
       } else {
         localStorage.removeItem('pacientId');
       }
@@ -230,11 +234,14 @@ export class DashboardComponent implements OnInit {
       console.log(this.updatedPacient);
       this.pacientId = localStorage.getItem('pacientId');
       if (this.pacientId !== null) {
-        this.pacientService.updatePatient(this.pacientId, this.updatedPacient)
-        .then()
-        .catch(err => {
-          console.log(err);
-        });
+        this.pacientService
+          .updatePatient(this.pacientId, this.updatedPacient)
+          .then(() => {
+            console.log('successfully update');
+          })
+          .catch(err => {
+            console.log(err);
+          });
       } else {
         this.pacientService.addPacient(this.updatedPacient);
       }
