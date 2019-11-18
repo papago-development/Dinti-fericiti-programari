@@ -65,8 +65,4 @@ export class PatientComponent implements OnInit, OnDestroy {
       console.log(err);
     });
   }
-
-  onFileSelected(event) {
-    console.log(event);
-  }
 }

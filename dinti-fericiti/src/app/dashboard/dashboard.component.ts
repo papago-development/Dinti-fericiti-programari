@@ -117,7 +117,8 @@ export class DashboardComponent implements OnInit {
       start: [this.clickedDate, Validators.required],
       cabinet: [''],
       emailPacient: ['', Validators.email],
-      end: ['', Validators.required]
+      end: ['', Validators.required],
+
     });
   }
 
@@ -144,7 +145,11 @@ export class DashboardComponent implements OnInit {
         emailPacient: this.event.emailPacient,
         start: this.event.start,
         medic: this.event.medic,
-        title: this.event.title
+        title: this.event.title,
+        files: [{
+          filename: '',
+          url: ''
+        }]
       };
 
       // If patient exists return true, otherwise return false

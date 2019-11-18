@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {  MatInputModule,
@@ -37,6 +38,7 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { PatientsComponent } from './dashboard/patients/patients.component';
 import { PatientComponent } from './dashboard/patient/patient.component';
 import { HistoryAppointmentComponent } from './dashboard/history-appointment/history-appointment.component';
+import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
 
 
 @NgModule({
@@ -53,7 +55,8 @@ import { HistoryAppointmentComponent } from './dashboard/history-appointment/his
       DoctorComponent,
       PatientsComponent,
       PatientComponent,
-      HistoryAppointmentComponent
+      HistoryAppointmentComponent,
+      UploadFileComponent
    ],
    imports: [
       BrowserModule,
@@ -62,6 +65,7 @@ import { HistoryAppointmentComponent } from './dashboard/history-appointment/his
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule,
       AngularFireAuthModule,
+      AngularFireStorageModule,
       RouterModule.forRoot(appRoutes),
       CalendarModule.forRoot({
          provide: DateAdapter,

@@ -1,0 +1,9 @@
+<br>
+<div class="container">
+  <input type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf">
+  <div *ngFor="let item of this.files">
+    <div>
+      {{ item.filename}}
+    </div>
+  </div>
+</div>

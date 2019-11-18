@@ -1,4 +1,6 @@
-export interface Users {
+import { Files } from './files';
+
+export class Users {
   id: number;
   username: string;
   name: string;

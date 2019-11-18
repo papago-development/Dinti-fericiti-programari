@@ -1,4 +1,5 @@
 import { Interventie } from './interventie';
+import { Files } from './files';
 
 export class Patient {
   name: string;
@@ -7,4 +8,5 @@ export class Patient {
   medic: string;
   start?: Date;
   emailPacient: string;
+  files: Files[] = [];
 }

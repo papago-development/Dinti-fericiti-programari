@@ -1,5 +1,7 @@
 <div class="container" id="dashboard">
-  <app-calendar-header [(view)]="view" [(viewDate)]="viewDate"></app-calendar-header>
+  <app-calendar-header
+            [(view)]="view"
+            [(viewDate)]="viewDate"></app-calendar-header>
   <hr>
   <div *ngFor="let doctor of doctors" class="doctors">
     <input type="checkbox" (change)="filterData($event, doctor.name)"> Dr. {{ doctor.name }}
@@ -7,17 +9,27 @@
   <hr>
 
   <div [ngSwitch]="view">
-    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
-      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-      (eventClicked)="openEditDialog($event, editContent)">
+    <mwl-calendar-month-view  *ngSwitchCase="'month'"
+                              [viewDate]="viewDate"
+                              [events]="events"
+                              (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+                              (eventClicked)="openEditDialog($event, editContent)">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events"
-      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-      (eventClicked)="openEditDialog($event, editContent)">
+    <mwl-calendar-week-view *ngSwitchCase="'week'"
+                            [viewDate]="viewDate"
+                            [events]="events"
+                            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+                            (eventClicked)="openEditDialog($event, editContent)"
+                            [dayStartHour]="8"
+                            [dayEndHour]="22">
     </mwl-calendar-week-view>
-    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events"
-      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-      (eventClicked)="openEditDialog($event, editContent)">
+    <mwl-calendar-day-view  *ngSwitchCase="'day'"
+                            [viewDate]="viewDate"
+                            [events]="events"
+                            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+                            (eventClicked)="openEditDialog($event, editContent)"
+                            [dayStartHour]="8"
+                            [dayEndHour]="22">
     </mwl-calendar-day-view>
   </div>
 </div>
