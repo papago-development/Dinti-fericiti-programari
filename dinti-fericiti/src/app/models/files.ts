@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
 export interface Files {
-  url: string;
+  url: Observable<string>;
   filename: string;
 }

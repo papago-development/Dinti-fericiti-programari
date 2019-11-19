@@ -232,7 +232,11 @@ export class DashboardComponent implements OnInit {
         phonePacient: this.updatedAppointment.phonePacient,
         emailPacient: this.updatedAppointment.emailPacient,
         title: this.updatedAppointment.title,
-        medic: this.updatedAppointment.medic
+        medic: this.updatedAppointment.medic,
+        files: [{
+          filename: '',
+          url: ''
+        }]
       };
 
       this.pacientId = localStorage.getItem('pacientId');

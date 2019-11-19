@@ -165,10 +165,13 @@ export class DoctorComponent implements OnInit {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
         emailPacient: this.event.emailPacient,
-
         medic: this.event.medic,
         start: this.event.start,
-        title: this.event.title
+        title: this.event.title,
+        files: [{
+          filename: '',
+          url: ''
+        }]
       };
 
       this.patientService.addPacient(this.patient);
