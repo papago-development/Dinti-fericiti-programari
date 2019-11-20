@@ -21,6 +21,8 @@ import {  MatInputModule,
           MatTableModule,
           MatPaginatorModule,
           MatSortModule} from '@angular/material';
+import { CommonModule } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -30,7 +32,6 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
 import { CalendarHeaderComponent } from './calendar-header/calendar-header.component';
-import { CommonModule } from '@angular/common';
 import { DoctorsComponent } from './dashboard/doctors/doctors.component';
 import { AddDoctorComponent } from './dashboard/add-doctor/add-doctor.component';
 import { AddRoomComponent } from './dashboard/add-room/add-room.component';
@@ -84,7 +85,8 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
        MatSelectModule,
        MatTableModule,
        MatPaginatorModule,
-       MatSortModule
+       MatSortModule,
+       ToastrModule.forRoot()
       ],
   providers: [
   ],

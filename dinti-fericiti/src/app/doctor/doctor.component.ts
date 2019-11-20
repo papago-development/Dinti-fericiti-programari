@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-doctor',
@@ -170,7 +171,7 @@ export class DoctorComponent implements OnInit {
         title: this.event.title,
         files: [{
           filename: '',
-          url: ''
+          url: null
         }]
       };
 

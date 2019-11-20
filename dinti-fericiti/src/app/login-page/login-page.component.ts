@@ -41,8 +41,10 @@ export class LoginPageComponent implements OnInit {
     if (this.loginForm.valid) {
       this.user = Object.assign({}, this.loginForm.value);
       this.authService.login(this.user.username, this.user.password);
+
     }
   }
+
   getEmailErrorMessage() {
     return  this.loginForm.controls.username.hasError('required') ? 'You must enter a value' :
             this.loginForm.controls.username.hasError('email') ? 'Not a valid email' :

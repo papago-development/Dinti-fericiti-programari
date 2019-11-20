@@ -1,5 +1,4 @@
 <form [formGroup]="loginForm" (ngSubmit)="login()" class="login">
-
   <mat-form-field id="emailLogin">
     <input matInput #input formControlName='username' placeholder="Email">
     <mat-error *ngIf="!this.loginForm.controls.username.valid">{{ getEmailErrorMessage() }}</mat-error>
@@ -9,7 +8,7 @@
     <input matInput #input type="password" formControlName="password" placeholder="Password">
     <mat-error *ngIf="!this.loginForm.controls.password.valid">{{ getPasswordErrorMessage() }}</mat-error>
   </mat-form-field>
-
+  <br>
   <div class="form-group text-center">
     <button mat-raised-button class="btn btn-success" type="submit" [disabled]="!loginForm.valid">Login</button>
   </div>

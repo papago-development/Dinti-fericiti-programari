@@ -9,3 +9,16 @@
 #emailLogin {
   width: 100%;
 }
+
+@media only screen and (max-width: 450px) {
+  .login {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 25px;
+  }
+  #emailLogin {
+    width: 100%;
+  }
+}

@@ -7,8 +7,10 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { RoomService } from '../services/room.service';
+import { truncate } from 'fs';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,6 +40,10 @@ export class DashboardComponent implements OnInit {
   updatedAppointment: Programare;
   subsUpdate: Subscription;
   pacientExists: boolean;
+
+  checked: boolean = true;
+
+  checkboxes: any[] = [];
 
   constructor(
     private appointmentService: AppointmentService,
@@ -88,21 +94,45 @@ export class DashboardComponent implements OnInit {
   loadDoctors() {
     this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
+      // tslint:disable-next-line: forin
+      for (const i in data) {
+        this.checkboxes.push({name: data[i].name, checked: true});
+      }
+      console.log('Checkboxes load doctors: ', this.checkboxes);
     });
   }
 
   // Filter events after doctor
   filterData(event, doctor) {
     // if checkbox is checked then return the list of filtered events
-    if (event.target.checked) {
-      this.doctor = doctor;
+    if (event.target.checked === false) {
+      this.checkboxes.forEach(val => {
+        if (val.name === doctor) {
+          val.checked = false;
+        }
 
+        this.doctor = doctor;
+
+
+      });
+      this.events = this.events.filter(m => m.medic !== this.doctor);
+      console.log('Filtered events: ', this.events);
+      console.log('checkboxes filter data', this.checkboxes);
+
+     // return this.events;
+    } else if (event.target.checked === true) {
+      this.checkboxes.forEach(val => {
+        if (val.name === doctor) {
+          val.checked = true;
+        }
+        this.doctor = doctor;
+
+      });
       this.events = this.events.filter(m => m.medic === this.doctor);
       console.log('Filtered events: ', this.events);
       return this.events;
-    } else {
       // otherwise return the whole list of events
-      this.loadAppointments();
+      //this.loadAppointments();
     }
   }
 
@@ -111,7 +141,7 @@ export class DashboardComponent implements OnInit {
     this.form = this.fb.group({
       id: [''],
       namePacient: ['', Validators.required],
-      phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
+      phonePacient: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       title: ['', Validators.required],
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
@@ -148,7 +178,7 @@ export class DashboardComponent implements OnInit {
         title: this.event.title,
         files: [{
           filename: '',
-          url: ''
+          url: null
         }]
       };
 
@@ -235,7 +265,7 @@ export class DashboardComponent implements OnInit {
         medic: this.updatedAppointment.medic,
         files: [{
           filename: '',
-          url: ''
+          url: null
         }]
       };
 

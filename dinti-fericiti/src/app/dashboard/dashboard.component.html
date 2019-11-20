@@ -3,9 +3,14 @@
             [(view)]="view"
             [(viewDate)]="viewDate"></app-calendar-header>
   <hr>
-  <div *ngFor="let doctor of doctors" class="doctors">
-    <input type="checkbox" (change)="filterData($event, doctor.name)"> Dr. {{ doctor.name }}
+  <div *ngFor="let checkbox of checkboxes" class="doctors">
+    <input  type="checkbox" [(ngModel)]="checkbox.checked"
+            [value]="checkbox.name" (change)="filterData($event, checkbox.name)">
+            Dr. {{ checkbox.name }}
   </div>
+  <!-- <div *ngFor="let doctor of doctors" class="doctors">
+    <input type="checkbox" [value]="checked" (change)="filterData($event, doctor.name)"> Dr. {{ doctor.name }}
+  </div> -->
   <hr>
 
   <div [ngSwitch]="view">

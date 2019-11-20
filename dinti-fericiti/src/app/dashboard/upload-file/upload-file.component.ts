@@ -20,7 +20,7 @@ export class UploadFileComponent implements OnInit {
   counter: any = 0;
   files: Array<Files> = [];
   user: any[] = [];
-  url: Observable<string>;
+  url: Observable<string | null>;
   patientId;
 
   dataSource = new MatTableDataSource<Patient>();
@@ -49,10 +49,9 @@ export class UploadFileComponent implements OnInit {
   }
 
   onFileSelected(event) {
-
     // create a reference to the storage bucket location
     const file = event.target.files[0];
-    const filePath = this.patientId;
+    const filePath = '/' + file.name;
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
 
