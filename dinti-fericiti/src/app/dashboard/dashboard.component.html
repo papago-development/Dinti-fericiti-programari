@@ -25,12 +25,14 @@
                             [events]="events"
                             (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
                             (eventClicked)="openEditDialog($event, editContent)"
+                            [locale]="locale"
                             [dayStartHour]="8"
                             [dayEndHour]="22">
     </mwl-calendar-week-view>
     <mwl-calendar-day-view  *ngSwitchCase="'day'"
                             [viewDate]="viewDate"
                             [events]="events"
+                            [locale]="locale"
                             (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
                             (eventClicked)="openEditDialog($event, editContent)"
                             [dayStartHour]="8"

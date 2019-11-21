@@ -9,12 +9,19 @@ import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Observable } from 'rxjs';
 import { RoomService } from '../services/room.service';
-import { analytics } from 'firebase';
+import { CalendarDateFormatter } from 'angular-calendar';
+import { CustomDateFormatter } from '../customDate/customDateFormatter';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: CustomDateFormatter
+    }
+  ]
 })
 export class DashboardComponent implements OnInit {
   // Properties
@@ -44,6 +51,7 @@ export class DashboardComponent implements OnInit {
 
   checkboxes: any[] = [];
   filteredEvents: Array<any> = [];
+  locale: string = 'en';
 
   constructor(
     private appointmentService: AppointmentService,

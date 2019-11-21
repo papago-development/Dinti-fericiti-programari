@@ -11,11 +11,19 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
+import { CalendarDateFormatter } from 'angular-calendar';
+import { CustomDateFormatter } from '../customDate/customDateFormatter';
 
 @Component({
   selector: 'app-doctor',
   templateUrl: './doctor.component.html',
-  styleUrls: ['./doctor.component.css']
+  styleUrls: ['./doctor.component.css'],
+  providers:[
+    {
+      provide: CalendarDateFormatter,
+      useClass: CustomDateFormatter
+    }
+  ]
 })
 export class DoctorComponent implements OnInit {
   // Properties
@@ -41,6 +49,7 @@ export class DoctorComponent implements OnInit {
   patient: Patient;
 
   interventiiList;
+  locale: string = 'en';
 
   checkboxes: any[] = [];
   filteredEvents: any[] = [];
