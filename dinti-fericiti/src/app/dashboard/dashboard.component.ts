@@ -9,8 +9,7 @@ import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Observable } from 'rxjs';
 import { RoomService } from '../services/room.service';
-import { truncate } from 'fs';
-import { forEach } from '@angular/router/src/utils/collection';
+import { analytics } from 'firebase';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +21,7 @@ export class DashboardComponent implements OnInit {
   view = 'day';
   viewDate: Date = new Date();
 
-  events: any[] = [];
+  events: Array<any> = [];
   event: Programare;
   updatedEvent: any;
   doctors: Doctor[] = [];
@@ -44,6 +43,7 @@ export class DashboardComponent implements OnInit {
   checked: boolean = true;
 
   checkboxes: any[] = [];
+  filteredEvents: Array<any> = [];
 
   constructor(
     private appointmentService: AppointmentService,
@@ -94,6 +94,7 @@ export class DashboardComponent implements OnInit {
   loadDoctors() {
     this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
+
       // tslint:disable-next-line: forin
       for (const i in data) {
         this.checkboxes.push({name: data[i].name, checked: true});
@@ -110,29 +111,41 @@ export class DashboardComponent implements OnInit {
         if (val.name === doctor) {
           val.checked = false;
         }
-
         this.doctor = doctor;
-
-
       });
       this.events = this.events.filter(m => m.medic !== this.doctor);
       console.log('Filtered events: ', this.events);
       console.log('checkboxes filter data', this.checkboxes);
 
-     // return this.events;
-    } else if (event.target.checked === true) {
+      return this.events;
+    } else {
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
           val.checked = true;
         }
-        this.doctor = doctor;
+      });
+      this.doctor = doctor;
+
+      this.appointmentService.getAppointments().subscribe(data => {
+        data.forEach(item => {
+          if (item.medic === this.doctor) {
+              // this.events = {
+
+              // };
+          }
+        });
+        // if (data.medic === this.doctor) {
+
+        // this.events = data;
+        console.log('Events', this.events);
+        // }
 
       });
-      this.events = this.events.filter(m => m.medic === this.doctor);
-      console.log('Filtered events: ', this.events);
+
+      console.log('checkboxes filter data', this.checkboxes);
+
+
       return this.events;
-      // otherwise return the whole list of events
-      //this.loadAppointments();
     }
   }
 

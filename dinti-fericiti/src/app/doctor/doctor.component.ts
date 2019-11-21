@@ -11,7 +11,6 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-doctor',
@@ -23,7 +22,7 @@ export class DoctorComponent implements OnInit {
   view = 'day';
   viewDate: Date = new Date();
 
-  events: any[] = [];
+  events;
   rooms: Room[] = [];
   room: Room;
   doctorInfo: Users;
@@ -42,6 +41,12 @@ export class DoctorComponent implements OnInit {
   patient: Patient;
 
   interventiiList;
+
+  checkboxes: any[] = [];
+  filteredEvents: any[] = [];
+  pacientExists: boolean;
+  pacientId: string;
+  updatedPacient: Patient;
 
   constructor(
     private roomService: RoomService,
@@ -85,33 +90,68 @@ export class DoctorComponent implements OnInit {
   loadRooms() {
     this.roomService.getRooms().subscribe(data => {
       this.rooms = data;
+        // tslint:disable-next-line: forin
+      for (const i in data) {
+        this.checkboxes.push({ name: data[i].name, checked: true });
+      }
     });
   }
 
   // Events filtered by rooms
   filterData(event, room) {
-    if (event.target.checked) {
-      this.room = room;
-      this.events = this.events.filter(r => r.cabinet === room);
+    if (event.target.checked === false) {
+      this.checkboxes.forEach(val => {
+        if (val.name === room) {
+          val.checked = false;
+        }
+        this.room = room;
+      });
+      this.events = this.events.filter(r => r.cabinet !== this.room);
+      console.log('Filtered events: ', this.events);
+      console.log('checkboxes filter data', this.checkboxes);
       return this.events;
     } else {
-      this.loadAppointments();
+      this.checkboxes.forEach(val => {
+        if (val.name === room) {
+          val.checked = true;
+        }
+      });
+      this.room = room;
+
+      console.log('checkboxes filter data', this.checkboxes);
+      this.appointmentService.getAppointmentByDoctor(this.userName).subscribe(data => {
+        this.events = data.filter(r => r.cabinet === this.room);
+        console.log('Events', this.events);
+      });
+      return this.events;
     }
   }
 
   // The method is used to make events unclickable is doesn't belong to the current user
-  eventClicked({ event }: { event: Programare }, addContent): void {
+  eventClicked({ event }: { event: Programare }): void {
     console.log(event);
   }
 
   // Open dialog
   openDialog(addContent) {
     this.dialogRef = this.dialog.open(addContent);
+
+    // Clear local storage
+    localStorage.removeItem('pacientId');
   }
 
   // Open edit dialog
   openEditDialog({ event }: { event: Programare}, editContent) {
     if (event.medic === this.authService.currentUser.name) {
+      this.patientService.getPatientByName(event.namePacient).subscribe(res => {
+        if (res.length > 0) {
+          localStorage.setItem('pacientId', res.toString());
+          console.log('pacient id', res.toString());
+        } else {
+          localStorage.removeItem('pacientId');
+        }
+      });
+
       this.dialogRef = this.dialog.open(editContent);
       this.appointment = event;
       console.log(event);
@@ -175,12 +215,43 @@ export class DoctorComponent implements OnInit {
         }]
       };
 
-      this.patientService.addPacient(this.patient);
-      this.appointmentService.addAppointment(this.event).then(res => {
+      // If patient exists return true, otherwise return false
+      this.patientService.patientExists(this.event.phonePacient).then(data => {
+        this.pacientExists = data;
+
+        // If patient exists update values from patient
+        if (this.pacientExists) {
+          this.patientService.getPatientByName(this.event.namePacient).subscribe(res => {
+            if (res.length > 0) {
+              localStorage.setItem('pacientId', res[0]);
+
+              // Get the patient Id from localstorage
+              this.pacientId = localStorage.getItem('pacientId');
+
+              this.patientService
+                .updatePatient(this.pacientId, this.patient)
+                .then(() => {
+                  console.log('Successfully updated');
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            }
+          });
+        } else {
+          // Otherwise create a new patient in 'Patient' collection
+          this.patientService.addPacient(this.patient);
+          console.log('Added');
+        }
+      });
+
+      this.appointmentService.addAppointment(this.event).then(() => {
         // After adding the appointment into collection
         // we reset the form and close the modal
         this.dialog.closeAll();
         this.form.reset();
+      }).catch(err => {
+        console.log(err);
       });
     }
   }
@@ -190,21 +261,49 @@ export class DoctorComponent implements OnInit {
     if (this.updateForm.valid) {
       this.event = Object.assign({}, this.updateForm.value);
       console.log('Update event', this.event);
-      this.appointmentService.updateAppointment(this.appointment.id, this.event).then( res => {
+
+      this.updatedPacient = {
+        name: this.event.namePacient,
+        phonePacient: this.event.phonePacient,
+        emailPacient: this.event.emailPacient,
+        title: this.event.title,
+        medic: this.event.medic,
+        files: [{
+          filename: '',
+          url: null
+        }]
+      };
+
+      this.pacientId = localStorage.getItem('pacientId');
+      if (this.pacientId !== null) {
+        this.patientService
+          .updatePatient(this.pacientId, this.updatedPacient)
+          .then(() => {
+            console.log('successfully update');
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.patientService.addPacient(this.updatedPacient);
+      }
+
+      this.appointmentService.updateAppointment(this.appointment.id, this.event).then( () => {
         this.dialog.closeAll();
         this.updateForm.reset();
+      }).catch( err => {
+        console.log(err);
       });
     }
   }
 
   // Cancel an event
   cancelEvent() {
-    this.appointmentService.cancelAppointment(this.appointment.id).then( res => {
+    this.appointmentService.cancelAppointment(this.appointment.id).then( () => {
       this.dialog.closeAll();
       this.updateForm.reset();
     });
   }
-
 
   getNamePacientErrorMessage() {
     return this.form.controls.namePacient.hasError('required') ? 'You must enter a value' : '';
