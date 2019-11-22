@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Programare } from '../models/programare';
-import { Room } from '../models/room';
-import { RoomService } from '../services/room.service';
 import { AppointmentService } from '../services/appointment.service';
 import { ActivatedRoute } from '@angular/router';
 import { Users } from '../models/user';
@@ -31,8 +29,6 @@ export class DoctorComponent implements OnInit {
   viewDate: Date = new Date();
 
   events;
-  rooms: Room[] = [];
-  room: Room;
   doctorInfo: Users;
   userName: any;
   dialogRef;
@@ -58,7 +54,6 @@ export class DoctorComponent implements OnInit {
   updatedPacient: Patient;
 
   constructor(
-    private roomService: RoomService,
     private appointmentService: AppointmentService,
     private doctorService: DoctorService,
     private patientService: PatientService,
@@ -73,7 +68,6 @@ export class DoctorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadRooms();
     this.loadAppointments();
     this.route.params.subscribe(params => {
       this.doctorService.getDoctorById(params.id).subscribe(i => {
@@ -94,46 +88,6 @@ export class DoctorComponent implements OnInit {
         console.log('Events', data);
         this.events = data;
       });
-  }
-
-  loadRooms() {
-    this.roomService.getRooms().subscribe(data => {
-      this.rooms = data;
-        // tslint:disable-next-line: forin
-      for (const i in data) {
-        this.checkboxes.push({ name: data[i].name, checked: true });
-      }
-    });
-  }
-
-  // Events filtered by rooms
-  filterData(event, room) {
-    if (event.target.checked === false) {
-      this.checkboxes.forEach(val => {
-        if (val.name === room) {
-          val.checked = false;
-        }
-        this.room = room;
-      });
-      this.events = this.events.filter(r => r.cabinet !== this.room);
-      console.log('Filtered events: ', this.events);
-      console.log('checkboxes filter data', this.checkboxes);
-      return this.events;
-    } else {
-      this.checkboxes.forEach(val => {
-        if (val.name === room) {
-          val.checked = true;
-        }
-      });
-      this.room = room;
-
-      console.log('checkboxes filter data', this.checkboxes);
-      this.appointmentService.getAppointmentByDoctor(this.userName).subscribe(data => {
-        this.events = data.filter(r => r.cabinet === this.room);
-        console.log('Events', this.events);
-      });
-      return this.events;
-    }
   }
 
   // The method is used to make events unclickable is doesn't belong to the current user
@@ -170,7 +124,6 @@ export class DoctorComponent implements OnInit {
       this.updateForm.controls.phonePacient.setValue(event.phonePacient);
       this.updateForm.controls.title.setValue(event.title);
       this.updateForm.controls.medic.setValue(event.medic);
-      this.updateForm.controls.cabinet.setValue(event.cabinet);
       this.updateForm.controls.emailPacient.setValue(event.emailPacient);
     }
   }
@@ -188,7 +141,6 @@ export class DoctorComponent implements OnInit {
       emailPacient: ['', [Validators.required, Validators.email]],
       title: ['', Validators.required],
       medic: [this.userName, Validators.required],
-      cabinet: [''],
       start: ['', Validators.required],
       end: ['', Validators.required]
     });
@@ -201,8 +153,7 @@ export class DoctorComponent implements OnInit {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       emailPacient: ['', [Validators.required, Validators.email]],
       title: ['', Validators.required],
-      medic: [this.userName, Validators.required],
-      cabinet: ['']
+      medic: [this.userName, Validators.required]
     });
   }
 

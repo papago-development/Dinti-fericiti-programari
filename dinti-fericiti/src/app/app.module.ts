@@ -32,9 +32,6 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
 import { CalendarHeaderComponent } from './calendar-header/calendar-header.component';
-import { DoctorsComponent } from './dashboard/doctors/doctors.component';
-import { AddDoctorComponent } from './dashboard/add-doctor/add-doctor.component';
-import { AddRoomComponent } from './dashboard/add-room/add-room.component';
 import { DoctorComponent } from './doctor/doctor.component';
 import { PatientsComponent } from './dashboard/patients/patients.component';
 import { PatientComponent } from './dashboard/patient/patient.component';
@@ -48,11 +45,8 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
       NavbarComponent,
       LoginPageComponent,
       DashboardComponent,
-      DoctorsComponent,
       SignupFormComponent,
       CalendarHeaderComponent,
-      AddDoctorComponent,
-      AddRoomComponent,
       DoctorComponent,
       PatientsComponent,
       PatientComponent,

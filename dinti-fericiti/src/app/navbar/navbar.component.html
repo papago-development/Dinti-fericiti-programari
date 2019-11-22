@@ -16,9 +16,6 @@
         <a class="nav-item nav-link" [routerLink]="['dashboard']">Programari</a>
       </li>
       <li class="nav-item">
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['doctors']" routerLinkActive="router-link-active">Doctori</a>
-      </li>
     </ul>
     <ul  class="nav navbar-nav navbar-right">
       <li *ngIf="userStatus && userStatus['role'] === 'user'" class="nav-item">

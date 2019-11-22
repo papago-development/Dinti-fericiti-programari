@@ -8,7 +8,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Observable } from 'rxjs';
-import { RoomService } from '../services/room.service';
 import { CalendarDateFormatter } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 
@@ -58,14 +57,12 @@ export class DashboardComponent implements OnInit {
     private doctorService: DoctorService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private pacientService: PatientService,
-    private roomService: RoomService
+    private pacientService: PatientService
   ) {}
 
   ngOnInit() {
     this.loadAppointments();
     this.loadDoctors();
-    this.loadRooms();
     this.createForm();
     this.createUpdateForm();
   }
@@ -88,13 +85,6 @@ export class DashboardComponent implements OnInit {
     this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
       console.log('Events', this.events);
-    });
-  }
-
-  // Load all rooms from database
-  loadRooms() {
-    this.roomService.getRooms().subscribe(data => {
-      this.rooms = data;
     });
   }
 
@@ -263,7 +253,6 @@ export class DashboardComponent implements OnInit {
     this.updateForm.controls.phonePacient.setValue(event.phonePacient);
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
-    this.updateForm.controls.cabinet.setValue(event.cabinet);
     this.updateForm.controls.emailPacient.setValue(event.emailPacient);
     // this.updateForm.controls.start.setValue(event.start);
     // this.updateForm.controls.end.setValue(event.end);

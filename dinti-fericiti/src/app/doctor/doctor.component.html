@@ -1,15 +1,6 @@
 <div class="container" id="doctor">
   <app-calendar-header [(view)]="view" [(viewDate)]="viewDate"></app-calendar-header>
-  <hr>
-  <div *ngFor="let checkbox of checkboxes" class="rooms">
-    <input  type="checkbox" [(ngModel)]="checkbox.checked"
-            [value]="checkbox.name" (change)="filterData($event, checkbox.name)">
-            {{ checkbox.name }}
-  </div>
-  <!-- <div *ngFor="let room of rooms" class="rooms">
-      <input type="checkbox" (change)="filterData($event, room.name)"> {{ room.name }}
-    </div> -->
-  <hr>
+<br>
   <div [ngSwitch]="view">
       <mwl-calendar-month-view  *ngSwitchCase="'month'"
                                 [viewDate]="viewDate"
@@ -62,21 +53,13 @@
       <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Subiect</mat-label>
-      <input matInput #input formControlName="title" placeholder="Subiect">
+      <mat-label>Manopera</mat-label>
+      <input matInput #input formControlName="title" placeholder="Manopera">
       <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Medic</mat-label>
       <input matInput #input formControlName="medic" readonly>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Cabinet</mat-label>
-      <mat-select formControlName="cabinet">
-        <mat-option *ngFor="let cabinet of this.rooms" [value]="cabinet.name">
-            {{ cabinet.name }}
-        </mat-option>
-      </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Ora start</mat-label>
@@ -120,21 +103,13 @@
         <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
       </mat-form-field>
     <mat-form-field>
-      <mat-label>Subiect</mat-label>
-      <input matInput #input formControlName="title" placeholder="Subiect">
+      <mat-label>Manopera</mat-label>
+      <input matInput #input formControlName="title" placeholder="Manopera">
       <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Medic</mat-label>
       <input matInput #input formControlName="medic" placeholder="Medic" readonly>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Cabinet</mat-label>
-      <mat-select formControlName="cabinet">
-        <mat-option *ngFor="let cabinet of this.rooms" [value]="cabinet.name">
-          {{ cabinet.name }}
-        </mat-option>
-      </mat-select>
     </mat-form-field>
     <div class="form-group">
       <button mat-raised-button type="submit" class="btn btn-success" [disabled]="!this.updateForm.valid">Editeaza</button>

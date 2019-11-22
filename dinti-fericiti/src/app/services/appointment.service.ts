@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { colors } from '../models/colors';
 
 @Injectable({
