@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
   view = 'day';
   viewDate: Date = new Date();
 
-  events: Array<any> = [];
+  events: any = [];
   event: Programare;
   updatedEvent: any;
   doctors: Doctor[] = [];
@@ -46,11 +46,11 @@ export class DashboardComponent implements OnInit {
   subsUpdate: Subscription;
   pacientExists: boolean;
 
-  checked: boolean = true;
+  checked = true;
 
   checkboxes: any[] = [];
   filteredEvents: Array<any> = [];
-  locale: string = 'en';
+  locale = 'en';
 
   constructor(
     private appointmentService: AppointmentService,
@@ -111,10 +111,8 @@ export class DashboardComponent implements OnInit {
         }
         this.doctor = doctor;
       });
-      this.events = this.events.filter(m => m.medic !== this.doctor);
-      console.log('Filtered events: ', this.events);
-      console.log('checkboxes filter data', this.checkboxes);
 
+      this.events = this.events.filter(m => m.medic !== this.doctor);
       return this.events;
     } else {
       this.checkboxes.forEach(val => {
@@ -124,25 +122,19 @@ export class DashboardComponent implements OnInit {
       });
       this.doctor = doctor;
 
+
+      console.log('events', this.events);
+
       this.appointmentService.getAppointments().subscribe(data => {
-        data.forEach(item => {
-          if (item.medic === this.doctor) {
-              // this.events = {
-
-              // };
-          }
-        });
-        // if (data.medic === this.doctor) {
-
-        // this.events = data;
-        console.log('Events', this.events);
-        // }
+        this.filteredEvents = data.filter(m => m.medic === this.doctor);
+        this.events = [];
+        this.events = this.filteredEvents;
 
       });
 
-      console.log('checkboxes filter data', this.checkboxes);
+      // console.log('checkboxes filter data', this.checkboxes);
 
-
+      console.log('Filtered events', this.events);
       return this.events;
     }
   }
