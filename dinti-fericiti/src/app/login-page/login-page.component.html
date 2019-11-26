@@ -6,6 +6,7 @@
 
   <mat-form-field id="passwordLogin">
     <input matInput #input type="password" formControlName="password" placeholder="Password">
+
     <mat-error *ngIf="!this.loginForm.controls.password.valid">{{ getPasswordErrorMessage() }}</mat-error>
   </mat-form-field>
   <br>

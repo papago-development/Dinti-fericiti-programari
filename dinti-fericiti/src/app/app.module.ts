@@ -20,7 +20,9 @@ import {  MatInputModule,
           MatSelectModule,
           MatTableModule,
           MatPaginatorModule,
-          MatSortModule} from '@angular/material';
+          MatSortModule,
+          MatButtonToggleModule,
+          MatCheckboxModule} from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -80,6 +82,7 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
        MatTableModule,
        MatPaginatorModule,
        MatSortModule,
+       MatCheckboxModule,
        ToastrModule.forRoot()
       ],
   providers: [

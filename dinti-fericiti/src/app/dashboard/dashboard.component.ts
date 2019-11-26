@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
@@ -7,9 +7,10 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, Subject } from 'rxjs';
 import { CalendarDateFormatter } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,6 +52,8 @@ export class DashboardComponent implements OnInit {
   checkboxes: any[] = [];
   filteredEvents: Array<any> = [];
   locale = 'en';
+  obj: Array<any> = [];
+  refresh: Subject<any> = new Subject();
 
   constructor(
     private appointmentService: AppointmentService,
@@ -58,7 +61,7 @@ export class DashboardComponent implements OnInit {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private pacientService: PatientService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadAppointments();
@@ -84,7 +87,6 @@ export class DashboardComponent implements OnInit {
   loadAppointments() {
     this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
-      console.log('Events', this.events);
     });
   }
 
@@ -95,47 +97,57 @@ export class DashboardComponent implements OnInit {
 
       // tslint:disable-next-line: forin
       for (const i in data) {
-        this.checkboxes.push({name: data[i].name, checked: true});
+        this.checkboxes.push({ name: data[i].name, checked: true });
       }
-      console.log('Checkboxes load doctors: ', this.checkboxes);
     });
   }
 
   // Filter events after doctor
   filterData(event, doctor) {
-    // if checkbox is checked then return the list of filtered events
     if (event.target.checked === false) {
+      this.obj = this.events;
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
-          val.checked = false;
+          this.checked = !this.checked;
+          // val.checked = false;
+
+          // this.checked = val.checked;
+          console.log('checked', this.checked);
         }
         this.doctor = doctor;
       });
 
+      this.obj.forEach(item => {
+        if (item.medic === this.doctor) {
+          const index = this.obj.indexOf(item);
+          console.log('index', index);
+          this.obj.splice(index, 1);
+        }
+      });
+      console.log('obj if', this.obj);
+
       this.events = this.events.filter(m => m.medic !== this.doctor);
-      return this.events;
+      console.log('events', this.events);
     } else {
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
           val.checked = true;
+          this.checked = val.checked;
+          console.log('checked', this.checked);
+
         }
+        this.doctor = doctor;
       });
-      this.doctor = doctor;
-
-
-      console.log('events', this.events);
-
       this.appointmentService.getAppointments().subscribe(data => {
         this.filteredEvents = data.filter(m => m.medic === this.doctor);
-        this.events = [];
-        this.events = this.filteredEvents;
-
+        this.filteredEvents.forEach(item => {
+          this.obj.push(item);
+          console.log('obj else', this.obj);
+        });
+        this.events = this.obj;
+        this.refresh.next();
+        console.log('events', this.events);
       });
-
-      // console.log('checkboxes filter data', this.checkboxes);
-
-      console.log('Filtered events', this.events);
-      return this.events;
     }
   }
 
@@ -148,7 +160,6 @@ export class DashboardComponent implements OnInit {
       title: ['', Validators.required],
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
-      cabinet: [''],
       emailPacient: ['', Validators.email],
       end: ['', Validators.required],
 
@@ -162,7 +173,6 @@ export class DashboardComponent implements OnInit {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       emailPacient: ['', Validators.email],
       title: ['', Validators.required],
-      cabinet: [''],
       medic: ['', Validators.required]
     });
   }
@@ -217,12 +227,12 @@ export class DashboardComponent implements OnInit {
 
       // Add event/appointment to 'Programari' collection
       this.appointmentService.addAppointment(this.event)
-          .then(() => {
-            this.dialogRef.close();
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        .then(() => {
+          this.dialogRef.close();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
@@ -313,8 +323,8 @@ export class DashboardComponent implements OnInit {
     return this.form.controls.phonePacient.hasError('required')
       ? 'You must enter a value'
       : this.form.controls.phonePacient.hasError('maxlength')
-      ? 'Maximum length is 10 character'
-      : '';
+        ? 'Maximum length is 10 character'
+        : '';
   }
 
   getEmailErrorMessage() {

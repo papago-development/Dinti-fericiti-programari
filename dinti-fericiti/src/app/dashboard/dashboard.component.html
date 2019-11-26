@@ -8,18 +8,23 @@
             [value]="checkbox.name" (change)="filterData($event, checkbox.name)">
             Dr. {{ checkbox.name }}
   </div>
+  <!-- <div *ngFor="let checkbox of checkboxes" class="doctors">
+    <mat-checkbox (change)="filterData($event, checkbox.name)" [(ngModel)]="checkbox.checked">Dr. {{ checkbox.name }}</mat-checkbox>
+  </div> -->
   <hr>
 
   <div [ngSwitch]="view">
     <mwl-calendar-month-view  *ngSwitchCase="'month'"
                               [viewDate]="viewDate"
                               [events]="events"
+                              [refresh]="refresh"
                               (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
                               (eventClicked)="openEditDialog($event, editContent)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view *ngSwitchCase="'week'"
                             [viewDate]="viewDate"
                             [events]="events"
+                            [refresh]="refresh"
                             (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
                             (eventClicked)="openEditDialog($event, editContent)"
                             [locale]="locale"
@@ -29,6 +34,7 @@
     <mwl-calendar-day-view  *ngSwitchCase="'day'"
                             [viewDate]="viewDate"
                             [events]="events"
+                            [refresh]="refresh"
                             [locale]="locale"
                             (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
                             (eventClicked)="openEditDialog($event, editContent)"
