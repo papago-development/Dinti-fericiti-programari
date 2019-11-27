@@ -7,3 +7,15 @@ table {
   margin: 10px 0 0 10px;
   right: 0;
 }
+
+#addAppointment {
+  clear: both;
+  float: right;
+  overflow: hidden;
+}
+
+
+#addEvent {
+  display: flex;
+  flex-direction: column;
+}

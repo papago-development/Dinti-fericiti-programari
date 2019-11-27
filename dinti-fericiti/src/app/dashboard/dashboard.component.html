@@ -12,7 +12,8 @@
     <mat-checkbox (change)="filterData($event, checkbox.name)" [(ngModel)]="checkbox.checked">Dr. {{ checkbox.name }}</mat-checkbox>
   </div> -->
   <hr>
-
+<br>
+<br>
   <div [ngSwitch]="view">
     <mwl-calendar-month-view  *ngSwitchCase="'month'"
                               [viewDate]="viewDate"
@@ -83,7 +84,7 @@
           {{ doctor.name }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
+      <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
     </mat-form-field>
 
     <mat-form-field>

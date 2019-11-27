@@ -23,7 +23,7 @@ import { map } from 'rxjs/operators';
     }
   ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // Properties
   view = 'day';
   viewDate: Date = new Date();
@@ -33,7 +33,6 @@ export class DashboardComponent implements OnInit {
   updatedEvent: any;
   doctors: Doctor[] = [];
   doctor: any;
-  rooms: any[] = [];
   dialogRef;
 
   clickedDate: Date;
@@ -44,16 +43,18 @@ export class DashboardComponent implements OnInit {
   public pacientId: string;
   updatedPacient: Patient;
   updatedAppointment: Programare;
-  subsUpdate: Subscription;
   pacientExists: boolean;
-
   checked = true;
-
   checkboxes: any[] = [];
   filteredEvents: Array<any> = [];
   locale = 'en';
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
+
+  // Subscriptions
+  loadAppointmentsSubs: Subscription;
+  loadDoctorsSubs: Subscription;
+  getAppointmentsSubs: Subscription;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -68,6 +69,11 @@ export class DashboardComponent implements OnInit {
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
+  }
+
+  ngOnDestroy() {
+    this.loadAppointmentsSubs.unsubscribe();
+    this.loadDoctorsSubs.unsubscribe();
   }
 
   // Open dialog for adding a new event
@@ -85,14 +91,14 @@ export class DashboardComponent implements OnInit {
 
   // Load all appointments from database
   loadAppointments() {
-    this.appointmentService.getAppointments().subscribe(data => {
+    this.loadAppointmentsSubs = this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
     });
   }
 
   // Load all doctors from database
   loadDoctors() {
-    this.doctorService.getDoctors().subscribe(data => {
+    this.loadDoctorsSubs = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
 
       // tslint:disable-next-line: forin
@@ -109,9 +115,6 @@ export class DashboardComponent implements OnInit {
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
           this.checked = !this.checked;
-          // val.checked = false;
-
-          // this.checked = val.checked;
           console.log('checked', this.checked);
         }
         this.doctor = doctor;
@@ -138,7 +141,7 @@ export class DashboardComponent implements OnInit {
         }
         this.doctor = doctor;
       });
-      this.appointmentService.getAppointments().subscribe(data => {
+      this.getAppointmentsSubs = this.appointmentService.getAppointments().subscribe(data => {
         this.filteredEvents = data.filter(m => m.medic === this.doctor);
         this.filteredEvents.forEach(item => {
           this.obj.push(item);
@@ -161,8 +164,7 @@ export class DashboardComponent implements OnInit {
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
       emailPacient: ['', Validators.email],
-      end: ['', Validators.required],
-
+      end: ['', Validators.required]
     });
   }
 

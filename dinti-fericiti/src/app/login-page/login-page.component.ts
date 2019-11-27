@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthService } from '../services/auth.service';
@@ -16,8 +16,12 @@ export class LoginPageComponent implements OnInit {
   loginForm: FormGroup;
   user: Users;
   authenticated: Observable<any>;
+  passwordShown: boolean = false;
+  passwordType: string = 'password';
+  visibilityIcon: string = 'visibility_off';
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router) { }
+  constructor(private authService: AuthService, private fb: FormBuilder,
+              private router: Router) { }
 
   ngOnInit() {
     this.createLoginForm();
@@ -41,7 +45,21 @@ export class LoginPageComponent implements OnInit {
     if (this.loginForm.valid) {
       this.user = Object.assign({}, this.loginForm.value);
       this.authService.login(this.user.username, this.user.password);
+    }
+  }
 
+  // This method is used to show/hide password
+  public togglePassword() {
+    if (this.passwordShown) {
+      this.passwordShown = false;
+      this.passwordType = 'password';
+
+      this.visibilityIcon = 'visibility_off';
+    } else {
+
+      this.passwordShown = true;
+      this.passwordType = 'text';
+      this.visibilityIcon = 'visibility';
     }
   }
 

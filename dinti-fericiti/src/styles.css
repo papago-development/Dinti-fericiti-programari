@@ -2,6 +2,8 @@
 @import '~ngx-toastr/toastr';
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "../node_modules/ngx-datetime-picker/ngx-datetime-picker.css";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body { height: 100%; }

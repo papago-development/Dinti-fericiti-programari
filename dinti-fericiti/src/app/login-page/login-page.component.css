@@ -10,6 +10,12 @@
   width: 100%;
 }
 
+.mat-icon {
+  margin-bottom: 0px;
+  padding-bottom: 0;
+  color: gray;
+}
+
 @media only screen and (max-width: 450px) {
   .login {
     display: flex;

@@ -21,10 +21,12 @@ import {  MatInputModule,
           MatTableModule,
           MatPaginatorModule,
           MatSortModule,
-          MatButtonToggleModule,
-          MatCheckboxModule} from '@angular/material';
+          MatCheckboxModule,
+          MatIconModule} from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
+import { DateTimePickerModule } from 'ngx-datetime-picker';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -39,6 +41,7 @@ import { PatientsComponent } from './dashboard/patients/patients.component';
 import { PatientComponent } from './dashboard/patient/patient.component';
 import { HistoryAppointmentComponent } from './dashboard/history-appointment/history-appointment.component';
 import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
+import { ModalComponent } from './modal/modal.component';
 
 
 @NgModule({
@@ -53,7 +56,8 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
       PatientsComponent,
       PatientComponent,
       HistoryAppointmentComponent,
-      UploadFileComponent
+      UploadFileComponent,
+      ModalComponent
    ],
    imports: [
       BrowserModule,
@@ -83,7 +87,11 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
        MatPaginatorModule,
        MatSortModule,
        MatCheckboxModule,
-       ToastrModule.forRoot()
+       MatIconModule,
+       ToastrModule.forRoot(),
+       DateTimePickerModule,
+       OwlDateTimeModule,
+       OwlNativeDateTimeModule
       ],
   providers: [
   ],
