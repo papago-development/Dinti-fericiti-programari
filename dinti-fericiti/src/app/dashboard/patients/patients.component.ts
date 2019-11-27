@@ -119,6 +119,7 @@ export class PatientsComponent implements OnInit {
         emailPacient: this.appointment.emailPacient,
         title: this.appointment.title,
         medic: this.appointment.medic,
+        start: this.appointment.start,
         files: [{filename: null, url: null}]
       };
 

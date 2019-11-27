@@ -92,10 +92,8 @@
       <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Ora end</mat-label>
-      <input matInput type="datetime-local" formControlName="end" [matDatepicker]="picker" placeholder="Choose a date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <input matInput [owlDateTime]="dt2" formControlName="end" pickerMode = "dialog" [owlDateTimeTrigger]="dt2" placeholder="Date end">
+      <owl-date-time #dt2></owl-date-time>
       <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
     </mat-form-field>
     <div class="form-group">
