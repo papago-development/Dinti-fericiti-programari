@@ -25,7 +25,6 @@ import {  MatInputModule,
           MatIconModule} from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-import { DateTimePickerModule } from 'ngx-datetime-picker';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 import { AppComponent } from './app.component';
@@ -89,7 +88,6 @@ import { ModalComponent } from './modal/modal.component';
        MatCheckboxModule,
        MatIconModule,
        ToastrModule.forRoot(),
-       DateTimePickerModule,
        OwlDateTimeModule,
        OwlNativeDateTimeModule
       ],

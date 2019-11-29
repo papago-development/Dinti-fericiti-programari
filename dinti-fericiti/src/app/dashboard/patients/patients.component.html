@@ -23,7 +23,8 @@
         <th mat-header-cell *matHeaderCellDef>Editeaza</th>
         <td mat-cell *matCellDef="let item">
           <i class="material-icons" [routerLink]="['/patient/', item.id]">edit</i>
-          <button mat-button class="btn btn-info" id="addAppointment" (click)="openDialog(addContent, item.id)">Adauga programare</button>
+          <button mat-button class="btn btn-info" id="addAppointment" (click)="openDialog(addContent, item.id)">Adauga
+            programare</button>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -48,7 +49,8 @@
     <mat-form-field>
       <mat-label>Nume pacient</mat-label>
       <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
-      <mat-error *ngIf="!this.addAppointmentForm.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
+      <mat-error *ngIf="!this.addAppointmentForm.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}
+      </mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Telefon pacient</mat-label>
@@ -80,12 +82,15 @@
       <mat-error *ngIf="!this.addAppointmentForm.controls.start.valid">{{ getStartErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput [owlDateTime]="dt2" formControlName="end" pickerMode = "dialog" [owlDateTimeTrigger]="dt2" placeholder="Date end">
+      <input matInput [owlDateTime]="dt2" formControlName="end" pickerMode="dialog" [owlDateTimeTrigger]="dt2"
+        placeholder="Date end">
+      <mat-icon matSuffix>calendar_today</mat-icon>
       <owl-date-time #dt2></owl-date-time>
       <mat-error *ngIf="!this.addAppointmentForm.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
     </mat-form-field>
     <div class="form-group">
-      <button mat-raised-button class="btn btn-success" type="submit" [disabled]="!this.addAppointmentForm.valid">Add</button>
+      <button mat-raised-button class="btn btn-success" type="submit"
+        [disabled]="!this.addAppointmentForm.valid">Add</button>
     </div>
   </form>
 </ng-template>
