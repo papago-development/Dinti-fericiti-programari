@@ -8,9 +8,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Observable, Subject } from 'rxjs';
-import { CalendarDateFormatter } from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEventTitleFormatter } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
-import { map } from 'rxjs/operators';
+import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +20,9 @@ import { map } from 'rxjs/operators';
     {
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter
+    }, {
+      provide: CalendarEventTitleFormatter,
+      useClass: CustomEventTitleFormatter
     }
   ]
 })
@@ -192,7 +195,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         medic: this.event.medic,
         title: this.event.title,
         files: [{
-          filename: '',
+          filename: null,
           url: null
         }]
       };

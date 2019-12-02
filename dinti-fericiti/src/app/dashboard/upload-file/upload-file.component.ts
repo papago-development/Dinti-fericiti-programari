@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Patient } from 'src/app/models/patient';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -44,6 +45,12 @@ export class UploadFileComponent implements OnInit {
     this.patientId = this.route.snapshot.params.id;
     this.patientService.getPatientById(this.patientId).subscribe(data => {
       this.files = data.files;
+      for (let i = 0; i < this.files.length; i++) {
+        if ((this.files[i].filename === '' || this.files[i].filename === null) && this.files[i].url === null) {
+            this.files.splice(i, 1);
+        }
+      }
+      console.log('files', this.files);
       this.dataSource.data = data.files as Patient[];
     });
   }
@@ -57,19 +64,27 @@ export class UploadFileComponent implements OnInit {
 
     console.log(this.files);
 
-    ref.getDownloadURL().subscribe(data => {
-      this.url = data;
+    task.then(() => {
+      ref.getDownloadURL().subscribe(data => {
+        this.url = data;
 
-      const fileNew: Files = {
-        url: this.url,
-        filename: file.name
-      };
+        const fileNew: Files = {
+          url: this.url,
+          filename: file.name
+        };
 
-      this.files.push(fileNew);
+        this.files.push(fileNew);
 
-      console.log("files", this.files);
+        console.log('files', this.files);
 
-      this.patientService.addFileToPatient(this.patientId, this.files);
-    });
+        try {
+          this.patientService.addFileToPatient(this.patientId, this.files);
+        } catch (error) {
+          console.log('Error', error);
+        }
+      });
+    }).catch(err => console.log('Error', err));
+
+
   }
 }

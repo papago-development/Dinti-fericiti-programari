@@ -1,7 +1,8 @@
 <br>
 <div class="container">
   <div class="mat-elevation-z8">
-    <input type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg">
+    <label for="chooseFile" class="btn">Incarca document</label>
+    <input id="chooseFile" type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg">
     <table mat-table *ngIf="this.files.length > 0" [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="filename">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Filename</th>

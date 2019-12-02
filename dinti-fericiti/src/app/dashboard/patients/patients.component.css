@@ -12,10 +12,53 @@ table {
   clear: both;
   float: right;
   overflow: hidden;
-}
 
+}
+/* button #addAppointment {
+  padding-left: 10px;
+} */
+
+ i{
+   padding-top: 5px;
+   padding-left: 10px;
+ }
 
 #addEvent {
   display: flex;
   flex-direction: column;
+}
+
+.mat-elevation-z8 {
+  margin-top: 20px;
+}
+
+.owl-dt-popup.dt2 {
+  right: 34.4em !important;
+
+}
+
+.form-group {
+  padding-top: 10px;
+  margin-left: 10px;
+}
+
+div.owl-dt-popup.dt2 {
+  left: 34.4px !important;
+}
+
+.button-text-mobile {
+  display: none;
+}
+i{
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 450px) {
+  .button-text {
+    display: none;
+  }
+
+  .button-text-mobile {
+    display: inline;
+  }
 }
