@@ -24,7 +24,7 @@ export class PatientsComponent implements OnInit {
   // variable for sorting the events for patient
   @ViewChild(MatSort) sort: MatSort;
 
-  displayedColumns: string[] = ['name', 'phonePacient', 'medic', 'action'];
+  displayedColumns: string[] = ['name', 'phonePacient', 'medic'];
 
   dialogRef;
   addAppointmentForm: FormGroup;
