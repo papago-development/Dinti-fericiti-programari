@@ -17,6 +17,10 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefon</th>
         <td mat-cell *matCellDef="let item">{{ item.phonePacient }}</td>
       </ng-container>
+      <ng-container matColumnDef="medic">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Medic</th>
+        <td mat-cell *matCellDef="let item">{{ item.medic }}</td>
+      </ng-container>
 
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>Editeaza</th>

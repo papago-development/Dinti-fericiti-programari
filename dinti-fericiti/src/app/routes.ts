@@ -15,8 +15,8 @@ export const appRoutes: Routes = [
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['admin']},
   },
   { path: 'doctor/:id', component: DoctorComponent, canActivate: [AuthGuard], data: {roles: ['user']}},
-  { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard], data: {roles: ['admin']}},
-  {path: 'patient/:id', component: PatientComponent, canActivate: [AuthGuard], data: {roles: ['admin']}},
+  { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard], data: {roles: ['admin', 'user']}},
+  {path: 'patient/:id', component: PatientComponent, canActivate: [AuthGuard], data: {roles: ['admin', 'user']}},
 
   { path: '', redirectTo: 'login', pathMatch: 'full', data: { roles: ['user', 'admin'] } }
 ];
