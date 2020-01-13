@@ -31,10 +31,11 @@ export class AppointmentService {
           color: (event.payload.doc.data()['medic'] === 'Laura Prie') ? colors.red :
                  (event.payload.doc.data()['medic'] === 'Erna Dupir') ? colors.blue :
                  (event.payload.doc.data()['medic'] === 'Ana Sandu') ? colors.yellow :
-                 (event.payload.doc.data()['medic'] === 'Petrica Ilona') ? colors.orange :
-                 (event.payload.doc.data()['medic'] === 'Dinu Georgeta-Nicoleta') ? colors.purple :
+                 (event.payload.doc.data()['medic'] === 'Ilona Petrica') ? colors.orange :
+                 (event.payload.doc.data()['medic'] === 'Georgeta-Nicoleta Dinu') ? colors.purple :
                  (event.payload.doc.data()['medic'] === 'Raluca Calu') ? colors.green :
-                 (event.payload.doc.data()['medic'] === 'Diana Ene') ? colors.pink : colors.indigo,
+                 (event.payload.doc.data()['medic'] === 'Diana Ene') ? colors.pink : colors.gray,
+                 
           // tslint:disable-next-line: no-string-literal
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal

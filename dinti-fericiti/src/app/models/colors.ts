@@ -12,8 +12,8 @@ export const colors: any = {
     secondary: '#FDF1BA'
   },
   orange: {
-    primary: '#FF8C00',
-    secondary: '#F79862'
+    primary: '#F79862',
+    secondary: '#d16c19 '
   },
   purple: {
     primary: '#800080',
