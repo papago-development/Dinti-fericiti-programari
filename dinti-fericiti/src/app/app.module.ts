@@ -1,3 +1,4 @@
+import localeRo from '@angular/common/locales/ro';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
@@ -23,7 +24,7 @@ import {  MatInputModule,
           MatSortModule,
           MatCheckboxModule,
           MatIconModule} from '@angular/material';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
@@ -42,7 +43,7 @@ import { HistoryAppointmentComponent } from './dashboard/history-appointment/his
 import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
 import { ModalComponent } from './modal/modal.component';
 
-
+registerLocaleData(localeRo);
 @NgModule({
    declarations: [
       AppComponent,

@@ -1,108 +1,94 @@
 <div class="container" id="dashboard">
-  <app-calendar-header [(view)]="view" [(viewDate)]="viewDate"></app-calendar-header>
+  <app-calendar-header [(view)]="view" [(viewDate)]="viewDate" locale="ro"></app-calendar-header>
   <hr>
   <div *ngFor="let checkbox of checkboxes" class="doctors">
     <input type="checkbox" [(ngModel)]="checkbox.checked" [value]="checkbox.name"
       (change)="filterData($event, checkbox.name)">
     Dr. {{ checkbox.name }}
   </div>
-  <!-- <div *ngFor="let checkbox of checkboxes" class="doctors">
-    <mat-checkbox (change)="filterData($event, checkbox.name)" [(ngModel)]="checkbox.checked">Dr. {{ checkbox.name }}</mat-checkbox>
-  </div> -->
   <hr>
-  <br>
-  <br>
   <div [ngSwitch]="view">
-    <mwl-calendar-month-view
-
-            *ngSwitchCase="'month'"
-            [viewDate]="viewDate"
-            [events]="events"
-            [refresh]="refresh"
-            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-            (eventClicked)="openEditDialog($event, editContent)">
+    <mwl-calendar-month-view  *ngSwitchCase="'month'"
+                              [viewDate]="viewDate"
+                              [events]="events"
+                              locale="ro"
+                              [refresh]="refresh"
+                              (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+                              (eventClicked)="openEditDialog($event, editContent)">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view
-            *ngSwitchCase="'week'"
-            [viewDate]="viewDate"
-            [events]="events"
-            [refresh]="refresh"
-            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-            (eventClicked)="openEditDialog($event, editContent)"
-            [locale]="locale"
-            [dayStartHour]="8"
-            [dayEndHour]="22">
+    <mwl-calendar-week-view *ngSwitchCase="'week'"
+                            [viewDate]="viewDate"
+                            [events]="events"
+                            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+                            (eventClicked)="openEditDialog($event, editContent)" 
+                            locale="ro"
+                            
+                            [dayStartHour]="8"
+                            [dayEndHour]="22">
     </mwl-calendar-week-view>
-    <mwl-calendar-day-view
-            *ngSwitchCase="'day'"
-            [viewDate]="viewDate"
-            [events]="events"
-            [refresh]="refresh"
-            [locale]="locale"
-            (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
-            (eventClicked)="openEditDialog($event, editContent)"
-            [dayStartHour]="8"
-            [dayEndHour]="22">
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
+      (eventClicked)="openEditDialog($event, editContent)" [dayStartHour]="8" [dayEndHour]="22">
     </mwl-calendar-day-view>
   </div>
 </div>
 
 <!-- Modal for adding a new appointment -->
 
-  <ng-template #addContent let-modal id="addModal" class="modal">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Adauga programare </h4>
-      <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
-      <input #input formControlName='id' hidden>
-      <mat-form-field>
-        <mat-label>Nume pacient</mat-label>
-        <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
-        <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Telefon pacient</mat-label>
-        <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient">
-        <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Email pacient</mat-label>
-        <input matInput #input formControlName="emailPacient" placeholder="Email pacient">
-        <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Manopera</mat-label>
-        <input matInput #input formControlName="title" placeholder="Manopera">
-        <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Medic</mat-label>
-        <mat-select formControlName="medic">
-          <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-            {{ doctor.name }}
-          </mat-option>
-        </mat-select>
-        <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
-      </mat-form-field>
+<ng-template #addContent let-modal id="addModal" class="modal">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Adauga programare </h4>
+    <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
+    <input #input formControlName='id' hidden>
+    <mat-form-field>
+      <mat-label>Nume pacient</mat-label>
+      <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
+      <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Telefon pacient</mat-label>
+      <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient">
+      <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Email pacient</mat-label>
+      <input matInput #input formControlName="emailPacient" placeholder="Email pacient">
+      <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Manopera</mat-label>
+      <input matInput #input formControlName="title" placeholder="Manopera">
+      <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Medic</mat-label>
+      <mat-select formControlName="medic">
+        <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+          {{ doctor.name }}
+        </mat-option>
+      </mat-select>
+      <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
+    </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Ora start</mat-label>
-        <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [owlDateTime]="dt2" formControlName="end" pickerMode="dialog" [owlDateTimeTrigger]="dt2"
-          placeholder="Date end">
-        <owl-date-time #dt2></owl-date-time>
-        <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
-      </mat-form-field>
-      <div class="form-group">
-        <button mat-raised-button class="btn btn-success" type="submit" [disabled]="!this.form.valid">Add</button>
-      </div>
-    </form>
-  </ng-template>
+    <mat-form-field>
+      <mat-label>Ora start</mat-label>
+      <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" readonly>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [owlDateTime]="dt2" formControlName="end" pickerMode="dialog" [owlDateTimeTrigger]="dt2"
+        placeholder="Date end">
+      <owl-date-time #dt2></owl-date-time>
+      <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <div class="form-group">
+      <button mat-raised-button class="btn btn-success" type="submit" [disabled]="!this.form.valid">Add</button>
+    </div>
+  </form>
+</ng-template>
 <!-- Modal for editing an existing appointment -->
 <ng-template #editContent let-modal id="addModal">
   <div class="modal-header">

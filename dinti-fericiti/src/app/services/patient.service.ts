@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Patient } from '../models/patient';
 
@@ -122,5 +122,14 @@ export class PatientService {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  deleteFileFromPatient(patientId, file) {
+    this.db.collection('Pacienti')
+                                  .doc(patientId)
+                                  .valueChanges()
+                                  .subscribe(data => {
+                                    console.log('data');
+                                  });
   }
 }

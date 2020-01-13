@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
@@ -8,14 +8,16 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Observable, Subject } from 'rxjs';
-import { CalendarDateFormatter, CalendarEventTitleFormatter } from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
+import { load } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: CalendarDateFormatter,
@@ -28,10 +30,13 @@ import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormat
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // Properties
-  view = 'day';
+  view: string = 'day';
   viewDate: Date = new Date();
+  locale: string = 'ro';
+  weekStartsON: number = DAYS_OF_WEEK.MONDAY;
+  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
 
-  events: any = [];
+  events: any[] = [];
   event: Programare;
   updatedEvent: any;
   doctors: Doctor[] = [];
@@ -50,7 +55,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   checked = true;
   checkboxes: any[] = [];
   filteredEvents: Array<any> = [];
-  locale = 'en';
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
 
@@ -65,10 +69,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private pacientService: PatientService
-  ) { }
+  ) {
+   }
 
   ngOnInit() {
     this.loadAppointments();
+
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
@@ -96,6 +102,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadAppointments() {
     this.loadAppointmentsSubs = this.appointmentService.getAppointments().subscribe(data => {
       this.events = data;
+      this.refresh.next();
+      console.log('events', this.events);
     });
   }
 
@@ -103,6 +111,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadDoctors() {
     this.loadDoctorsSubs = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
+      this.refresh.next();
+      console.log('doctors', this.doctors);
 
       // tslint:disable-next-line: forin
       for (const i in data) {

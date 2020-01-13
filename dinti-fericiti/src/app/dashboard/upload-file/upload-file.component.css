@@ -15,3 +15,14 @@ input[type="file"] {
   background-color: #007bff;
   margin: 10px 0 0 10px;
 }
+
+#update-text {
+  color: green;
+  font-style: 200;
+}
+
+#delete-file {
+  margin-right: 0;
+  float: right;
+  cursor: pointer;
+}

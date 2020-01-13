@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { DAYS_OF_WEEK } from 'angular-calendar';
 
 
 @Component({
@@ -11,7 +12,7 @@ export class CalendarHeaderComponent implements OnInit {
   // Properties
   @Input() view: string;
   @Input() viewDate: Date;
-  @Input() locale = 'en';
+  @Input() locale: string = 'en';
   @Output() viewChange: EventEmitter<string> = new EventEmitter();
   @Output() viewDateChange: EventEmitter<Date> = new EventEmitter();
   constructor() { }

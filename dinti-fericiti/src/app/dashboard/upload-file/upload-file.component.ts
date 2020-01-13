@@ -5,11 +5,9 @@ import { Files } from 'src/app/models/files';
 import { PatientService } from 'src/app/services/patient.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Patient } from 'src/app/models/patient';
 import { forEach } from '@angular/router/src/utils/collection';
-
 
 @Component({
   selector: 'app-upload-file',
@@ -23,6 +21,7 @@ export class UploadFileComponent implements OnInit {
   user: any[] = [];
   url: Observable<string | null>;
   patientId;
+  updated = '';
 
   dataSource = new MatTableDataSource<Patient>();
   displayedColumns: string[] = ['filename'];
@@ -34,9 +33,9 @@ export class UploadFileComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private dbStorage: AngularFireStorage,
-              private patientService: PatientService,
-              private db: AngularFirestore,
-              private route: ActivatedRoute) { }
+    private patientService: PatientService,
+    private db: AngularFirestore,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -47,7 +46,7 @@ export class UploadFileComponent implements OnInit {
       this.files = data.files;
       for (let i = 0; i < this.files.length; i++) {
         if ((this.files[i].filename === '' || this.files[i].filename === null) && this.files[i].url === null) {
-            this.files.splice(i, 1);
+          this.files.splice(i, 1);
         }
       }
       console.log('files', this.files);
@@ -79,12 +78,25 @@ export class UploadFileComponent implements OnInit {
 
         try {
           this.patientService.addFileToPatient(this.patientId, this.files);
+          this.updated = 'Fisierul a fost incarcat cu success';
+          setTimeout(() => {
+            this.updated = '';
+          }, 100);
         } catch (error) {
           console.log('Error', error);
         }
       });
     }).catch(err => console.log('Error', err));
+  }
 
-
+  deleteFile(fileName) {
+    this.patientService.deleteFileFromPatient(this.patientId, fileName);
+    // this.files.forEach(data => {
+    //   if (data.filename === fileName) {
+    //     const index = this.files.indexOf(fileName);
+    //     console.log('index', index);
+    //     this.files.splice(index, 1);
+    //   }
+    // });
   }
 }
