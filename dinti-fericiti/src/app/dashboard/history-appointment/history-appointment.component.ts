@@ -15,7 +15,7 @@ import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 export class HistoryAppointmentComponent implements OnInit, OnDestroy {
 
   // Properties
-  patientId: any;
+  patientId: string;
   patient: any;
   patientName: any;
   subs: Subscription;
@@ -29,6 +29,7 @@ export class HistoryAppointmentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.patientId = this.route.snapshot.paramMap.get('id');
+    console.log('pacient id', this.patientId);
     this.getPatientName();
   }
 

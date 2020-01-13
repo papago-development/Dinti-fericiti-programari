@@ -61,6 +61,18 @@ export class PatientService {
       );
   }
 
+    // return phone number by patient name
+    getPhoneByPatientName(name) {
+      return this.db.collection('Pacienti', ref => ref.where('name', '==', name))
+        .snapshotChanges()
+        .pipe(
+          map(data => data.map(event => {
+            return event.payload.doc.data()['phonePacient']
+                                  
+          }))
+        );
+    }
+
   // Update patient information
   updatePatient(id, updatePatient) {
     return this.db

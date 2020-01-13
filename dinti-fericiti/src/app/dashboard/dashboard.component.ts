@@ -63,6 +63,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadDoctorsSubs: Subscription;
   getAppointmentsSubs: Subscription;
 
+  @Input() phoneNumber: string;
+
   constructor(
     private appointmentService: AppointmentService,
     private doctorService: DoctorService,
@@ -70,7 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private pacientService: PatientService
   ) {
-   }
+  }
 
   ngOnInit() {
     this.loadAppointments();
@@ -196,7 +198,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   addAppointment() {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
-
+      console.log('test', this.event);
       this.pacient = {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
@@ -364,5 +366,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.form.controls.end.hasError('required')
       ? 'You must enter a value'
       : '';
+  }
+
+  // Upload file
+  onFileSelected() {
+
+  }
+
+  checkPatient($event) {
+    console.log('Name', event.target['value']);
+    this.pacientService.getPhoneByPatientName(event.target['value']).subscribe(data => {
+      let phone = data;
+      if (phone !== null) {
+        this.phoneNumber = phone[0];
+      }
+    });
   }
 }

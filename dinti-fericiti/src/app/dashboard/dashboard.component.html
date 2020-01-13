@@ -46,12 +46,12 @@
     <input #input formControlName='id' hidden>
     <mat-form-field>
       <mat-label>Nume pacient</mat-label>
-      <input matInput #input formControlName='namePacient' placeholder="Nume pacient">
+      <input matInput #input formControlName='namePacient' placeholder="Nume pacient" (change)="checkPatient($event.target.value)">
       <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Telefon pacient</mat-label>
-      <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient">
+      <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient" [(ngModel)]="phoneNumber">
       <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field>
