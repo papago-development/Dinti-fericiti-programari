@@ -1,3 +1,4 @@
+import { LastAppointmentService } from './../services/last-appointment.service';
 import { Component, OnInit, OnDestroy, Input, Output, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
@@ -11,7 +12,7 @@ import { Subscription, Observable, Subject } from 'rxjs';
 import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
-import { load } from '@angular/core/src/render3';
+import { ILastAppointment } from '../models/ILastAppointment';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,7 @@ import { load } from '@angular/core/src/render3';
   ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+
   // Properties
   view: string = 'day';
   viewDate: Date = new Date();
@@ -41,6 +43,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   updatedEvent: any;
   doctors: Doctor[] = [];
   doctor: any;
+  lastAppointment: ILastAppointment;
+
   dialogRef;
 
   clickedDate: Date;
@@ -48,7 +52,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   form: FormGroup;
   updateForm: FormGroup;
   pacient: Patient;
-  public pacientId: string;
+  pacientId: string;
   updatedPacient: Patient;
   updatedAppointment: Programare;
   pacientExists: boolean;
@@ -57,11 +61,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   filteredEvents: Array<any> = [];
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
+  email: any = [];
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
   loadDoctorsSubs: Subscription;
   getAppointmentsSubs: Subscription;
+  doctorsSubs: Subscription;
+
 
   @Input() phoneNumber: string;
 
@@ -70,21 +77,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private doctorService: DoctorService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private pacientService: PatientService
-  ) {
-  }
+    private pacientService: PatientService,
+    private lastAppointmentService: LastAppointmentService
+  ) { }
 
   ngOnInit() {
     this.loadAppointments();
-
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
   }
 
   ngOnDestroy() {
-    this.loadAppointmentsSubs.unsubscribe();
-    this.loadDoctorsSubs.unsubscribe();
+
+    if (this.loadAppointments) {
+      this.loadAppointmentsSubs.unsubscribe();
+    }
+
+    if (this.loadDoctorsSubs) {
+      this.loadDoctorsSubs.unsubscribe();
+    }
+
+    if (this.doctorsSubs) {
+      this.doctorsSubs.unsubscribe();
+    }
   }
 
   // Open dialog for adding a new event
@@ -198,7 +214,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   addAppointment() {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
+
       console.log('test', this.event);
+
       this.pacient = {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
@@ -211,6 +229,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
           url: null
         }]
       };
+
+      this.doctorService.getEmailByDoctorName(this.event.medic).subscribe(result => {
+        console.log("Email", result);
+        this.email = result.toString();
+
+        this.lastAppointment = {
+          pacientName: this.event.namePacient,
+          pacientPhone: this.event.phonePacient,
+          doctorEmail: this.email,
+          doctorName: this.event.medic,
+          lastDate: this.event.start
+        };
+
+        console.log('last appointmnet', this.lastAppointment);
+
+        // Add pacient to 'UltimeleProgramari' collection
+        this.lastAppointmentService.addLastAppointment(this.lastAppointment)
+          .then(() => {
+            console.log('Successfully added!');
+          }).catch(err => {
+            console.error(err);
+          });
+      });
 
       // If patient exists return true, otherwise return false
       this.pacientService.patientExists(this.event.phonePacient).then(data => {

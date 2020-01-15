@@ -34,7 +34,7 @@ export class AppointmentService {
                  (event.payload.doc.data()['medic'] === 'Ilona Petrica') ? colors.orange :
                  (event.payload.doc.data()['medic'] === 'Georgeta-Nicoleta Dinu') ? colors.purple :
                  (event.payload.doc.data()['medic'] === 'Raluca Calu') ? colors.green :
-                 (event.payload.doc.data()['medic'] === 'Diana Ene') ? colors.pink : colors.gray,
+                 (event.payload.doc.data()['medic'] === 'Diana Ene') ? colors.pink : colors.burgundy,
                  
           // tslint:disable-next-line: no-string-literal
           namePacient: event.payload.doc.data()['namePacient'],

@@ -33,4 +33,12 @@ export class DoctorService {
   getDoctorById(id: string): Observable<any> {
     return this.db.collection('Users', ref => ref.where('id', '==', id)).valueChanges();
   }
+
+  //Return doctor email from name
+  getEmailByDoctorName(name: string) {
+    return this.db.collection('Users', ref => ref.where('name', '==', name)).snapshotChanges().pipe(
+    map( events => events.map(event => {
+      return event.payload.doc.data()['username']
+    })));
+  }
 }
