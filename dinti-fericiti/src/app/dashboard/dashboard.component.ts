@@ -63,8 +63,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
   email: any = [];
-  colorsArray: any[] = ['#D1E8FF', '#FF69B4', '#F79862', '#FDF1BA', '#800080', '#008000',
-                        '#FAE3E3', '#5A2C2C'];
+  colorsArray: any[] = ['#1e90ff', '#FFB6C1', '#d16c19', '#e3bc08', '#8B008B', '#006400',
+                        '#ad2121', '#5A2C2B'];
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
@@ -88,7 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
-    console.log('colors', this.colorsArray);
   }
 
 

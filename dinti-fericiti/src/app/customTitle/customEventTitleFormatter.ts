@@ -11,10 +11,10 @@ export class CustomEventTitleFormatter extends CalendarEventTitleFormatter {
   }
 
   day(event: CalendarEvent): string {
-    return `${event.title} - ${event.medic}`;
+    return `${event.title} - ${event. namePacient}`;
   }
 
   week(event: CalendarEvent): string {
-    return `${event.title} - ${event.medic}`;
+    return `${event.title} - ${event.namePacient}`;
   }
 }
