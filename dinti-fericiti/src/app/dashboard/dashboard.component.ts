@@ -13,6 +13,7 @@ import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK, Calen
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
 import { ILastAppointment } from '../models/ILastAppointment';
+import { colors } from '../models/colors';
 
 @Component({
   selector: 'app-dashboard',
@@ -62,13 +63,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
   email: any = [];
+  colorsArray: any[] = ['#D1E8FF', '#FF69B4', '#F79862', '#FDF1BA', '#800080', '#008000',
+                        '#FAE3E3', '#5A2C2C'];
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
   loadDoctorsSubs: Subscription;
   getAppointmentsSubs: Subscription;
   doctorsSubs: Subscription;
-
 
   @Input() phoneNumber: string;
 
@@ -86,10 +88,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
+    console.log('colors', this.colorsArray);
   }
 
-  ngOnDestroy() {
 
+  ngOnDestroy() {
     if (this.loadAppointments) {
       this.loadAppointmentsSubs.unsubscribe();
     }

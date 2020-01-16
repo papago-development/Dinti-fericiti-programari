@@ -1,4 +1,4 @@
-import localeRo from '@angular/common/locales/ro';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
@@ -24,7 +24,10 @@ import {  MatInputModule,
           MatSortModule,
           MatCheckboxModule,
           MatIconModule} from '@angular/material';
+
 import { CommonModule, registerLocaleData } from '@angular/common';
+import localeRo from '@angular/common/locales/ro';
+
 import { ToastrModule } from 'ngx-toastr';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 

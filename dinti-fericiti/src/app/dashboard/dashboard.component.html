@@ -1,11 +1,13 @@
 <div class="container" id="dashboard">
   <app-calendar-header [(view)]="view" [(viewDate)]="viewDate" locale="ro"></app-calendar-header>
   <hr>
-  <div *ngFor="let checkbox of checkboxes" class="doctors">
-    <input type="checkbox" [(ngModel)]="checkbox.checked" [value]="checkbox.name"
-      (change)="filterData($event, checkbox.name)">
-    Dr. {{ checkbox.name }}
-  </div>
+
+    <div *ngFor="let checkbox of checkboxes; let i = index;" class="doctors" [style.backgroundColor]="colorsArray[i]">
+       
+      <input type="checkbox" [(ngModel)]="checkbox.checked"
+        (change)="filterData($event, checkbox.name)" id="check">
+      Dr. {{ checkbox.name }}
+    </div>
   <hr>
   <div [ngSwitch]="view">
     <mwl-calendar-month-view  *ngSwitchCase="'month'"

@@ -1,5 +1,8 @@
 // Import the Firebase SDK for Google Cloud Fnctions
 const functions = require('firebase-functions');
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const expressLocale = require('express-locale')
 
 //Import and initialize the Firebase Admin SDK
 const admin = require('firebase-admin');
@@ -14,6 +17,33 @@ sendgridMail.setApiKey(sendgrid_API_KEY);
 const cors = require('cors')({
   origin: true
 });
+
+const localeMap = {
+  ro: 'ro_RO',
+
+}
+
+const prefixMap = {
+  ro_RO: 'ro-RO'
+}
+
+const defaultLocale = 'ro_RO'
+const app = express()
+
+app
+  .use(cookieParser())
+  .use(expressLocale({
+    priority: ['cookie', 'accept-language', 'map', 'default'],
+    default: defaultLocale,
+    map: localeMap
+  }))
+  .use('*', (req, res, next) => {
+    const locale = localeMap[req.locale.language]
+    const prefix = prefixMap[locale] || prefixMap[defaultLocale]
+    res.redirect(`/${prefix}${req.originalUrl}`)
+  })
+
+exports.multilang = functions.https.onRequest(app)
 
 exports.sendEmail = functions.https.onRequest((req, res) => {
   cors(req, res, () => {

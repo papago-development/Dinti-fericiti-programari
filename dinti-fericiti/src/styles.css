@@ -28,5 +28,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .cal-day-view .cal-event{
-  color: #07a7ff !important;
+  color:white !important;
+}
+
+
+#text {
+  color: white !important;
 }
