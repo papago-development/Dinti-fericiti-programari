@@ -14,7 +14,7 @@ export class AuthService {
   public currentUser: any;
   public userStatus: string;
   public userStatusChages: BehaviorSubject<string> = new BehaviorSubject<string>(this.userStatus);
-  public userId: number;
+  private userId: number;
 
   constructor(private db: AngularFirestore, private dbAuth: AngularFireAuth,
               private router: Router, private ngZone: NgZone,

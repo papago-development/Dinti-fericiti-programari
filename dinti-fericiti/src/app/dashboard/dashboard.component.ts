@@ -1,5 +1,6 @@
+import { UploadFileService } from './../services/upload-file.service';
 import { LastAppointmentService } from './../services/last-appointment.service';
-import { Component, OnInit, OnDestroy, Input, Output, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
 import { Doctor } from '../models/doctor';
@@ -8,12 +9,14 @@ import { MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
-import { Subscription, Observable, Subject } from 'rxjs';
-import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK, CalendarEvent } from 'angular-calendar';
+import { Subscription, Subject, Observable } from 'rxjs';
+import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
 import { ILastAppointment } from '../models/ILastAppointment';
-import { colors } from '../models/colors';
+import { Files } from '../models/files';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,20 +27,20 @@ import { colors } from '../models/colors';
     {
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter
-    }, {
+    },
+    {
       provide: CalendarEventTitleFormatter,
       useClass: CustomEventTitleFormatter
     }
   ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
   // Properties
-  view: string = 'day';
+
+  // Properties for angular calendar
+  view = 'day';
   viewDate: Date = new Date();
-  locale: string = 'ro';
-  weekStartsON: number = DAYS_OF_WEEK.MONDAY;
-  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+  locale = 'ro';
 
   events: any[] = [];
   event: Programare;
@@ -45,11 +48,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   doctors: Doctor[] = [];
   doctor: any;
   lastAppointment: ILastAppointment;
+  name: string;
 
   dialogRef;
 
   clickedDate: Date;
-  clickedColumn: number;
   form: FormGroup;
   updateForm: FormGroup;
   pacient: Patient;
@@ -57,14 +60,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   updatedPacient: Patient;
   updatedAppointment: Programare;
   pacientExists: boolean;
-  checked = true;
-  checkboxes: any[] = [];
+  checked = true; // variable for doctor checkbox
+  checkboxes: any[] = []; // list of checkboxes
   filteredEvents: Array<any> = [];
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
   email: any = [];
-  colorsArray: any[] = ['#1e90ff', '#FFB6C1', '#d16c19', '#e3bc08', '#8B008B', '#006400',
-                        '#ad2121', '#5A2C2B'];
+  colorsArray: any[] = [
+    '#ad2121',
+    '#FFB6C1',
+    '#d16c19',
+    '#e3bc08',
+    '#8B008B',
+    '#006400',
+    '#1e90ff',
+    '#5A2C2B'
+  ];
+
+  // Properties
+  files: Array<Files> = [];
+  url: Observable<string | null>;
+  isUpdated: boolean;
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
@@ -80,7 +96,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private pacientService: PatientService,
-    private lastAppointmentService: LastAppointmentService
+    private lastAppointmentService: LastAppointmentService,
+    private dbStorage: AngularFireStorage
   ) { }
 
   ngOnInit() {
@@ -89,7 +106,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.createForm();
     this.createUpdateForm();
   }
-
 
   ngOnDestroy() {
     if (this.loadAppointments) {
@@ -120,11 +136,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Load all appointments from database
   loadAppointments() {
-    this.loadAppointmentsSubs = this.appointmentService.getAppointments().subscribe(data => {
-      this.events = data;
-      this.refresh.next();
-      console.log('events', this.events);
-    });
+    this.loadAppointmentsSubs = this.appointmentService
+      .getAppointments()
+      .subscribe(data => {
+        this.events = data;
+        this.refresh.next();
+        console.log('events', this.events);
+      });
   }
 
   // Load all doctors from database
@@ -170,20 +188,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
           val.checked = true;
           this.checked = val.checked;
           console.log('checked', this.checked);
-
         }
         this.doctor = doctor;
       });
-      this.getAppointmentsSubs = this.appointmentService.getAppointments().subscribe(data => {
-        this.filteredEvents = data.filter(m => m.medic === this.doctor);
-        this.filteredEvents.forEach(item => {
-          this.obj.push(item);
-          console.log('obj else', this.obj);
+      this.getAppointmentsSubs = this.appointmentService
+        .getAppointments()
+        .subscribe(data => {
+          this.filteredEvents = data.filter(m => m.medic === this.doctor);
+          this.filteredEvents.forEach(item => {
+            this.obj.push(item);
+            console.log('obj else', this.obj);
+          });
+          this.events = this.obj;
+          this.refresh.next();
+          console.log('events', this.events);
         });
-        this.events = this.obj;
-        this.refresh.next();
-        console.log('events', this.events);
-      });
     }
   }
 
@@ -192,12 +211,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       id: [''],
       namePacient: ['', Validators.required],
-      phonePacient: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
+      phonePacient: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(10)
+        ]
+      ],
       title: ['', Validators.required],
       medic: ['', Validators.required],
       start: [this.clickedDate, Validators.required],
       emailPacient: ['', Validators.email],
-      end: ['', Validators.required]
+      end: ['', Validators.required],
+      consimtamant: ['', Validators.required]
     });
   }
 
@@ -208,7 +235,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       phonePacient: ['', [Validators.required, Validators.maxLength(10)]],
       emailPacient: ['', Validators.email],
       title: ['', Validators.required],
-      medic: ['', Validators.required]
+      medic: ['', Validators.required],
+      consimtamant: ['', Validators.required]
     });
   }
 
@@ -219,6 +247,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       console.log('test', this.event);
 
+      this.name = this.event.namePacient;
       this.pacient = {
         name: this.event.namePacient,
         phonePacient: this.event.phonePacient,
@@ -226,34 +255,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
         start: this.event.start,
         medic: this.event.medic,
         title: this.event.title,
-        files: [{
-          filename: null,
-          url: null
-        }]
+        files: this.files,
+        consimtamant: this.event.consimtamant
       };
 
-      this.doctorService.getEmailByDoctorName(this.event.medic).subscribe(result => {
-        console.log("Email", result);
-        this.email = result.toString();
+      this.doctorService
+        .getEmailByDoctorName(this.event.medic)
+        .subscribe(result => {
+          console.log('Email', result);
+          this.email = result.toString();
 
-        this.lastAppointment = {
-          pacientName: this.event.namePacient,
-          pacientPhone: this.event.phonePacient,
-          doctorEmail: this.email,
-          doctorName: this.event.medic,
-          lastDate: this.event.start
-        };
+          this.lastAppointment = {
+            pacientName: this.event.namePacient,
+            pacientPhone: this.event.phonePacient,
+            doctorEmail: this.email,
+            doctorName: this.event.medic,
+            lastDate: this.event.start
+          };
 
-        console.log('last appointmnet', this.lastAppointment);
+          console.log('last appointment', this.lastAppointment);
 
-        // Add pacient to 'UltimeleProgramari' collection
-        this.lastAppointmentService.addLastAppointment(this.lastAppointment)
-          .then(() => {
-            console.log('Successfully added!');
-          }).catch(err => {
-            console.error(err);
-          });
-      });
+          // Add pacient to 'UltimeleProgramari' collection
+          this.lastAppointmentService
+            .addLastAppointment(this.lastAppointment)
+            .then(() => {
+              console.log('Successfully added!');
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        });
 
       // If patient exists return true, otherwise return false
       this.pacientService.patientExists(this.event.phonePacient).then(data => {
@@ -261,23 +292,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         // If patient exists update values from patient
         if (this.pacientExists) {
-          this.pacientService.getPatientByName(this.event.namePacient).subscribe(res => {
-            if (res.length > 0) {
-              localStorage.setItem('pacientId', res[0]);
+          this.pacientService
+            .getPatientByName(this.event.namePacient)
+            .subscribe(res => {
+              if (res.length > 0) {
+                localStorage.setItem('pacientId', res[0]);
 
-              // Get the patient Id from localstorage
-              this.pacientId = localStorage.getItem('pacientId');
+                // Get the patient Id from localstorage
+                this.pacientId = localStorage.getItem('pacientId');
 
-              this.pacientService
-                .updatePatient(this.pacientId, this.pacient)
-                .then(() => {
-                  console.log('Successfully updated');
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-            }
-          });
+                this.pacientService
+                  .updatePatient(this.pacientId, this.pacient)
+                  .then(() => {
+                    console.log('Successfully updated');
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              }
+            });
         } else {
           // Otherwise create a new patient in 'Patient' collection
           this.pacientService.addPacient(this.pacient);
@@ -286,7 +319,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
 
       // Add event/appointment to 'Programari' collection
-      this.appointmentService.addAppointment(this.event)
+      console.log('event add', this.event);
+      this.appointmentService
+        .addAppointment(this.event)
         .then(() => {
           this.dialogRef.close();
         })
@@ -296,8 +331,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  onFileSelected(event) {
+
+    // create a reference to the storage bucket location
+    const file = event.target.files[0];
+    const filePath = '/' + this.name + '/' + file.name;
+    const ref = this.dbStorage.ref(filePath);
+    const task = this.dbStorage.upload(filePath, file);
+
+
+    console.log('ref', ref.getDownloadURL);
+    console.log('Name', this.name);
+
+    console.log(this.files);
+
+    task
+      .then(() => {
+        ref.getDownloadURL().subscribe(data => {
+          this.url = data;
+          const fileNew: Files = {
+            url: this.url,
+            filename: file.name
+          };
+          this.files.push(fileNew);
+          this.isUpdated = true;
+        });
+      })
+      .catch((err) => {
+        this.isUpdated = false;
+        console.log('Error', err);
+      });
+  }
+
   // Open dialog for editing
   openEditDialog({ event }: { event: Programare }, editContent) {
+    console.log('is updated', this.isUpdated);
+    this.name = event.namePacient;
     this.pacientService.getPatientByName(event.namePacient).subscribe(res => {
       if (res.length > 0) {
         localStorage.setItem('pacientId', res.toString());
@@ -316,6 +385,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.updateForm.controls.title.setValue(event.title);
     this.updateForm.controls.medic.setValue(event.medic);
     this.updateForm.controls.emailPacient.setValue(event.emailPacient);
+    this.updateForm.controls.consimtamant.setValue(event.consimtamant);
     // this.updateForm.controls.start.setValue(event.start);
     // this.updateForm.controls.end.setValue(event.end);
 
@@ -335,10 +405,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         emailPacient: this.updatedAppointment.emailPacient,
         title: this.updatedAppointment.title,
         medic: this.updatedAppointment.medic,
-        files: [{
-          filename: '',
-          url: null
-        }]
+        files: this.files,
+        consimtamant: this.updatedAppointment.consimtamant
       };
 
       this.pacientId = localStorage.getItem('pacientId');
@@ -359,6 +427,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .updateAppointment(this.updatedEvent.id, this.updatedAppointment)
         .then(() => {
           this.dialogRef.close();
+          this.isUpdated = false;
         })
         .catch(err => {
           console.log(err);
@@ -411,18 +480,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       : '';
   }
 
-  // Upload file
-  onFileSelected() {
-
-  }
-
   checkPatient($event) {
     console.log('Name', event.target['value']);
-    this.pacientService.getPhoneByPatientName(event.target['value']).subscribe(data => {
-      let phone = data;
-      if (phone !== null) {
-        this.phoneNumber = phone[0];
-      }
-    });
+    this.pacientService
+      .getPhoneByPatientName(event.target['value'])
+      .subscribe(data => {
+        const phone = data;
+        if (phone !== null) {
+          this.phoneNumber = phone[0];
+        }
+      });
   }
 }

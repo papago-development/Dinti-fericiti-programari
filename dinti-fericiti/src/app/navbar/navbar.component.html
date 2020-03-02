@@ -17,6 +17,10 @@
         <a class="nav-item nav-link" [routerLink]="['dashboard']">Programari</a>
       </li>
       <li class="nav-item">
+          <a class="nav-item nav-link" (click)="logout()">Logout</a>
+
+        </li>
+
     </ul>
     <!-- Navbar for doctors -->
     <ul  class="nav navbar-nav navbar-right" *ngIf="userStatus && userStatus['role'] === 'user'" > 
@@ -27,12 +31,18 @@
         <a class="nav-item nav-link" [routerLink]="['patients']">Pacienti</a>
       </li>
       <li *ngIf="userStatus" class="nav-item">
-        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+          <a class="nav-item nav-link" (click)="logout()">Logout</a>
+
       </li>
       <!-- <li *ngIf="!userStatus" class="nav-item">
         <a class="nav-item nav-link" (click)="signUp()">SignUp</a>
       </li> -->
     </ul>
+    <!-- <ul>
+            <li *ngIf="!userStatus" class="nav-item">
+        <a class="nav-item nav-link" (click)="signUp()">SignUp</a>
+      </li>
+    </ul> -->
   </div>
 </nav>
 <router-outlet></router-outlet>

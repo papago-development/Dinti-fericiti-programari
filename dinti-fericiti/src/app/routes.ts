@@ -1,3 +1,4 @@
+import { AddPatientComponent } from './dashboard/patients/add-patient/add-patient.component';
 import { Routes } from '@angular/router';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -16,7 +17,7 @@ export const appRoutes: Routes = [
   },
   { path: 'doctor/:id', component: DoctorComponent, canActivate: [AuthGuard], data: {roles: ['user']}},
   { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard], data: {roles: ['admin', 'user']}},
-  {path: 'patient/:id', component: PatientComponent, canActivate: [AuthGuard], data: {roles: ['admin', 'user']}},
-
+  { path: 'addPatient', component: AddPatientComponent, canActivate: [AuthGuard], data: { roles: ['admin', 'user']}},
+  { path: 'patient/:id', component: PatientComponent, canActivate: [AuthGuard], data: {roles: ['admin', 'user']}},
   { path: '', redirectTo: 'login', pathMatch: 'full', data: { roles: ['user', 'admin'] } }
 ];

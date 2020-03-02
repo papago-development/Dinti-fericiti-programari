@@ -1,12 +1,15 @@
-import { Interventie } from './interventie';
 import { Files } from './files';
 
-export class Patient {
+export interface Patient {
   name: string;
   title: string;
+  cnp?: string;
+  boli?: string;
+  alergi?: string;
   phonePacient: number;
   medic: string;
   start?: Date;
   emailPacient: string;
-  files: Files[] = [];
+  files: Files[];
+  consimtamant?: boolean;
 }

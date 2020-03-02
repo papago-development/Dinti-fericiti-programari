@@ -7,6 +7,7 @@ import { DoctorService } from 'src/app/services/doctor.service';
 import { Doctor } from 'src/app/models/doctor';
 import { Programare } from 'src/app/models/programare';
 import { AppointmentService } from 'src/app/services/appointment.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patients',
@@ -42,7 +43,9 @@ export class PatientsComponent implements OnInit {
               private doctorService: DoctorService,
               private appointmentService: AppointmentService,
               private fb: FormBuilder,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.loadPatients();
@@ -164,6 +167,10 @@ export class PatientsComponent implements OnInit {
 
       console.log('create patient', this.createPatient);
     }
+  }
+
+  addPatientPage() {
+    this.router.navigate(['addPatient']);
   }
 
   getNamePacientErrorMessage() {

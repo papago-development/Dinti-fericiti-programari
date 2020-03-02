@@ -14,9 +14,12 @@ table {
   overflow: hidden;
 
 }
-/* button #addAppointment {
-  padding-left: 10px;
-} */
+
+#addPatient {
+  float: right;
+  padding-top: 10px;
+  padding-right: 25px;
+}
 
  i{
    padding-top: 5px;

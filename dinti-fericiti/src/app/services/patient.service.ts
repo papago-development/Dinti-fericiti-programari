@@ -136,6 +136,19 @@ export class PatientService {
       });
   }
 
+  addFileToPatientName(name, file) {
+    this.db
+    .collection('Pacienti')
+    .doc(name)
+    .update(Object.assign({files: file}))
+    .then(() => {
+      console.log('Document successfully written!');
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+
   deleteFileFromPatient(patientId, file) {
     this.db.collection('Pacienti')
                                   .doc(patientId)

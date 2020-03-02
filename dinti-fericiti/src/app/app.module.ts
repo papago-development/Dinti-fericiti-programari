@@ -1,4 +1,3 @@
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
@@ -44,7 +43,9 @@ import { PatientsComponent } from './dashboard/patients/patients.component';
 import { PatientComponent } from './dashboard/patient/patient.component';
 import { HistoryAppointmentComponent } from './dashboard/history-appointment/history-appointment.component';
 import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
-import { ModalComponent } from './modal/modal.component';
+import { AddPatientComponent } from './dashboard/patients/add-patient/add-patient.component';
+import { AddManoperaComponent } from './dashboard/patient/add-manopera/add-manopera.component';
+import { AddPlanManoperaComponent } from './dashboard/patient/add-plan-manopera/add-plan-manopera.component';
 
 registerLocaleData(localeRo);
 @NgModule({
@@ -60,7 +61,9 @@ registerLocaleData(localeRo);
       PatientComponent,
       HistoryAppointmentComponent,
       UploadFileComponent,
-      ModalComponent
+      AddPatientComponent,
+      AddManoperaComponent,
+      AddPlanManoperaComponent
    ],
    imports: [
       BrowserModule,

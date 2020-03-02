@@ -1,0 +1,18 @@
+#pacient {
+    flex-direction: column;
+    display: flex;
+}
+
+#importantForm {
+    flex-direction: column;
+    display: flex;
+}
+
+#importantTitle {
+    /* background-color: red; */
+    color: red;
+}
+
+#important {
+    color: red;
+}

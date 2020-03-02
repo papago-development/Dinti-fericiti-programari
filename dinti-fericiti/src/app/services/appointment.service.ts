@@ -28,8 +28,8 @@ export class AppointmentService {
           title: event.payload.doc.data()['title'],
           // tslint:disable-next-line: no-string-literal
           // tslint:disable-next-line: max-line-length
-          color: (event.payload.doc.data()['medic'] === 'Laura Prie') ? colors.red :
-                 (event.payload.doc.data()['medic'] === 'Erna Dupir') ? colors.blue :
+          color: (event.payload.doc.data()['medic'] === 'Laura Prie') ? colors.blue :
+                 (event.payload.doc.data()['medic'] === 'Erna Dupir') ? colors.red :
                  (event.payload.doc.data()['medic'] === 'Ana Sandu') ? colors.yellow :
                  (event.payload.doc.data()['medic'] === 'Ilona Petrica') ? colors.orange :
                  (event.payload.doc.data()['medic'] === 'Georgeta-Nicoleta Dinu') ? colors.purple :
@@ -40,7 +40,8 @@ export class AppointmentService {
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal
           phonePacient: event.payload.doc.data()['phonePacient'],
-          emailPacient: event.payload.doc.data()['emailPacient']
+          emailPacient: event.payload.doc.data()['emailPacient'],
+          consimtamant: event.payload.doc.data()['consimtamant']
         };
       }))
     );
@@ -89,7 +90,8 @@ export class AppointmentService {
           namePacient: event.payload.doc.data()['namePacient'],
           // tslint:disable-next-line: no-string-literal
           phonePacient: event.payload.doc.data()['phonePacient'],
-          emailPacient: event.payload.doc.data()['emailPacient']
+          emailPacient: event.payload.doc.data()['emailPacient'],
+          consimtamant: event.payload.doc.data()['consimtamant']
         };
       }))
     );

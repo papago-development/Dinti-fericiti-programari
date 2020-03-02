@@ -1,0 +1,95 @@
+<div class="container">
+    <!-- <form [formGroup]="addPatientForm" (ngSubmit)="addPatient()" >
+  <mat-tab-group>
+
+        <mat-tab label = "Informatii pacient">
+          <div id="pacient">
+            <mat-form-field>
+                <mat-label>Nume pacient</mat-label>
+                <input matInput #input formControlName="name" placeholder="Nume pacient">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>CNP</mat-label>
+                <input matInput #input formControlName="cnp" placeholder="CNP">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Telefon pacient</mat-label>
+                <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Medic</mat-label>
+                <mat-select formControlName="medic">
+                  <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+                    {{ doctor.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+        </mat-tab>
+        <mat-tab label = "Important">
+              <mat-card-title id="important">Important</mat-card-title>
+              <mat-card-subtitle id="importantForm">
+                <mat-form-field>
+                  <mat-label>Boli</mat-label>
+                  <input matInput #input formControlName="boli" placeholder="Boli">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Alergi</mat-label>
+                  <input matInput #input formControlName="alergi" placeholder="Alergi">
+                </mat-form-field>
+                </mat-card-subtitle>
+        </mat-tab>
+        <mat-tab label = "Plan tratament">
+          <mat-card-title>Plan de tratament</mat-card-title>
+        </mat-tab>
+
+  </mat-tab-group>
+</form> -->
+  <mat-card>
+    <mat-card-title>
+      Informatii pacient
+    </mat-card-title>
+    <mat-card-subtitle>
+      <form [formGroup]="addPatientForm" (ngSubmit)="addPatient()" id="pacient">
+        <mat-form-field>
+          <mat-label>Nume pacient</mat-label>
+          <input matInput #input formControlName="name" placeholder="Nume pacient">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>CNP</mat-label>
+          <input matInput #input formControlName="cnp" placeholder="CNP">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Telefon pacient</mat-label>
+          <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Medic</mat-label>
+          <mat-select formControlName="medic">
+            <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+              {{ doctor.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-card-title id="importantTitle">
+          Important
+        </mat-card-title>
+        <mat-card-subtitle id="importantForm">
+          <mat-form-field>
+            <mat-label>Boli</mat-label>
+            <input matInput #input formControlName="boli" placeholder="Boli">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Alergi</mat-label>
+            <input matInput #input formControlName="alergi" placeholder="Alergi">
+          </mat-form-field>
+        </mat-card-subtitle>
+        <div class="form-group">
+          <button mat-raised-button color="success" type="submit">Salveaza</button>
+        </div>
+      </form>
+    </mat-card-subtitle>
+  </mat-card>
+</div>
+<app-add-plan-manopera></app-add-plan-manopera>

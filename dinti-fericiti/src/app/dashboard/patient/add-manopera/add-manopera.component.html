@@ -1,0 +1,33 @@
+<div class="container">
+    <mat-card>
+        <mat-card-title>
+          Plan tratament
+        </mat-card-title>
+        <mat-card-subtitle>
+          <form [formGroup]="manoperaForm" (ngSubmit)="addManopera()" id="pacient">
+            <mat-form-field>
+              <mat-label>CNP</mat-label>
+              <input matInput #input formControlName="cnp" placeholder="CNP pacient">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Manopera</mat-label>
+              <input matInput #input formControlName="manopera" placeholder="Manopera">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Medic</mat-label>
+              <mat-select formControlName="medic">
+                  <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+                    {{ doctor.name }}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label></mat-label>
+            </mat-form-field>
+            <div class="form-group">
+              <button mat-raised-button color="primary" type="submit">Editeaza</button>
+            </div>
+          </form>
+        </mat-card-subtitle>
+      </mat-card>
+</div>

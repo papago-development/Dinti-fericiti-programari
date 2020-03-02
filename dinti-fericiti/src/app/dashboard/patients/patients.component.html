@@ -6,6 +6,9 @@
     <mat-form-field>
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Cautare">
     </mat-form-field>
+    <span id="addPatient">
+      <button class="mr-auto" mat-raised-button color="primary" (click)="addPatientPage()">Adauga pacient</button>
+    </span>
     <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="name">
