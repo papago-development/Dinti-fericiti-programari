@@ -36,7 +36,8 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   createForm() {
     this.planManoperaForm = new FormGroup({
       manopera: new FormControl(null, Validators.required),
-      medic: new FormControl(null, Validators.required)
+      medic: new FormControl(null, Validators.required),
+      isFinished: new FormControl(false)
     });
   }
 

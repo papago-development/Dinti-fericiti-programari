@@ -13,6 +13,18 @@
         </mat-form-field>
 <button type="button" (click)="add()">+</button>
 </form>
-<div *ngFor="let item of manoperaList">
-  {{item.manopera}} - {{item.medic}}
-</div>
+<table  class="table table-responsive"
+        *ngIf="manoperaList.length > 0">
+  <thead>
+    <tr>
+      <td>Medic</td>
+      <td>Manopera</td>
+    </tr>
+  </thead>
+  <tbody *ngFor="let item of manoperaList">
+    <tr>
+      <td>{{item.medic}}</td>
+    <td>{{item.manopera}}</td>
+    </tr>
+  </tbody>
+</table>

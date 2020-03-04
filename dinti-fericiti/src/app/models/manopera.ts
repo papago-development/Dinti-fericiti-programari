@@ -1,5 +1,6 @@
 export interface Manopera {
-    cnp: string;
     manopera: string;
     medic: string;
+    data: Date;
+    tehnician: string;
 }
