@@ -11,8 +11,12 @@ export class PatientService {
   constructor(private db: AngularFirestore) {}
 
   // Add pacient to firebase collection 'Pacienti'
-  addPacient(pacient) {
-    this.db.collection('Pacienti').add(pacient);
+  addPacient(pacient, manopere?) {
+    console.log('patient', pacient);
+    this.db.collection('Pacienti').doc(`${pacient.cnp}`).set(pacient).then(() => {
+      // tslint:disable-next-line: max-line-length
+      this.db.collection('Pacienti').doc(`${pacient.cnp}`).collection('Manopera').add({...manopere});
+    });
   }
 
   // Get all patients from firebase collection 'Patienti'

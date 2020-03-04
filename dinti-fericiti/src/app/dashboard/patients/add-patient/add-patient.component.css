@@ -8,6 +8,11 @@
     display: flex;
 }
 
+#manopera {
+    flex-direction: column;
+    display: flex;
+}
+
 #importantTitle {
     /* background-color: red; */
     color: red;

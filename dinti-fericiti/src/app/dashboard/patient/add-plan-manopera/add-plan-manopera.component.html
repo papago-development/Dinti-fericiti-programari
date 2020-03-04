@@ -1,40 +1,18 @@
-<div class="container">
-    <mat-card>
-        <mat-card-title>
-          Plan tratament
-        </mat-card-title>
-        <mat-card-subtitle>
-          <form [formGroup]="planManoperaForm" (ngSubmit)="addPlanManopera()" id="pacient">
-            <mat-form-field>
-              <mat-label>CNP</mat-label>
-              <input matInput #input formControlName="cnp" placeholder="CNP pacient">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Manopera</mat-label>
-              <input matInput #input formControlName="manopera" placeholder="Manopera">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Medic</mat-label>
-              <mat-select formControlName="medic">
-                  <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-                    {{ doctor.name }}
-                  </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Data</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="data">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Tehnician</mat-label>
-              <input matInput #input formControlName="tehnician" placeholder="Tehnician">
-            </mat-form-field>
-            <div class="form-group">
-              <button mat-raised-button color="primary" type="submit">Salveaza</button>
-            </div>
-          </form>
-        </mat-card-subtitle>
-      </mat-card>
+<form [formGroup]="planManoperaForm">
+      <mat-form-field>
+        <mat-label>Manopera</mat-label>
+        <input matInput #input formControlName="manopera" placeholder="Manopera">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Medic</mat-label>
+        <mat-select formControlName="medic">
+          <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+            {{ doctor.name }}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
+<button type="button" (click)="add()">+</button>
+</form>
+<div *ngFor="let item of manoperaList">
+  {{item.manopera}} - {{item.medic}}
 </div>

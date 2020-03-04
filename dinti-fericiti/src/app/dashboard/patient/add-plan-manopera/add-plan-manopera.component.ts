@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Doctor } from './../../../models/doctor';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { PlanManoperaService } from './../../../services/plan-manopera.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,13 +11,14 @@ import { Subscription } from 'rxjs';
   templateUrl: './add-plan-manopera.component.html',
   styleUrls: ['./add-plan-manopera.component.css']
 })
-export class AddPlanManoperaComponent implements OnInit {
+export class AddPlanManoperaComponent implements OnInit, OnChanges {
 
   // Properties
   doctors: Doctor[] = [];
   doctorSubscription: Subscription;
   planManoperaForm: FormGroup;
   planManopera: PlanManopera;
+  manoperaList: any[] = [];
 
   constructor(private planManoperaService: PlanManoperaService,
               private doctorService: DoctorService) { }
@@ -25,15 +26,17 @@ export class AddPlanManoperaComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
+    this.getManopera();
+  }
+
+  ngOnChanges() {
+    this.getManopera();
   }
 
   createForm() {
     this.planManoperaForm = new FormGroup({
-      cnp: new FormControl(null, Validators.required),
       manopera: new FormControl(null, Validators.required),
-      medic: new FormControl(null, Validators.required),
-      data: new FormControl(null, Validators.required),
-      tehnician: new FormControl(null, Validators.required)
+      medic: new FormControl(null, Validators.required)
     });
   }
 
@@ -44,9 +47,19 @@ export class AddPlanManoperaComponent implements OnInit {
   }
 
   addPlanManopera() {
+    // this.planManopera = Object.assign({}, this.planManoperaForm.value);
+    // console.log('plan manopera', this.planManopera);
+    // this.planManoperaService.addManopera(this.planManopera);
+    // window.alert('Manopera a fost adaugata cu success');
+  }
+
+  add() {
     this.planManopera = Object.assign({}, this.planManoperaForm.value);
-    console.log('plan manopera', this.planManopera);
-    this.planManoperaService.addManopera(this.planManopera);
-    window.alert('Manopera a fost adaugata cu success');
+    this.planManoperaService.add(this.planManopera);
+    this.planManoperaForm.reset();
+  }
+
+  getManopera() {
+    this.manoperaList = this.planManoperaService.getManopera();
   }
 }

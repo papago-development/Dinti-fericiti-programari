@@ -1,52 +1,150 @@
 <div class="container">
-    <!-- <form [formGroup]="addPatientForm" (ngSubmit)="addPatient()" >
-  <mat-tab-group>
+  <form [formGroup]="addPatientForm" (ngSubmit)="addPatient()">
+    <mat-horizontal-stepper [linear]="isLinear">
 
-        <mat-tab label = "Informatii pacient">
-          <div id="pacient">
-            <mat-form-field>
-                <mat-label>Nume pacient</mat-label>
-                <input matInput #input formControlName="name" placeholder="Nume pacient">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>CNP</mat-label>
-                <input matInput #input formControlName="cnp" placeholder="CNP">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Telefon pacient</mat-label>
-                <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Medic</mat-label>
-                <mat-select formControlName="medic">
-                  <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-                    {{ doctor.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+      <!-- First step -->
+      <mat-step [stepControl]="infoPatientForm">
+        <ng-template matStepLabel>Informatii pacient</ng-template>
+        <div id="pacient" >
+          <mat-form-field>
+            <mat-label>Nume pacient</mat-label>
+            <input matInput #input formControlName="name" placeholder="Nume pacient">
+            <mat-error *ngIf="addPatientForm.get('name').invalid && (addPatientForm.get('name').dirty ||addPatientForm.get('name').touched)"
+              class="help-block">Numele este obligatoriu</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>CNP</mat-label>
+            <input  matInput
+                    #input 
+                    formControlName="cnp" 
+                    pattern="^\d*[0-9]\d*$"
+                    [maxLength]="maxLengthCNP"
+                    placeholder="CNP">
+            <mat-error  *ngIf="addPatientForm.get('cnp').invalid && addPatientForm.get('cnp').touched"
+                        class="help-block">CNP-ul este obligatoriu</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Telefon pacient</mat-label>
+            <input  matInput 
+                    #input
+                    formControlName="phonePacient" 
+                    type="number" 
+                    pattern="^\d*[0-9]\d*$" 
+                    [maxLength]="maxLengthPhone"
+                    placeholder="Telefon pacient">
+            <mat-error  *ngIf="addPatientForm.get('phonePacient').invalid && 
+                               addPatientForm.get('phonePacient').touched" 
+                        class="help-block">Numarul de telefon este obligatoriu si trebuie sa contina 10 cifre
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Medic</mat-label>
+            <mat-select formControlName="medic">
+              <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+                {{ doctor.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="addPatientForm.get('medic').invalid && addPatientForm.get('medic').touched"
+              class="help-block">Selectarea unui medic este obligatorie</mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button type="button" mat-button matStepperNext 
+          [disabled]="addPatientForm.get('medic').invalid || addPatientForm.get('phonePacient').invalid ||
+                      addPatientForm.get('cnp').invalid || addPatientForm.get('name').invalid">Next</button>
+        </div>
+      </mat-step>
 
-        </mat-tab>
-        <mat-tab label = "Important">
-              <mat-card-title id="important">Important</mat-card-title>
-              <mat-card-subtitle id="importantForm">
-                <mat-form-field>
-                  <mat-label>Boli</mat-label>
-                  <input matInput #input formControlName="boli" placeholder="Boli">
-                </mat-form-field>
-                <mat-form-field>
-                  <mat-label>Alergi</mat-label>
-                  <input matInput #input formControlName="alergi" placeholder="Alergi">
-                </mat-form-field>
-                </mat-card-subtitle>
-        </mat-tab>
-        <mat-tab label = "Plan tratament">
-          <mat-card-title>Plan de tratament</mat-card-title>
-        </mat-tab>
+      <!-- Second step -->
+      <mat-step>
+        <ng-template matStepLabel>Important</ng-template>
+        <div id="importantForm">
+          <mat-form-field>
+            <mat-label>Boli</mat-label>
+            <input matInput #input formControlName="boli" placeholder="Boli">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Alergi</mat-label>
+            <input matInput #input formControlName="alergi" placeholder="Alergi">
+          </mat-form-field>
+        </div>
+        <div>
+          <button type="button" mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
 
-  </mat-tab-group>
-</form> -->
-  <mat-card>
+      <!-- Third step -->
+      <mat-step>
+        <ng-template matStepLabel>Plan tratament stomatologic</ng-template>
+        <div id="manopera">
+          <app-add-plan-manopera></app-add-plan-manopera>
+        </div>
+        <div>
+          <button type="button" mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+
+      <!-- Last step -->
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <div>
+          <div class="form-group">
+            <button mat-raised-button color="primary" type="submit" [disabled]="addPatientForm.invalid">Salveaza</button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </form>
+  <!-- <form [formGroup]="addPatientForm" (ngSubmit)="addPatient()">
+    <mat-tab-group>
+      <mat-tab label="Informatii pacient">
+        <div id="pacient">
+          <mat-form-field>
+            <mat-label>Nume pacient</mat-label>
+            <input matInput #input formControlName="name" placeholder="Nume pacient">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>CNP</mat-label>
+            <input matInput #input formControlName="cnp" placeholder="CNP">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Telefon pacient</mat-label>
+            <input matInput #input formControlName="phonePacient" placeholder="Telefon pacient">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Medic</mat-label>
+            <mat-select formControlName="medic">
+              <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+                {{ doctor.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Important">
+        <mat-card-title id="important">Important</mat-card-title>
+        <mat-card-subtitle id="importantForm">
+          <mat-form-field>
+            <mat-label>Boli</mat-label>
+            <input matInput #input formControlName="boli" placeholder="Boli">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Alergi</mat-label>
+            <input matInput #input formControlName="alergi" placeholder="Alergi">
+          </mat-form-field>
+        </mat-card-subtitle>
+      </mat-tab>
+      <mat-tab label="Plan tratament">
+        <app-add-plan-manopera></app-add-plan-manopera>
+      </mat-tab>
+      <mat-tab label="Finish">
+        <div class="form-group">
+          <button mat-raised-button color="primary" type="submit">Salveaza</button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form> -->
+  <!-- <mat-card>
     <mat-card-title>
       Informatii pacient
     </mat-card-title>
@@ -90,6 +188,5 @@
         </div>
       </form>
     </mat-card-subtitle>
-  </mat-card>
+  </mat-card> -->
 </div>
-<app-add-plan-manopera></app-add-plan-manopera>

@@ -1,11 +1,14 @@
+import { PlanManoperaService } from './../../../services/plan-manopera.service';
+import { Manopera } from './../../../models/manopera';
 import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/models/doctor';
 import { DoctorService } from 'src/app/services/doctor.service';
+import { PlanManopera } from 'src/app/models/planManopera';
 
 @Component({
   selector: 'app-add-patient',
@@ -20,9 +23,20 @@ export class AddPatientComponent implements OnInit {
   patient: Patient;
   doctors: Doctor;
   subscription: Subscription;
+  isLinear = false;
+  patientForm: FormGroup;
+  maxLengthCNP = 13;
+  maxLengthPhone = 10;
+  infoPatientForm: FormGroup;
+  boliPatientForm: FormGroup;
+  isOptional = false;
+
+  // tslint:disable-next-line: no-input-rename
+  manoperaList: PlanManopera[] = [];
 
   constructor(private patientService: PatientService,
               private doctorService: DoctorService,
+              private manoperaService: PlanManoperaService,
               private router: Router) { }
 
   ngOnInit() {
@@ -35,12 +49,13 @@ export class AddPatientComponent implements OnInit {
    */
   createForm() {
     this.addPatientForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      cnp: new FormControl(null, Validators.required),
-      phonePacient: new FormControl(null, Validators.required),
-      medic: new FormControl(null, Validators.required),
-      boli: new FormControl(null),
-      alergi: new FormControl(null)
+
+        name: new FormControl(null, Validators.required),
+        cnp: new FormControl(null, Validators.required),
+        phonePacient: new FormControl(null, Validators.required),
+        medic: new FormControl(null, Validators.required),
+        boli: new FormControl(null),
+        alergi: new FormControl(null)
     });
   }
 
@@ -57,12 +72,16 @@ export class AddPatientComponent implements OnInit {
   addPatient() {
     this.patient = Object.assign({}, this.addPatientForm.value);
     console.log('patient', this.patient);
-    // this.patientService.addPacient(this.patient);
-    // console.log('Add');
 
-    // setTimeout(() => {
-    //   this.router.navigate(['patients']);
-    // }, 100);
+    this.manoperaList = this.manoperaService.getManopera();
+    console.log('manopera', this.manoperaList);
+
+    this.patientService.addPacient(this.patient, this.manoperaList);
+    console.log('Add');
+
+    setTimeout(() => {
+      this.router.navigate(['patients']);
+    }, 100);
   }
 
 }

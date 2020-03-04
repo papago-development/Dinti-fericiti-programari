@@ -1,5 +1,4 @@
 import { PlanManopera } from './../models/planManopera';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -7,21 +6,15 @@ import { Injectable } from '@angular/core';
 })
 export class PlanManoperaService {
 
-  constructor(private db: AngularFirestore) { }
+  manoperaList: PlanManopera[] = [];
 
-  addManopera(planManopera) {
-    this.db.collection('PlanManopera').add(planManopera);
+  constructor() { }
+
+  add(manopera) {
+    this.manoperaList.push(manopera);
   }
 
-  getByCnp(cnp) {
-    return this.db.firestore.collection('PlanManopera')
-                .where('CNP', '==', cnp)
-                .get()
-                .then(snap => {
-                  snap.forEach(doc => {
-                    const data = doc.data() as PlanManopera;
-                    console.log('Data' + JSON.stringify(data));
-                  });
-                });
+  getManopera() {
+    return this.manoperaList;
   }
 }

@@ -22,7 +22,8 @@ import {  MatInputModule,
           MatPaginatorModule,
           MatSortModule,
           MatCheckboxModule,
-          MatIconModule} from '@angular/material';
+          MatIconModule,
+          MatStepperModule} from '@angular/material';
 
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeRo from '@angular/common/locales/ro';
@@ -44,8 +45,9 @@ import { PatientComponent } from './dashboard/patient/patient.component';
 import { HistoryAppointmentComponent } from './dashboard/history-appointment/history-appointment.component';
 import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
 import { AddPatientComponent } from './dashboard/patients/add-patient/add-patient.component';
-import { AddManoperaComponent } from './dashboard/patient/add-manopera/add-manopera.component';
 import { AddPlanManoperaComponent } from './dashboard/patient/add-plan-manopera/add-plan-manopera.component';
+import { HistoryManopereComponent } from './dashboard/history-manopere/history-manopere.component';
+import { AddManoperaComponent } from './dashboard/history-manopere/add-manopera/add-manopera.component';
 
 registerLocaleData(localeRo);
 @NgModule({
@@ -63,7 +65,8 @@ registerLocaleData(localeRo);
       UploadFileComponent,
       AddPatientComponent,
       AddManoperaComponent,
-      AddPlanManoperaComponent
+      AddPlanManoperaComponent,
+      HistoryManopereComponent
    ],
    imports: [
       BrowserModule,
@@ -94,6 +97,7 @@ registerLocaleData(localeRo);
        MatSortModule,
        MatCheckboxModule,
        MatIconModule,
+       MatStepperModule,
        ToastrModule.forRoot(),
        OwlDateTimeModule,
        OwlNativeDateTimeModule
