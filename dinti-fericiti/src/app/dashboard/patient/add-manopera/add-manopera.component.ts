@@ -1,3 +1,5 @@
+import { PlanManoperaService } from './../../../services/plan-manopera.service';
+import { PlanManopera } from './../../../models/planManopera';
 import { ManoperaService } from './../../../services/manopera.service';
 import { Manopera } from './../../../models/manopera';
 import { Doctor } from './../../../models/doctor';
@@ -21,9 +23,11 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
   doctorSubscription: Subscription;
   manopereSubscription: Subscription;
   patientId: string;
+  planManopere: PlanManopera[] = [];
 
   constructor(private doctorService: DoctorService,
               private manoperaService: ManoperaService,
+              private planManoperaService: PlanManoperaService,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -31,6 +35,7 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
     console.log('patient cnp', this.patientId);
     this.createForm();
     this.loadDoctors();
+    this.loadPlanManopere();
   }
 
   ngOnDestroy() {
@@ -59,6 +64,12 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
   loadDoctors() {
     this.doctorSubscription = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
+    });
+  }
+
+  loadPlanManopere() {
+    this.planManoperaService.getPlanManopereByCNP(this.patientId).subscribe(data => {
+      this.planManopere = data;
     });
   }
 

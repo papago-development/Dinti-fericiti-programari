@@ -21,29 +21,23 @@
             <button type="button" (click)="add()">+</button>
           </form>
           <table  class="table table-responsive"
-                  *ngIf="manoperaList.length > 0">
+                  *ngIf="planManopera.length > 0">
             <thead>
               <tr>
+                <td></td>
                 <td>Medic</td>
                 <td>Manopera</td>
               </tr>
             </thead>
-            <tbody *ngFor="let item of manopere">
+            <tbody *ngFor="let item of planManopera; let i = index;">
               <tr>
+                <td>{{i + 1}}</td>
                 <td>{{item.medic}}</td>
               <td>{{item.manopera}}</td>
               <td><mat-checkbox [value]="item.isFinished"></mat-checkbox></td>
               </tr>
             </tbody>
           </table>
-          
-          <div *ngFor="let item of arr">
-          <!-- {{item[i].medic}}
-          {{i}} -->
-          <div *ngFor="let x of manopere[item]">
-            {{x.medic}}
-          </div>
-          </div>
     </mat-card-subtitle>
   </mat-card>
 

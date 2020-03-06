@@ -78,11 +78,12 @@
       <mat-step>
         <ng-template matStepLabel>Plan tratament stomatologic</ng-template>
         <div id="manopera">
-            <!-- <button type="button" (click)="addManopere()"> Adauga manopera</button>
+            <button type="button" (click)="addManopere()"> Adauga manopera</button>
           <div formArrayName="manopere"
             *ngFor="let manopere of addPatientForm.get('manopere')['controls']; let i = index;">
 
             <div [formGroupName]="i">
+              {{i+1}}
                 <mat-form-field>
                     <mat-label>Manopera</mat-label>
                     <input matInput #input formControlName="manopera" placeholder="Manopera">
@@ -96,8 +97,9 @@
                     </mat-select>
                     </mat-form-field>
             </div>
-          </div> -->
-          <app-add-plan-manopera [cnpPacient]="addPatientForm.get('cnp').value"></app-add-plan-manopera>
+          </div>
+          Value: {{ addPatientForm.value | json }}
+          <!-- <app-add-plan-manopera [cnpPacient]="cpn()"></app-add-plan-manopera> -->
         </div>
         <div>
           <button type="button" mat-button matStepperNext>Next</button>

@@ -9,7 +9,11 @@
   </mat-form-field>
   <mat-form-field>
       <mat-label>Manopera</mat-label>
-        <input matInput #input formControlName="manopera" placeholder="Manopera">
+      <mat-select formControlName="manopera">
+          <mat-option *ngFor="let doctor of planManopere" [value]="doctor.manopera">
+            {{ doctor.manopera }}
+          </mat-option>
+        </mat-select>
   </mat-form-field>
   <mat-form-field>
       <mat-label>Data</mat-label>

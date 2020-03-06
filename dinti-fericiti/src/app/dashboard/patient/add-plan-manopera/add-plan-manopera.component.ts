@@ -1,12 +1,11 @@
-import { forEach } from '@angular/router/src/utils/collection';
 import { ActivatedRoute } from '@angular/router';
 import { PlanManopera } from './../../../models/planManopera';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Doctor } from './../../../models/doctor';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { PlanManoperaService } from './../../../services/plan-manopera.service';
-import { Component, OnInit, OnChanges, Input, ElementRef, ViewChild } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-plan-manopera',
@@ -19,20 +18,23 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   doctors: Doctor[] = [];
   doctorSubscription: Subscription;
   planManoperaForm: FormGroup;
-  planManopera: PlanManopera;
+  planManopera: PlanManopera[] = [];
   manoperaList: any[] = [];
-  manopere: Array<any> = [];
+
   patientId: string;
   arr: any[] = [];
 
-  @Input() cnpPacient: ElementRef;
+  @Input() cnpPacient: string;
 
   constructor(private planManoperaService: PlanManoperaService,
               private doctorService: DoctorService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute) {
+
+
+  }
 
   ngOnInit() {
-    console.log('cpn', this.cnpPacient);
+    console.log('cnp', this.cnpPacient);
     this.patientId = this.route.snapshot.paramMap.get('id');
     this.createForm();
     this.loadDoctors();
@@ -60,14 +62,13 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   loadManopere() {
-    // this.manopere = this.planManoperaService.getItemFromDatabaseByCNP(this.patientId);
+    // this.manopere = this.planManoperaService.getPlanManopereByCNP(this.patientId);
     // console.log('manopere', this.manopere);
-    // this.planManoperaService.getItemFromDatabaseByCNP(this.patientId)
-    // .subscribe(data => {
-    //   this.manopere = data;
-    //   console.log('manopere', this.manopere);
-    //   console.log('manopere 1', JSON.stringify(this.manopere));
-    // });
+    this.planManoperaService.getPlanManopereByCNP(this.patientId)
+      .subscribe(data => {
+        this.planManopera = data;
+        console.log('manopere', this.planManopera);
+      });
   }
 
   addPlanManopera() {
@@ -84,6 +85,6 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   getManopera() {
-    this.manoperaList = this.planManoperaService.getManopera();
+    this.manoperaList = this.planManoperaService.getPlanManopera();
   }
 }

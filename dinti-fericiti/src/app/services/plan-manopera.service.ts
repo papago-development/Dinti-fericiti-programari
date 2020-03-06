@@ -9,15 +9,21 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class PlanManoperaService {
 
-  private manoperaList: PlanManopera[] = [];
+  private planManoperaList: PlanManopera[] = [];
 
   constructor(private db: AngularFirestore) { }
 
-  add(manopera) {
-    this.manoperaList.push(manopera);
+  add(planManopera) {
+    this.planManoperaList.push(planManopera);
   }
 
-  getManopera() {
-    return this.manoperaList;
+  getPlanManopera() {
+    return this.planManoperaList;
   }
+
+  getPlanManopereByCNP(cnp): Observable<any> {
+    return this.db.collection('Pacienti').doc(`${cnp}`).collection('PlanManopera').valueChanges();
+
+  }
+
 }
