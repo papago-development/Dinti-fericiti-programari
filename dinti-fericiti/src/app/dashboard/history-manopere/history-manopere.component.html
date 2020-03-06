@@ -1,27 +1,38 @@
+<br>
 <div class="container">
-
-  <br>
-  <div class="mat-elevation-z8">
+  <mat-card>
     <mat-card-title>
       Istoric manopere pacient
-      <app-add-manopera></app-add-manopera>
     </mat-card-title>
+    <mat-card-subtitle>
+      <app-add-manopera></app-add-manopera>
+    </mat-card-subtitle>
 
-    <!-- <table mat-table [dataSource]="dataSource" matSort>
+      <table mat-table [dataSource]="dataSource" matSort>
 
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef>Interventie</th>
-        <td mat-cell *matCellDef="let item">{{ item.title }}</td>
-      </ng-container>
+        <ng-container matColumnDef="medic">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Medic</th>
+          <td mat-cell *matCellDef="let item">{{ item.medic }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="start">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
-        <td mat-cell *matCellDef="let item">{{ item.start | date: 'medium' }}</td>
-      </ng-container>
+        <ng-container matColumnDef="manopera">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Manopera</th>
+          <td mat-cell *matCellDef="let item">{{ item.manopera }}</td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table> -->
-  </div>
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+          <td mat-cell *matCellDef="let item">{{ item.data.toDate() | date: 'dd/MM/yyyy h:mm:ss ' }}</td>
+        </ng-container>
 
+        <ng-container matColumnDef="tehnician">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tehnician</th>
+          <td mat-cell *matCellDef="let item">{{ item.tehnician }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+  </mat-card>
 </div>

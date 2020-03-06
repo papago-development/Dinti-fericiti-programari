@@ -24,4 +24,22 @@ export class ManoperaService {
                   });
                 });
   }
+
+  addManoperaToPatient(cnp, manopera) {
+    this.db.collection('Pacienti').doc(`${cnp}`).collection('Manopera').add(manopera);
+  }
+
+  getItemFromDatabaseByCNP(cnp) {
+    return this.db.collection('Pacienti').doc(`${cnp}`).collection('Manopera').valueChanges();
+    // .pipe(
+    //     // tap(doctors => console.log('Doctors', doctors)),
+    //     map(data =>
+    //       data.map(item => {
+    //         const manopere = [];
+    //         manopere.push(item);
+    //         return manopere;
+    //       })
+    //     )
+    //   );
+  }
 }

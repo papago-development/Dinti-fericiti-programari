@@ -15,9 +15,10 @@ export class PatientService {
     console.log('patient', pacient);
     this.db.collection('Pacienti').doc(`${pacient.cnp}`).set(pacient).then(() => {
       // tslint:disable-next-line: max-line-length
-      this.db.collection('Pacienti').doc(`${pacient.cnp}`).collection('Manopera').add({...manopere});
+      this.db.collection('Pacienti').doc(`${pacient.cnp}`).collection('PlanManopera').add({...manopere});
     });
   }
+
 
   // Get all patients from firebase collection 'Patienti'
   getAllPatients() {

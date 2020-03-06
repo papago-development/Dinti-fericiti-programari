@@ -2,8 +2,8 @@ import { PlanManoperaService } from './../../../services/plan-manopera.service';
 import { Manopera } from './../../../models/manopera';
 import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation, Input, OnChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/models/doctor';
@@ -24,12 +24,12 @@ export class AddPatientComponent implements OnInit {
   doctors: Doctor;
   subscription: Subscription;
   isLinear = false;
-  patientForm: FormGroup;
   maxLengthCNP = 13;
   maxLengthPhone = 10;
-  infoPatientForm: FormGroup;
-  boliPatientForm: FormGroup;
   isOptional = false;
+  manopereForm: FormGroup;
+  manopere: FormArray;
+  cnpPatient: string;
 
   // tslint:disable-next-line: no-input-rename
   manoperaList: PlanManopera[] = [];
@@ -42,6 +42,8 @@ export class AddPatientComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
+    console.log('cnp', this.cnpPatient);
+
   }
 
   /**
@@ -56,7 +58,16 @@ export class AddPatientComponent implements OnInit {
         medic: new FormControl(null, Validators.required),
         boli: new FormControl(null),
         alergi: new FormControl(null)
+        // manopere: new FormArray([this.createManopereForm() ])
     });
+  }
+
+  createManopereForm() {
+    return  this.manopereForm = new FormGroup({
+          manopera: new FormControl(null, Validators.required),
+          medic: new FormControl(null),
+          isFinished: new FormControl(false)
+     });
   }
 
   loadDoctors() {
@@ -69,19 +80,50 @@ export class AddPatientComponent implements OnInit {
   /**
    * Tis method will add a patient in firebase
    */
-  addPatient() {
-    this.patient = Object.assign({}, this.addPatientForm.value);
-    console.log('patient', this.patient);
+  // addPatient() {
+  //   this.patient = Object.assign({}, this.addPatientForm.value);
+  //   console.log('patient', this.patient);
 
-    this.manoperaList = this.manoperaService.getManopera();
-    console.log('manopera', this.manoperaList);
+  //   const patientToSave = {
+  //     name: this.patient.name,
+  //     cnp: this.patient.cnp,
+  //     phonePacient: this.patient.phonePacient,
+  //     medic: this.patient.medic,
+  //     boli: this.patient.boli,
+  //     alergi: this.patient.alergi
+  //   };
 
-    this.patientService.addPacient(this.patient, this.manoperaList);
-    console.log('Add');
 
-    setTimeout(() => {
-      this.router.navigate(['patients']);
-    }, 100);
+  //   console.log('manopere', this.addPatientForm.get('manopere').value as FormArray);
+
+
+  //   this.patientService.addPacient(patientToSave, this.addPatientForm.get('manopere').value as FormArray);
+  //   console.log('Add');
+
+  //   setTimeout(() => {
+  //     this.router.navigate(['patients']);
+  //   }, 100);
+  // }
+
+  /* This method will add a patient in firebase
+  */
+ addPatient() {
+   this.patient = Object.assign({}, this.addPatientForm.value);
+   console.log('patient', this.patient);
+
+   this.manoperaList = this.manoperaService.getManopera();
+   console.log('manopera', this.manoperaList);
+
+   this.patientService.addPacient(this.patient, this.manoperaList);
+   console.log('Add');
+
+   setTimeout(() => {
+     this.router.navigate(['patients']);
+   }, 100);
+ }
+
+  addManopere() {
+    this.manopere = this.addPatientForm.get('manopere') as FormArray;
+    this.manopere.push(this.createManopereForm());
   }
-
 }

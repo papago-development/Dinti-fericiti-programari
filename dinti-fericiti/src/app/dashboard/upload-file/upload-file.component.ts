@@ -33,9 +33,9 @@ export class UploadFileComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private dbStorage: AngularFireStorage,
-    private patientService: PatientService,
-    private db: AngularFirestore,
-    private route: ActivatedRoute) { }
+              private patientService: PatientService,
+              private db: AngularFirestore,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -44,9 +44,11 @@ export class UploadFileComponent implements OnInit {
     this.patientId = this.route.snapshot.params.id;
     this.patientService.getPatientById(this.patientId).subscribe(data => {
       this.files = data.files;
-      for (let i = 0; i < this.files.length; i++) {
-        if ((this.files[i].filename === '' || this.files[i].filename === null) && this.files[i].url === null) {
-          this.files.splice(i, 1);
+      if (this.files.length > 0) {
+        for (let i = 0; i < this.files.length; i++) {
+          if ((this.files[i].filename === '' || this.files[i].filename === null) && this.files[i].url === null) {
+            this.files.splice(i, 1);
+          }
         }
       }
       console.log('files', this.files);

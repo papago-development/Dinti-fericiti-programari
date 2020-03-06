@@ -1,4 +1,4 @@
-<form [formGroup]="manoperaForm" (ngSubmit)="save()">
+<form [formGroup]="manoperaForm" (ngSubmit)="addManopera()">
   <mat-form-field>
     <mat-label>Medic</mat-label>
     <mat-select formControlName="medic">
@@ -9,11 +9,7 @@
   </mat-form-field>
   <mat-form-field>
       <mat-label>Manopera</mat-label>
-      <mat-select formControlName="manopera">
-        <mat-option *ngFor="let item of planManopere; let i=index;" [value]="item[i].manopera">
-          {{ item[i].manopera }}
-        </mat-option>
-      </mat-select>
+        <input matInput #input formControlName="manopera" placeholder="Manopera">
   </mat-form-field>
   <mat-form-field>
       <mat-label>Data</mat-label>

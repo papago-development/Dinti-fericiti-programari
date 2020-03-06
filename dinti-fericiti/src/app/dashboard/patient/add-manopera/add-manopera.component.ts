@@ -1,4 +1,4 @@
-import { PlanManopera } from 'src/app/models/planManopera';
+import { ManoperaService } from './../../../services/manopera.service';
 import { Manopera } from './../../../models/manopera';
 import { Doctor } from './../../../models/doctor';
 import { Subscription } from 'rxjs';
@@ -6,7 +6,6 @@ import { DoctorService } from './../../../services/doctor.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { PlanManoperaService } from 'src/app/services/plan-manopera.service';
 
 @Component({
   selector: 'app-add-manopera',
@@ -18,13 +17,13 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
   // Properties
   manoperaForm: FormGroup;
   doctors: Doctor[] = [];
-  planManopere: PlanManopera[] = [];
+  manopera: Manopera;
   doctorSubscription: Subscription;
-  planManopereSubscription: Subscription;
+  manopereSubscription: Subscription;
   patientId: string;
 
   constructor(private doctorService: DoctorService,
-              private planManopereService: PlanManoperaService,
+              private manoperaService: ManoperaService,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -32,7 +31,6 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
     console.log('patient cnp', this.patientId);
     this.createForm();
     this.loadDoctors();
-    this.loadManopere();
   }
 
   ngOnDestroy() {
@@ -40,18 +38,22 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
       this.doctorSubscription.unsubscribe();
     }
 
-    if (this.planManopereSubscription) {
-      this.planManopereSubscription.unsubscribe();
+    if (this.manopereSubscription) {
+      this.manopereSubscription.unsubscribe();
     }
   }
 
   createForm() {
     this.manoperaForm = new FormGroup({
       medic: new FormControl(null, Validators.required),
-      manopera: new FormControl(null, Validators.required),
+      manopera: new FormControl(null),
       data: new FormControl(null, Validators.required),
       tehnician: new FormControl(null)
     });
+  }
+
+  resetForm() {
+    this.manoperaForm.reset();
   }
 
   loadDoctors() {
@@ -60,16 +62,11 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadManopere() {
-    this.planManopereSubscription = this.planManopereService.getItemFromDatabaseByCNP(this.patientId)
-                                                            .subscribe(data => {
-                                                              this.planManopere = data;
-                                                              console.log('plan manopera', this.planManopere);
-    });
-  }
 
-  save() {
-    this.manoperaForm = Object.assign({}, this.manoperaForm.value);
-    console.log('Manopera form ', this.manoperaForm);
+  addManopera() {
+    this.manopera = Object.assign({}, this.manoperaForm.value);
+    console.log('Manopera form ', this.manopera);
+    this.manoperaService.addManoperaToPatient(this.patientId, this.manopera);
+    this.resetForm();
   }
 }

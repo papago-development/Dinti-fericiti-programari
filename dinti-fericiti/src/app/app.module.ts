@@ -47,7 +47,7 @@ import { UploadFileComponent } from './dashboard/upload-file/upload-file.compone
 import { AddPatientComponent } from './dashboard/patients/add-patient/add-patient.component';
 import { AddPlanManoperaComponent } from './dashboard/patient/add-plan-manopera/add-plan-manopera.component';
 import { HistoryManopereComponent } from './dashboard/history-manopere/history-manopere.component';
-import { AddManoperaComponent } from './dashboard/history-manopere/add-manopera/add-manopera.component';
+import { AddManoperaComponent } from './dashboard/patient/add-manopera/add-manopera.component';
 
 registerLocaleData(localeRo);
 @NgModule({
