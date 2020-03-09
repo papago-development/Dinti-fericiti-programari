@@ -1,4 +1,3 @@
-import { forEach } from '@angular/router/src/utils/collection';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
@@ -49,7 +48,7 @@ export class PatientService {
           patients.map(patient => {
             return {
               id: patient.payload.doc.id,
-              medic: patient.payload.doc.data().medic,
+              medic: patient.payload.doc.data()['medic'],
               // tslint:disable-next-line: no-string-literal
               title: patient.payload.doc.data()['title'],
               // tslint:disable-next-line: no-string-literal
@@ -91,7 +90,7 @@ export class PatientService {
       .snapshotChanges()
       .pipe(
         map(data => data.map(event => {
-          return event.payload.doc.data().phonePacient
+          return event.payload.doc.data()['phonePacient']
 
         }))
       );
@@ -106,8 +105,7 @@ export class PatientService {
   }
 
   getPatientEventById(id) {
-    return this.db
-      .collection('Pacienti')
+    return       this.db.collection('Pacienti')
       .doc(id)
       .snapshotChanges()
       .pipe(
@@ -173,11 +171,11 @@ export class PatientService {
       });
   }
 
-  deleteFileFromPatient(patientId, file) {
+  deleteFileFromPatient(patientId) {
     this.db.collection('Pacienti')
       .doc(patientId)
       .valueChanges()
-      .subscribe(data => {
+      .subscribe(() => {
         console.log('data');
       });
   }

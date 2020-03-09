@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
 import { Files } from 'src/app/models/files';
@@ -7,7 +7,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Patient } from 'src/app/models/patient';
-import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-upload-file',
@@ -34,7 +33,6 @@ export class UploadFileComponent implements OnInit {
 
   constructor(private dbStorage: AngularFireStorage,
               private patientService: PatientService,
-              private db: AngularFirestore,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -91,8 +89,8 @@ export class UploadFileComponent implements OnInit {
     }).catch(err => console.log('Error', err));
   }
 
-  deleteFile(fileName) {
-    this.patientService.deleteFileFromPatient(this.patientId, fileName);
+  deleteFile() {
+    //this.patientService.deleteFileFromPatient(this.patientIdfileName);
     // this.files.forEach(data => {
     //   if (data.filename === fileName) {
     //     const index = this.files.indexOf(fileName);

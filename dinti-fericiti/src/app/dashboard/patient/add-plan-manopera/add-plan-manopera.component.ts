@@ -87,4 +87,8 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   getManopera() {
     this.manoperaList = this.planManoperaService.getPlanManopera();
   }
+
+  onSelected(item: any, $event) {
+    console.log('selected item: ', item, $event.target.value);
+  }
 }

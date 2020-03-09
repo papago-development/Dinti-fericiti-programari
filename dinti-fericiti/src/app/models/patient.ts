@@ -1,4 +1,3 @@
-import { PlanManopera } from './planManopera';
 import { Files } from './files';
 
 export interface Patient {

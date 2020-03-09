@@ -4,11 +4,15 @@ import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Component, OnInit, ViewEncapsulation, Input, OnChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/models/doctor';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { PlanManopera } from 'src/app/models/planManopera';
+import { Files } from 'src/app/models/files';
+import { AngularFireStorage } from '@angular/fire/storage/storage';
+import { HttpEventType } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-patient',
@@ -31,19 +35,25 @@ export class AddPatientComponent implements OnInit {
   manopere: FormArray;
   cnpPatient: string;
 
+
+  url: Observable<string | null>;
+  files: Array<Files> = [];
+  uploadProgress: Observable<number>;
+  percent: number;
+
   // tslint:disable-next-line: no-input-rename
   planManoperaList: PlanManopera[] = [];
 
   constructor(private patientService: PatientService,
               private doctorService: DoctorService,
-              private planManoperaService: PlanManoperaService,
+              private dbStorage: AngularFireStorage,
               private router: Router) { }
 
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
     console.log('cnp', this.cnpPatient);
-
+    this.percent = 0;
   }
 
   /**
@@ -52,12 +62,14 @@ export class AddPatientComponent implements OnInit {
   createForm() {
     this.addPatientForm = new FormGroup({
 
-        name: new FormControl(null, Validators.required),
-        cnp: new FormControl(null, Validators.required),
-        phonePacient: new FormControl(null, Validators.required),
+        name: new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z]+$')]),
+        // tslint:disable-next-line: max-line-length
+        cnp: new FormControl(null, [Validators.required, Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
+        phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
         medic: new FormControl(null, Validators.required),
         boli: new FormControl(null),
         alergi: new FormControl(null),
+        consimtamant: new FormControl(null, Validators.required),
         manopere: new FormArray([this.createManopereForm() ])
     });
   }
@@ -78,7 +90,7 @@ export class AddPatientComponent implements OnInit {
   }
 
   /**
-   * Tis method will add a patient in firebase
+   * This method will add a patient in firebase
    */
   addPatient() {
     this.patient = Object.assign({}, this.addPatientForm.value);
@@ -90,7 +102,8 @@ export class AddPatientComponent implements OnInit {
       phonePacient: this.patient.phonePacient,
       medic: this.patient.medic,
       boli: this.patient.boli,
-      alergi: this.patient.alergi
+      alergi: this.patient.alergi,
+      files: this.files
     };
 
     console.log('manopere', this.addPatientForm.get('manopere').value as FormArray);
@@ -103,25 +116,6 @@ export class AddPatientComponent implements OnInit {
     }, 100);
   }
 
-  /* This method will add a patient in firebase
-  */
-//  addPatient() {
-//    this.patient = Object.assign({}, this.addPatientForm.value);
-//    console.log('patient', this.patient);
-
-//    this.planManoperaList = this.planManoperaService.getPlanManopera();
-//    console.log('manopera', this.planManoperaList);
-
-//    this.patientService.addPacient(this.patient);
-
-//   //  this.patientService.addPacient(this.patient, this.planManoperaList);
-//    console.log('Add');
-
-//    setTimeout(() => {
-//      this.router.navigate(['patients']);
-//    }, 100);
-//  }
-
   addManopere() {
     this.manopere = this.addPatientForm.get('manopere') as FormArray;
     this.manopere.push(this.createManopereForm());
@@ -129,5 +123,37 @@ export class AddPatientComponent implements OnInit {
 
   cpn() {
     return this.addPatientForm.get('cnp');
+  }
+
+  public  hasError(controlName: string, errorName: string) {
+    return this.addPatientForm.controls[controlName].hasError(errorName);
+  }
+
+  onFileSelected(event) {
+    // create a reference to the storage bucket location
+    const file = event.target.files[0];
+    const filePath = '/' + file.name;
+    const ref = this.dbStorage.ref(filePath);
+    const task = this.dbStorage.upload(filePath, file);
+
+
+    this.uploadProgress = task.percentageChanges();
+    this.uploadProgress.subscribe(data => {
+      this.percent = data;
+    });
+    task.then(() => {
+      ref.getDownloadURL().subscribe(data => {
+        this.url = data;
+
+
+
+        this.files.push({
+          url: this.url,
+          filename: file.name
+        });
+
+        console.log('files', this.files);
+      });
+    }).catch(err => console.log('Error', err));
   }
 }

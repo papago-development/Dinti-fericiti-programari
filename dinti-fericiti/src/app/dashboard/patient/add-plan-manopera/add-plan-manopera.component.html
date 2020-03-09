@@ -27,6 +27,7 @@
                 <td></td>
                 <td>Medic</td>
                 <td>Manopera</td>
+                <td>Efectuat</td>
               </tr>
             </thead>
             <tbody *ngFor="let item of planManopera; let i = index;">
@@ -34,7 +35,7 @@
                 <td>{{i + 1}}</td>
                 <td>{{item.medic}}</td>
               <td>{{item.manopera}}</td>
-              <td><mat-checkbox [value]="item.isFinished"></mat-checkbox></td>
+              <td><mat-checkbox [value]="item.isFinished" (change)="onSelected(item, $event)"></mat-checkbox></td>
               </tr>
             </tbody>
           </table>
