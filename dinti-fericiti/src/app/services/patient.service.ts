@@ -3,12 +3,15 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Patient } from '../models/patient';
+import { AngularFireStorage } from '@angular/fire/storage';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore,
+              private storage: AngularFireStorage) { }
 
   // Add pacient to firebase collection 'Pacienti'
   async addPacient(pacient, manopere?) {
@@ -54,7 +57,8 @@ export class PatientService {
               // tslint:disable-next-line: no-string-literal
               name: patient.payload.doc.data()['name'],
               // tslint:disable-next-line: no-string-literal
-              phonePacient: patient.payload.doc.data()['phonePacient']
+              phonePacient: patient.payload.doc.data()['phonePacient'],
+              start: patient.payload.doc.data()['start']
             };
           })
         )
@@ -102,6 +106,10 @@ export class PatientService {
       .collection('Pacienti')
       .doc(id)
       .update(updatePatient);
+  }
+
+  updatePlanToPatient(patientId, planManopera) {
+    return this.db.collection('Pacienti').doc(patientId).collection('PlanManopera').add(planManopera);
   }
 
   getPatientEventById(id) {
@@ -171,12 +179,7 @@ export class PatientService {
       });
   }
 
-  deleteFileFromPatient(patientId) {
-    this.db.collection('Pacienti')
-      .doc(patientId)
-      .valueChanges()
-      .subscribe(() => {
-        console.log('data');
-      });
+  deleteFileFromPatient(urlPhoto) {
+    return this.storage.ref(urlPhoto).delete();
   }
 }

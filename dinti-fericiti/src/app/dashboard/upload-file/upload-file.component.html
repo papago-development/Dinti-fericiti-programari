@@ -8,9 +8,6 @@
       <ng-container matColumnDef="filename">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Filename</th>
         <td mat-cell *matCellDef="let item"><a href="{{item.url}}" target="blank">{{ item.filename }}</a>
-          <i class="material-icons" id="delete-file" (click)="deleteFile(item.filename)">
-            delete
-          </i>
         </td>
 
       </ng-container>

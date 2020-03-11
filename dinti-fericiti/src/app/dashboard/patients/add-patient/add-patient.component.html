@@ -16,7 +16,6 @@
             <mat-label>CNP</mat-label>
             <input matInput #input formControlName="cnp" placeholder="CNP" [(ngModel)]="cnpPatient">
             <mat-hint align="end">CNP-ul trebuie sa contina 13 caractere</mat-hint>
-            <mat-error *ngIf="hasError('cnp', 'required')" class="help-block">CNP-ul este obligatoriu</mat-error>
             <mat-error *ngIf="hasError('cnp', 'pattern')" class="help-block">CNP-ul poate contine doar cifre</mat-error>
             <mat-error *ngIf="hasError('cnp', 'maxlength')" class="help-block">CNP-ul are mai mult de 13 caractere
             </mat-error>
@@ -66,8 +65,6 @@
             <input formControlName="consimtamant" id="chooseFile" type="file" (change)="onFileSelected($event)"
               accept=".png, .jpg, .pdf .jpeg">
               Upload percentage: <span>{{percent || 0}}%</span>
-              <!-- <div style="float:right"></div> -->
-
           </div>
           <progress max="100" [value]="(uploadProgress | async)" *ngIf="percent === 100">Fisierul a fost incarcat</progress>
         </div>
@@ -80,9 +77,9 @@
       <mat-step>
         <ng-template matStepLabel>Plan tratament stomatologic</ng-template>
         <div id="manopera">
-          <button type="button" (click)="addManopere()"> Adauga manopera</button>
           <div formArrayName="manopere"
             *ngFor="let manopere of addPatientForm.get('manopere')['controls']; let i = index;">
+
 
             <div [formGroupName]="i">
               {{i+1}}
@@ -99,7 +96,10 @@
                 </mat-select>
               </mat-form-field>
             </div>
+
           </div>
+          <button style="float:right;" class="col-md-2" mat-raised-button color="primary" type="button" (click)="addManopere()"> Adauga manopera</button>
+
           <!-- <app-add-plan-manopera [cnpPacient]="cpn()"></app-add-plan-manopera> -->
         </div>
         <div>

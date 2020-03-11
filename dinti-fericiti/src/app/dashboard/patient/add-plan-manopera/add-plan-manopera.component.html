@@ -18,7 +18,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <button type="button" (click)="add()">+</button>
+            <button type="button" mat-raised-button color="primary" (click)="add()">+</button>
           </form>
           <table  class="table table-responsive"
                   *ngIf="planManopera.length > 0">
@@ -35,12 +35,11 @@
                 <td>{{i + 1}}</td>
                 <td>{{item.medic}}</td>
               <td>{{item.manopera}}</td>
-              <td><mat-checkbox [value]="item.isFinished" (change)="onSelected(item, $event)"></mat-checkbox></td>
+              <td><mat-checkbox [value]="item.isFinished"></mat-checkbox></td>
               </tr>
             </tbody>
           </table>
     </mat-card-subtitle>
   </mat-card>
-
 </div>
 

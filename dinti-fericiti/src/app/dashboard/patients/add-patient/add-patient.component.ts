@@ -52,7 +52,6 @@ export class AddPatientComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
-    console.log('cnp', this.cnpPatient);
     this.percent = 0;
   }
 
@@ -64,12 +63,12 @@ export class AddPatientComponent implements OnInit {
 
         name: new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z]+$')]),
         // tslint:disable-next-line: max-line-length
-        cnp: new FormControl(null, [Validators.required, Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
+        cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
         phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
         medic: new FormControl(null, Validators.required),
         boli: new FormControl(null),
         alergi: new FormControl(null),
-        consimtamant: new FormControl(null, Validators.required),
+        consimtamant: new FormControl(null),
         manopere: new FormArray([this.createManopereForm() ])
     });
   }
@@ -95,16 +94,36 @@ export class AddPatientComponent implements OnInit {
   addPatient() {
     this.patient = Object.assign({}, this.addPatientForm.value);
     console.log('patient', this.patient);
+    let patientToSave;
 
-    const patientToSave = {
-      name: this.patient.name,
-      cnp: this.patient.cnp,
-      phonePacient: this.patient.phonePacient,
-      medic: this.patient.medic,
-      boli: this.patient.boli,
-      alergi: this.patient.alergi,
-      files: this.files
-    };
+
+
+    if (this.patient.cnp === undefined) {
+      var cnpRandom =  Math.floor(1000000000000 + Math.random() * 9000000000);
+      console.log('cnp random', cnpRandom);
+      patientToSave = {
+        name: this.patient.name,
+        cnp: cnpRandom,
+        phonePacient: this.patient.phonePacient,
+        medic: this.patient.medic,
+        boli: this.patient.boli,
+        alergi: this.patient.alergi,
+        files: this.files,
+        start: new Date()
+      };
+    } else {
+       patientToSave = {
+        name: this.patient.name,
+        cnp: this.patient.cnp,
+        phonePacient: this.patient.phonePacient,
+        medic: this.patient.medic,
+        boli: this.patient.boli,
+        alergi: this.patient.alergi,
+        files: this.files,
+        start: new Date()
+      };
+    }
+
 
     console.log('manopere', this.addPatientForm.get('manopere').value as FormArray);
 

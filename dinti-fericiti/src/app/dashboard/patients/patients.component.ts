@@ -57,8 +57,11 @@ export class PatientsComponent implements OnInit {
 
   loadPatients() {
     this.patientService.getAllPatients().subscribe(data => {
-      this.dataSource.data = data as any[];
+      this.dataSource.data = data.sort((a, b) => {
+        return +new Date(a.start).getDate() - +new Date(b.start).getDate();
+      }) as any[];
     });
+
   }
 
   loadDoctors() {

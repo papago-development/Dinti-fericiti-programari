@@ -1,4 +1,5 @@
-import { UploadFileService } from './../services/upload-file.service';
+import { ManoperaService } from './../services/manopera.service';
+import { Manopera } from './../models/manopera';
 import { LastAppointmentService } from './../services/last-appointment.service';
 import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Programare } from '../models/programare';
@@ -10,13 +11,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Patient } from '../models/patient';
 import { PatientService } from '../services/patient.service';
 import { Subscription, Subject, Observable } from 'rxjs';
-import { CalendarDateFormatter, CalendarEventTitleFormatter, DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarDateFormatter, CalendarEventTitleFormatter } from 'angular-calendar';
 import { CustomDateFormatter } from '../customDate/customDateFormatter';
 import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormatter';
 import { ILastAppointment } from '../models/ILastAppointment';
 import { Files } from '../models/files';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dashboard',
@@ -81,6 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   files: Array<Files> = [];
   url: Observable<string | null>;
   isUpdated: boolean;
+  manopera: Manopera;
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
@@ -97,6 +98,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private pacientService: PatientService,
     private lastAppointmentService: LastAppointmentService,
+    private manoperaService: ManoperaService,
     private dbStorage: AngularFireStorage
   ) { }
 
@@ -258,6 +260,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         files: this.files,
         consimtamant: this.event.consimtamant
       };
+
+      // this.manopera = {
+      //   manopera: this.event.title,
+      //   data: this.event.start,
+      //   medic: this.event.medic,
+      //   tehnician: null
+      // };
 
       this.doctorService
         .getEmailByDoctorName(this.event.medic)
@@ -480,7 +489,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       : '';
   }
 
-  checkPatient($event) {
+  checkPatient() {
     console.log('Name', event.target['value']);
     this.pacientService
       .getPhoneByPatientName(event.target['value'])

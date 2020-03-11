@@ -89,14 +89,20 @@ export class UploadFileComponent implements OnInit {
     }).catch(err => console.log('Error', err));
   }
 
-  deleteFile() {
-    //this.patientService.deleteFileFromPatient(this.patientIdfileName);
-    // this.files.forEach(data => {
-    //   if (data.filename === fileName) {
-    //     const index = this.files.indexOf(fileName);
-    //     console.log('index', index);
-    //     this.files.splice(index, 1);
-    //   }
-    // });
+  deleteFile(item) {
+    console.log('file to delete ', item);
+
+    this.patientService.deleteFileFromPatient(item);
+
+    this.files.forEach(data => {
+      console.log('file name', this.files.indexOf(data));
+      if (data.filename === item.filename) {
+
+        const index = this.files.indexOf(data);
+        console.log('index', index);
+        this.files.splice(index);
+
+      }
+    });
   }
 }

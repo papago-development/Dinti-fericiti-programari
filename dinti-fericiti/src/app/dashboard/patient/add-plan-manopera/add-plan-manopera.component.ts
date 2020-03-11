@@ -1,3 +1,4 @@
+import { PatientService } from './../../../services/patient.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanManopera } from './../../../models/planManopera';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -28,6 +29,7 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
 
   constructor(private planManoperaService: PlanManoperaService,
               private doctorService: DoctorService,
+              private patientService: PatientService,
               private route: ActivatedRoute) {
 
 
@@ -47,7 +49,6 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   createForm() {
-
     this.planManoperaForm = new FormGroup({
       manopera: new FormControl(null, Validators.required),
       medic: new FormControl(null, Validators.required),
@@ -62,8 +63,6 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   loadManopere() {
-    // this.manopere = this.planManoperaService.getPlanManopereByCNP(this.patientId);
-    // console.log('manopere', this.manopere);
     this.planManoperaService.getPlanManopereByCNP(this.patientId)
       .subscribe(data => {
         this.planManopera = data;
@@ -71,17 +70,19 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
       });
   }
 
-  addPlanManopera() {
-    // this.planManopera = Object.assign({}, this.planManoperaForm.value);
-    // console.log('plan manopera', this.planManopera);
-    // this.planManoperaService.addManopera(this.planManopera);
-    // window.alert('Manopera a fost adaugata cu success');
-  }
+  // addPlanManopera() {
+  //   this.planManopera = Object.assign({}, this.planManoperaForm.value);
+  //   console.log('plan manopera', this.planManopera);
+  //   this.planManoperaService.add(this.planManopera);
+  //   window.alert('Manopera a fost adaugata cu success');
+  // }
 
   add() {
     this.planManopera = Object.assign({}, this.planManoperaForm.value);
-    this.planManoperaService.add(this.planManopera);
-    this.planManoperaForm.reset();
+    console.log('add', this.planManopera);
+    this.patientService.updatePlanToPatient(this.patientId, this.planManopera).then(() => {
+      this.planManoperaForm.reset();
+    });
   }
 
   getManopera() {
