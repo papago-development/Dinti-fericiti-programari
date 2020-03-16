@@ -1,9 +1,7 @@
-import { PlanManoperaService } from './../../../services/plan-manopera.service';
-import { Manopera } from './../../../models/manopera';
 import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, ViewEncapsulation, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/models/doctor';
@@ -11,8 +9,6 @@ import { DoctorService } from 'src/app/services/doctor.service';
 import { PlanManopera } from 'src/app/models/planManopera';
 import { Files } from 'src/app/models/files';
 import { AngularFireStorage } from '@angular/fire/storage/storage';
-import { HttpEventType } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-patient',
@@ -61,7 +57,7 @@ export class AddPatientComponent implements OnInit {
   createForm() {
     this.addPatientForm = new FormGroup({
 
-        name: new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z]+$')]),
+        name: new FormControl(null, Validators.required),
         // tslint:disable-next-line: max-line-length
         cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
         phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),

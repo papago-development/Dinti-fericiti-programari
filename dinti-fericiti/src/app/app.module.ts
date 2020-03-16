@@ -30,6 +30,7 @@ import localeRo from '@angular/common/locales/ro';
 
 import { ToastrModule } from 'ngx-toastr';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { DateTimePickerModule } from 'ngx-datetime-picker';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -100,7 +101,8 @@ registerLocaleData(localeRo);
        MatStepperModule,
        ToastrModule.forRoot(),
        OwlDateTimeModule,
-       OwlNativeDateTimeModule
+       OwlNativeDateTimeModule,
+       DateTimePickerModule
       ],
   providers: [
   ],

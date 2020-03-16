@@ -21,10 +21,10 @@ table {
   padding-right: 25px;
 }
 
- i{
-   padding-top: 5px;
-   padding-left: 10px;
- }
+i {
+  padding-top: 5px;
+  padding-left: 10px;
+}
 
 #addEvent {
   display: flex;
@@ -35,25 +35,26 @@ table {
   margin-top: 20px;
 }
 
-.owl-dt-popup.dt2 {
-  right: 34.4em !important;
-
-}
-
 .form-group {
   padding-top: 10px;
-  margin-left: 10px;
-}
 
-div.owl-dt-popup.dt2 {
-  left: 34.4px !important;
 }
 
 .button-text-mobile {
   display: none;
 }
+
 i{
   cursor: pointer;
+}
+
+#add {
+  width: 100%;
+  margin-left: 0;
+}
+
+ngx-datetime-picker {
+  margin-left: 10px;
 }
 
 @media only screen and (max-width: 450px) {
@@ -63,5 +64,12 @@ i{
 
   .button-text-mobile {
     display: inline;
+    padding: 0 10px;
   }
+
+  .container {
+    padding: 0;
+    width: 100%;
+  }
+
 }

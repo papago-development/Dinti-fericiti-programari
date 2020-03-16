@@ -24,8 +24,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/ngx-toastr/toastr.css",
-              "../dinti-fericiti/node_modules/ngx-datetime-picker/ngx-datetime-picker.css"
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/ngx-datetime-picker/ngx-datetime-picker.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

@@ -19,9 +19,38 @@ pre {
   color: white;
 }
 
+
 #addAppointment {
   display: flex;
   flex-direction: column;
+}
+
+ngx-datetime-picker input[type="text"] {
+  width: 300px;
+}
+
+#addAppointmentButton {
+  width: 100%;
+  margin-left: 0;
+}
+
+input[type="file"] {
+  margin: 10px 0 0 10px;
+  right: 0;
+}
+
+#chooseFile {
+  visibility: hidden;
+}
+
+.btn{
+  background-color: #007bff;
+  width: 100%;
+  color: white;
+}
+
+#saveButton, #cancelButton {
+  width: 100%;
 }
 
 @media only screen and (max-width: 600px) {
@@ -41,18 +70,4 @@ pre {
       margin: 0px;
       padding: 0px;
   }
-}
-
-input[type="file"] {
-  margin: 10px 0 0 10px;
-  right: 0;
-}
-
-#chooseFile {
-  visibility: hidden;
-}
-
-.btn{
-  background-color: #007bff;
-  margin: 10px 0 0 10px;
 }

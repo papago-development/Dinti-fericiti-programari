@@ -26,7 +26,6 @@
 </div>
 
 <!-- Modal for adding a new appointment -->
-
 <ng-template #addContent let-modal id="addModal" class="modal">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Adauga programare </h4>
@@ -34,71 +33,72 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
-    <input #input formControlName='id' hidden>
-    <mat-form-field>
-      <mat-label>Nume pacient</mat-label>
-      <input matInput #input formControlName='namePacient' placeholder="Nume pacient" ngModel
-        (change)="checkPatient($event.target.value)">
-      <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Telefon pacient</mat-label>
-      <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient"
-        [(ngModel)]="phoneNumber">
-      <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Email pacient</mat-label>
-      <input matInput #input formControlName="emailPacient" placeholder="Email pacient">
-      <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Manopera</mat-label>
-      <input matInput #input formControlName="title" placeholder="Manopera">
-      <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="isUpdated" [checked]="isUpdated">
-      Consimtamant</mat-checkbox>
+  <mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="addAppointment()" id="addAppointment">
+      <input #input formControlName='id' hidden>
+      <mat-form-field>
+        <mat-label>Nume pacient</mat-label>
+        <input matInput #input formControlName='namePacient' placeholder="Nume pacient" ngModel
+          (change)="checkPatient($event.target.value)">
+        <mat-error *ngIf="!this.form.controls.namePacient.valid">{{ getNamePacientErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Telefon pacient</mat-label>
+        <input matInput #input formControlName="phonePacient" maxlength="10" placeholder="Telefon pacient"
+          [(ngModel)]="phoneNumber">
+        <mat-error *ngIf="!this.form.controls.phonePacient.valid">{{ getPhoneErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email pacient</mat-label>
+        <input matInput #input formControlName="emailPacient" placeholder="Email pacient">
+        <mat-error *ngIf="!this.form.controls.emailPacient.valid">{{ getEmailErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Manopera</mat-label>
+        <input matInput #input formControlName="title" placeholder="Manopera">
+        <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="isUpdated" [checked]="isUpdated">
+        Consimtamant</mat-checkbox>
 
-    <label for="chooseFile" class="btn">Incarca document</label>
-    <input id="chooseFile" type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg"
-      [disabled]="!this.form.controls.namePacient.valid">
-    <mat-form-field>
-      <mat-label>Medic</mat-label>
-      <mat-select formControlName="medic">
-        <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-          {{ doctor.name }}
-        </mat-option>
-      </mat-select>
-      <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
-    </mat-form-field>
+      <label for="chooseFile" class="btn">Incarca document</label>
+      <input id="chooseFile" type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg"
+        [disabled]="!this.form.controls.namePacient.valid">
+      <mat-form-field>
+        <mat-label>Medic</mat-label>
+        <mat-select formControlName="medic">
+          <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+            {{ doctor.name }}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Ora start</mat-label>
-      <input matInput #input formControlName="start" [(ngModel)]="this.clickedDate" [readonly]="true">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [owlDateTime]="dt2" [min]="this.clickedDate" formControlName="end" pickerMode="dialog"
-        [owlDateTimeTrigger]="dt2" placeholder="Date end">
-      <owl-date-time #dt2></owl-date-time>
-      <mat-error *ngIf="!this.form.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <div class="form-group">
-      <button mat-raised-button class="btn btn-success" type="submit" [disabled]="!this.form.valid">Add</button>
-    </div>
-  </form>
+      <ngx-datetime-picker includeTime="true" [(ngModel)]="this.clickedDate"
+        formControlName="start" [disableInput]="true" [use24HourClock]="true" [disableButton]="true"
+        date-format="DD/mm/YYYY" id="dateTime-start"></ngx-datetime-picker>
+
+      <ngx-datetime-picker includeTime="true" formControlName="end" [doNotCloseOnDateSet]="true"
+        placeholder="Ora sfarsit" [use24HourClock]="true" date-format="DD/MM/YYYY"
+        id="dateTime-end"></ngx-datetime-picker>
+
+      <div class="form-group">
+        <button mat-raised-button class="btn btn-success" id="addAppointmentButton" type="submit" [disabled]="!this.form.valid">Adauga</button>
+      </div>
+    </form>
+  </mat-dialog-content>
 </ng-template>
 
 
 <!-- Modal for editing an existing appointment -->
-<ng-template #editContent let-modal id="addModal">
+<ng-template #editContent let-modal id="addModal" class="modal">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Editeaza programare </h4>
     <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+  <mat-dialog-content>
   <form [formGroup]="updateForm" (ngSubmit)="updateAppointment()" id="addAppointment">
     <mat-form-field>
       <mat-label>Nume pacient</mat-label>
@@ -121,7 +121,8 @@
       <mat-error *ngIf="!this.updateForm.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
     </mat-form-field>
     <div *ngIf="!this.updateForm.controls.consimtamant.value">
-      <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="isUpdated" [checked]="this.updateForm.controls.consimtamant.value">
+      <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="isUpdated"
+        [checked]="this.updateForm.controls.consimtamant.value">
         Consimtamant</mat-checkbox>
     </div>
 
@@ -132,10 +133,8 @@
 
     <div *ngIf="!this.updateForm.controls.consimtamant.value">
       <label for="chooseFile" class="btn">Incarca document</label>
-      <input id="chooseFile" type="file" (change)="onFileSelected($event)"  accept=".png, .jpg, .pdf .jpeg" length="10">
+      <input id="chooseFile" type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg" length="10">
     </div>
-
-
     <mat-form-field>
       <mat-label>Medic</mat-label>
       <mat-select formControlName="medic">
@@ -146,9 +145,17 @@
       <mat-error *ngIf="!this.updateForm.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
     </mat-form-field>
     <div class="form-group">
-      <button mat-raised-button type="submit" class="btn btn-success"
-        [disabled]="!this.updateForm.valid">Salveaza</button>
+      <button mat-raised-button  
+              type="submit" 
+              class="btn btn-success"
+              id="saveButton"
+              [disabled]="!this.updateForm.valid">Salveaza</button>
     </div>
   </form>
-  <button mat-raised-button type="submit" class="btn btn-danger" (click)="cancelEvent()">Anuleaza programare</button>
+</mat-dialog-content>
+  <button mat-raised-button 
+          type="submit"
+          color="warn"
+          id="cancelButton"
+          (click)="cancelEvent()">Anuleaza programare</button>
 </ng-template>

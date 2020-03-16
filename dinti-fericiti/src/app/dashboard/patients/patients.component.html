@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="mat-elevation-z8">
+  <!-- <div class="mat-elevation-z8"> -->
     <mat-card>
       Pacienti
     </mat-card>
@@ -42,7 +42,7 @@
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
-</div>
+<!-- </div> -->
 
 <!-- Modal for adding a new appointment -->
 <ng-template #addContent let-modal id="addModal">
@@ -86,22 +86,27 @@
       </mat-select>
       <mat-error *ngIf="!this.addAppointmentForm.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
     </mat-form-field>
-    <mat-form-field>
-      <input matInput [owlDateTime]="dt1" formControlName="start" [owlDateTimeTrigger]="dt1" placeholder="Data start">
-      <owl-date-time #dt1></owl-date-time>
-      <mat-icon matSuffix>calendar_today</mat-icon>
-      <mat-error *ngIf="!this.addAppointmentForm.controls.start.valid">{{ getStartErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [owlDateTime]="dt2" setClass="dt2" formControlName="end" pickerMode="dialog" [owlDateTimeTrigger]="dt2"
-        placeholder="Data end">
-      <mat-icon matSuffix>calendar_today</mat-icon>
-      <owl-date-time #dt2></owl-date-time>
-      <mat-error *ngIf="!this.addAppointmentForm.controls.end.valid">{{ getEndErrorMessage() }}</mat-error>
-    </mat-form-field>
+    <ngx-datetime-picker  includeTime="true" 
+                          formControlName="start"
+                          [doNotCloseOnDateSet]="true"
+                          placeholder="Ora inceput"
+                          [disableInput]="true" 
+                          [use24HourClock]="true"
+                          date-format="DD/MM/YYYY" 
+                          id="dateTime-start"></ngx-datetime-picker>
+
+  <ngx-datetime-picker  includeTime="true" 
+                        formControlName="end" 
+                        [doNotCloseOnDateSet]="true"
+                        [disableInput]="true" 
+                        placeholder="Ora sfarsit"
+                        [use24HourClock]="true" 
+                        date-format="DD/MM/YYYY"
+                        id="dateTime-end"></ngx-datetime-picker>
+
     <div class="form-group">
       <button id="add" mat-raised-button class="btn btn-success" type="submit"
-        [disabled]="!this.addAppointmentForm.valid">Add</button>
+        [disabled]="!this.addAppointmentForm.valid">Adauga</button>
     </div>
   </form>
 </ng-template>

@@ -1,6 +1,5 @@
-import { ManoperaService } from './../services/manopera.service';
-import { Manopera } from './../models/manopera';
 import { LastAppointmentService } from './../services/last-appointment.service';
+import { Manopera } from './../models/manopera';
 import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Programare } from '../models/programare';
 import { AppointmentService } from '../services/appointment.service';
@@ -97,9 +96,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private pacientService: PatientService,
-    private lastAppointmentService: LastAppointmentService,
-    private manoperaService: ManoperaService,
-    private dbStorage: AngularFireStorage
+    private dbStorage: AngularFireStorage,
+    private lastAppointmentService: LastAppointmentService
   ) { }
 
   ngOnInit() {
@@ -260,13 +258,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         files: this.files,
         consimtamant: this.event.consimtamant
       };
-
-      // this.manopera = {
-      //   manopera: this.event.title,
-      //   data: this.event.start,
-      //   medic: this.event.medic,
-      //   tehnician: null
-      // };
 
       this.doctorService
         .getEmailByDoctorName(this.event.medic)

@@ -10,7 +10,7 @@
             <mat-label>Nume pacient</mat-label>
             <input matInput #input formControlName="name" placeholder="Nume pacient">
             <mat-error *ngIf="hasError('name', 'required')" class="help-block">Numele este obligatoriu</mat-error>
-            <mat-error *ngIf="hasError('name', 'pattern')">Numele nu poate contine cifre</mat-error>
+
           </mat-form-field>
           <mat-form-field>
             <mat-label>CNP</mat-label>
