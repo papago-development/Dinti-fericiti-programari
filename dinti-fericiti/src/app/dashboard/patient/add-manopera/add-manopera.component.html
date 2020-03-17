@@ -8,25 +8,26 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field>
-      <mat-label>Manopera</mat-label>
-      <mat-select formControlName="manopera">
-          <mat-option *ngFor="let doctor of planManopere" [value]="doctor.manopera">
-            {{ doctor.manopera }}
-          </mat-option>
-        </mat-select>
+    <mat-label>Manopera</mat-label>
+    <mat-select formControlName="manopera">
+      <mat-option *ngFor="let doctor of planManopere" [value]="doctor.manopera">
+        {{ doctor.manopera }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
-  <mat-form-field>
-      <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="data">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+
+    <input #input [owlDateTime]="dt1" formControlName="data" placeholder="Data">
+    <span class="trigger" [owlDateTimeTrigger]="dt1">
+      <i class="material-icons">calendar_today</i>
+    </span>
+    <owl-date-time #dt1></owl-date-time>
+
+
   <mat-form-field>
     <mat-label>Tehnician</mat-label>
     <input matInput #input formControlName="tehnician" placeholder="Tehnician">
   </mat-form-field>
   <div class="form-group">
-      <button mat-raised-button color="primary" type="submit" [disabled]="manoperaForm.invalid">Salveaza</button>
-    </div>
-
+    <button mat-raised-button color="primary" type="submit" [disabled]="manoperaForm.invalid">Salveaza</button>
+  </div>
 </form>

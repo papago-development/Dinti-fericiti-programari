@@ -3,7 +3,7 @@ import { Manopera } from './../../models/manopera';
 import { Component, OnInit, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-history-manopere',
@@ -22,6 +22,9 @@ export class HistoryManopereComponent implements OnInit, OnChanges, OnDestroy {
     // variable for sorting the events for patient
     @ViewChild(MatSort) sort: MatSort;
 
+    // paginator is used for paginating the mat-table
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(private manopereService: ManoperaService,
               private route: ActivatedRoute) { }
 
@@ -30,6 +33,7 @@ export class HistoryManopereComponent implements OnInit, OnChanges, OnDestroy {
 
     this.loadManopere();
     this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnChanges() {

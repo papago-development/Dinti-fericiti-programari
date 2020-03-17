@@ -21,6 +21,8 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   planManoperaForm: FormGroup;
   planManopera: PlanManopera[] = [];
   manoperaList: any[] = [];
+  config: any;
+  planManoperaCounter: number = 0;
 
   patientId: string;
   arr: any[] = [];
@@ -31,7 +33,11 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
               private doctorService: DoctorService,
               private patientService: PatientService,
               private route: ActivatedRoute) {
-
+                this.config = {
+                  itemsPerPage: 10,
+                  currentPage: 1,
+                  totalItems: this.planManoperaCounter
+                };
 
   }
 
@@ -66,10 +72,18 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
     this.planManoperaService.getPlanManopereByCNP(this.patientId)
       .subscribe(data => {
         this.planManopera = data;
+        data.forEach(element => {
+          this.planManoperaCounter += 1;
+        });
         console.log('manopere', this.planManopera);
+        console.log('manopere counter', this.planManoperaCounter);
+
       });
   }
 
+  pageChange(event) {
+    this.config.currentPage = event;
+  }
   // addPlanManopera() {
   //   this.planManopera = Object.assign({}, this.planManoperaForm.value);
   //   console.log('plan manopera', this.planManopera);

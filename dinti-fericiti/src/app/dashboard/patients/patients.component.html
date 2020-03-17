@@ -86,24 +86,25 @@
       </mat-select>
       <mat-error *ngIf="!this.addAppointmentForm.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
     </mat-form-field>
-    <ngx-datetime-picker  includeTime="true" 
-                          formControlName="start"
-                          [doNotCloseOnDateSet]="true"
-                          placeholder="Ora inceput"
-                          [disableInput]="true" 
-                          [use24HourClock]="true"
-                          date-format="DD/MM/YYYY" 
-                          id="dateTime-start"></ngx-datetime-picker>
+    <div class="form-group">
+      <input id="input-start-date" class="form-control" [owlDateTime]="dt1" [min]="8" [max]="22"
+        date-format="DD/MM/YYYY" formControlName="start" 
+        placeholder="Ora inceput">
+      <span class="trigger" [owlDateTimeTrigger]="dt1">
+        <i class="material-icons">calendar_today</i>
+      </span>
+      <owl-date-time #dt1 pickerMode="dialog"></owl-date-time>
+    </div>
 
-  <ngx-datetime-picker  includeTime="true" 
-                        formControlName="end" 
-                        [doNotCloseOnDateSet]="true"
-                        [disableInput]="true" 
-                        placeholder="Ora sfarsit"
-                        [use24HourClock]="true" 
-                        date-format="DD/MM/YYYY"
-                        id="dateTime-end"></ngx-datetime-picker>
-
+    <div class="form-group">
+      <input class="form-control" [owlDateTime]="dt2" formControlName="end" placeholder="Ora sfarsit">
+      <span class="trigger">
+        <i class="material-icons" [owlDateTimeTrigger]="dt2">
+          calendar_today
+        </i>
+      </span>
+      <owl-date-time #dt2 pickerMode="dialog"></owl-date-time>
+    </div>
     <div class="form-group">
       <button id="add" mat-raised-button class="btn btn-success" type="submit"
         [disabled]="!this.addAppointmentForm.valid">Adauga</button>

@@ -30,7 +30,7 @@
                 <td>Efectuat</td>
               </tr>
             </thead>
-            <tbody *ngFor="let item of planManopera; let i = index;">
+            <tbody *ngFor="let item of planManopera | paginate: config; let i = index;">
               <tr>
                 <td>{{i + 1}}</td>
                 <td>{{item.medic}}</td>
@@ -39,6 +39,9 @@
               </tr>
             </tbody>
           </table>
+          <pagination-controls  (pageChange)="pageChange($event)"
+                                directionLinks="true"
+                                autoHide="true"></pagination-controls>
     </mat-card-subtitle>
   </mat-card>
 </div>

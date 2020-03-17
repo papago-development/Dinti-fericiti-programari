@@ -25,8 +25,8 @@ pre {
   flex-direction: column;
 }
 
-ngx-datetime-picker input[type="text"] {
-  width: 300px;
+.ngx-picker {
+  width: 360px;
 }
 
 #addAppointmentButton {
@@ -51,6 +51,33 @@ input[type="file"] {
 
 #saveButton, #cancelButton {
   width: 100%;
+}
+
+.start-date {
+  display: inline-block;
+  width: 300px;
+}
+
+.form-group input {
+  width: 80%;
+  padding-right: 0;
+  margin: 0;
+  overflow: hidden;
+  display: inline;
+}
+
+.form-group span {
+  float: right;
+  padding-top: 5px;
+}
+
+.trigger {
+  float: right;
+  top: 0;
+}
+
+.start-date, .end-date {
+  margin-bottom: 20px;
 }
 
 @media only screen and (max-width: 600px) {

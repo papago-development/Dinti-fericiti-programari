@@ -29,8 +29,9 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import localeRo from '@angular/common/locales/ro';
 
 import { ToastrModule } from 'ngx-toastr';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 import { DateTimePickerModule } from 'ngx-datetime-picker';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
@@ -102,9 +103,11 @@ registerLocaleData(localeRo);
        ToastrModule.forRoot(),
        OwlDateTimeModule,
        OwlNativeDateTimeModule,
-       DateTimePickerModule
+       DateTimePickerModule,
+       NgxPaginationModule
       ],
   providers: [
+     { provide: OWL_DATE_TIME_LOCALE, useValue: 'ro'}
   ],
   bootstrap: [AppComponent]
 })
