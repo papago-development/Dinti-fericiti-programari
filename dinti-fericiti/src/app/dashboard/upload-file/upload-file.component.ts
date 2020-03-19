@@ -21,6 +21,7 @@ export class UploadFileComponent implements OnInit {
   url: Observable<string | null>;
   patientId;
   updated = '';
+  name: string;
 
   dataSource = new MatTableDataSource<Patient>();
   displayedColumns: string[] = ['filename'];
@@ -41,6 +42,7 @@ export class UploadFileComponent implements OnInit {
 
     this.patientId = this.route.snapshot.params.id;
     this.patientService.getPatientById(this.patientId).subscribe(data => {
+      this.name = data.name;
       this.files = data.files;
       if (this.files.length > 0) {
         for (let i = 0; i < this.files.length; i++) {
@@ -57,7 +59,10 @@ export class UploadFileComponent implements OnInit {
   onFileSelected(event) {
     // create a reference to the storage bucket location
     const file = event.target.files[0];
-    const filePath = '/' + file.name;
+
+    console.log('pacient name', this.name);
+    const filePath = '/' + this.name + '/' + file.name;
+    console.log('file path', filePath);
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
 
