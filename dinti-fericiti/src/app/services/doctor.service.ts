@@ -7,7 +7,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DoctorService {
+
+  public doctorName: any;
+
   constructor(private db: AngularFirestore) {}
+
+
+
+  //Getter for doctor name
+  get getDoctorName() {
+    return this.doctorName;
+  }
 
   // Get doctors from firebase collection 'Doctori'
   getDoctors(): Observable<any> {

@@ -1,3 +1,4 @@
+import { DoctorsNameEnum } from './../models/doctorName';
 import { LastAppointmentService } from './../services/last-appointment.service';
 import { Manopera } from './../models/manopera';
 import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from '@angular/core';
@@ -16,6 +17,7 @@ import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormat
 import { ILastAppointment } from '../models/ILastAppointment';
 import { Files } from '../models/files';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { NgLocalization } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -81,6 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   url: Observable<string | null>;
   isUpdated: boolean;
   manopera: Manopera;
+  selectedDoctor: any;
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
@@ -140,7 +143,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .getAppointments()
       .subscribe(data => {
         this.events = data;
-        this.refresh.next();
         console.log('events', this.events);
       });
   }
@@ -161,48 +163,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Filter events after doctor
   filterData(event, doctor) {
-    if (event.target.checked === false) {
-      this.obj = this.events;
-      this.checkboxes.forEach(val => {
-        if (val.name === doctor) {
-          this.checked = !this.checked;
-          console.log('checked', this.checked);
-        }
-        this.doctor = doctor;
-      });
 
-      this.obj.forEach(item => {
-        if (item.medic === this.doctor) {
-          const index = this.obj.indexOf(item);
-          console.log('index', index);
-          this.obj.splice(index, 1);
-        }
-      });
-      console.log('obj if', this.obj);
+    this.selectedDoctor = doctor;
+    this.doctorService.doctorName = this.selectedDoctor;
 
-      this.events = this.events.filter(m => m.medic !== this.doctor);
-      console.log('events', this.events);
-    } else {
-      this.checkboxes.forEach(val => {
-        if (val.name === doctor) {
-          val.checked = true;
-          this.checked = val.checked;
-          console.log('checked', this.checked);
-        }
-        this.doctor = doctor;
-      });
-      this.getAppointmentsSubs = this.appointmentService
-        .getAppointments()
-        .subscribe(data => {
-          this.filteredEvents = data.filter(m => m.medic === this.doctor);
-          this.filteredEvents.forEach(item => {
-            this.obj.push(item);
-            console.log('obj else', this.obj);
+    this.filteredEvents = this.events;
+
+    switch (this.selectedDoctor) {
+      case DoctorsNameEnum.AnaSandu:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.AndreeaBerendei:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.DianaEne:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.ErnaDupir:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.GeorgetaNicoletaDinu:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.IlonaPetrica:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.LauraPrie:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      case DoctorsNameEnum.RalucaCalu:
+        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+        break;
+      default:
+        this.loadAppointmentsSubs = this.appointmentService
+          .getAppointments()
+          .subscribe(data => {
+            this.events = data;
+            this.refresh.next();
           });
-          this.events = this.obj;
-          this.refresh.next();
-          console.log('events', this.events);
-        });
+        break;
     }
   }
 
@@ -324,6 +323,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .addAppointment(this.event)
         .then(() => {
           this.dialogRef.close();
+          location.reload();
         })
         .catch(err => {
           console.log(err);
@@ -439,6 +439,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   cancelEvent() {
     this.appointmentService.cancelAppointment(this.updatedEvent.id).then(() => {
       this.dialogRef.close();
+      location.reload();
     });
   }
 

@@ -1,24 +1,26 @@
 <div class="container" id="dashboard">
   <app-calendar-header [(view)]="view" [(viewDate)]="viewDate" locale="ro"></app-calendar-header>
   <hr>
-
-  <div *ngFor="let checkbox of checkboxes; let i = index;" class="doctors" [style.backgroundColor]="colorsArray[i]">
-
-    <input type="checkbox" [(ngModel)]="checkbox.checked" (change)="filterData($event, checkbox.name)" id="check">
-    Dr. {{ checkbox.name }}
-  </div>
+  <mat-form-field>
+    <mat-label>Medic</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let doctor of doctors" [value]="doctor.name" (click)="filterData($event, doctor.name)">
+        {{ doctor.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <hr>
   <div [ngSwitch]="view">
-    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" locale="ro"
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="filteredEvents" locale="ro"
       [refresh]="refresh" (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
       (eventClicked)="openEditDialog($event, editContent)">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events"
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="filteredEvents"
       (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
       (eventClicked)="openEditDialog($event, editContent)" locale="ro" [refresh]="refresh" [dayStartHour]="8"
       [dayEndHour]="22">
     </mwl-calendar-week-view>
-    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="filteredEvents" [refresh]="refresh"
       (hourSegmentClicked)="openDialog(addContent); clickedDate = $event.date"
       (eventClicked)="openEditDialog($event, editContent)" [dayStartHour]="8" [dayEndHour]="22">
     </mwl-calendar-day-view>
@@ -64,15 +66,20 @@
       <label for="chooseFile" class="btn">Incarca document</label>
       <input id="chooseFile" type="file" (change)="onFileSelected($event)" accept=".png, .jpg, .pdf .jpeg"
         [disabled]="!this.form.controls.namePacient.valid">
-      <mat-form-field>
-        <mat-label>Medic</mat-label>
-        <mat-select formControlName="medic">
-          <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-            {{ doctor.name }}
-          </mat-option>
-        </mat-select>
-        <!-- <mat-error *ngIf="!this.form.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error> -->
-      </mat-form-field>
+        <mat-form-field *ngIf="selectedDoctor !== undefined">
+          <mat-label>Medic</mat-label>
+          <input matInput #input formControlName="medic" [value]="selectedDoctor" [(ngModel)]="selectedDoctor" readonly> 
+          <mat-error *ngIf="!this.updateForm.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="selectedDoctor === undefined">
+          <mat-label>Medic</mat-label>
+          <mat-select formControlName="medic">
+            <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+              {{ doctor.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!this.updateForm.controls.medic.valid">{{ getDoctorErrorMessage() }}</mat-error>
+        </mat-form-field>
 
       <div class="form-group">
         <input id="input-start-date" class="form-control" [owlDateTime]="dt1" [min]="8" [max]="22"
