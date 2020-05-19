@@ -42,7 +42,6 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log('cnp', this.cnpPacient);
     this.patientId = this.route.snapshot.paramMap.get('id');
     this.createForm();
     this.loadDoctors();
@@ -75,25 +74,15 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
         data.forEach(element => {
           this.planManoperaCounter += 1;
         });
-        console.log('manopere', this.planManopera);
-        console.log('manopere counter', this.planManoperaCounter);
-
       });
   }
 
   pageChange(event) {
     this.config.currentPage = event;
   }
-  // addPlanManopera() {
-  //   this.planManopera = Object.assign({}, this.planManoperaForm.value);
-  //   console.log('plan manopera', this.planManopera);
-  //   this.planManoperaService.add(this.planManopera);
-  //   window.alert('Manopera a fost adaugata cu success');
-  // }
 
   add() {
     this.planManopera = Object.assign({}, this.planManoperaForm.value);
-    console.log('add', this.planManopera);
     this.patientService.updatePlanToPatient(this.patientId, this.planManopera).then(() => {
       this.planManoperaForm.reset();
     });
@@ -104,6 +93,5 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   onSelected(item: any, $event) {
-    console.log('selected item: ', item, $event.target.value);
   }
 }

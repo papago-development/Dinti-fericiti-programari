@@ -3,7 +3,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
 import { Files } from 'src/app/models/files';
 import { PatientService } from 'src/app/services/patient.service';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Patient } from 'src/app/models/patient';
@@ -51,7 +50,6 @@ export class UploadFileComponent implements OnInit {
           }
         }
       }
-      console.log('files', this.files);
       this.dataSource.data = data.files as Patient[];
     });
   }
@@ -60,13 +58,10 @@ export class UploadFileComponent implements OnInit {
     // create a reference to the storage bucket location
     const file = event.target.files[0];
 
-    console.log('pacient name', this.name);
     const filePath = '/' + this.name + '/' + file.name;
-    console.log('file path', filePath);
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
 
-    console.log(this.files);
 
     task.then(() => {
       ref.getDownloadURL().subscribe(data => {
@@ -79,7 +74,6 @@ export class UploadFileComponent implements OnInit {
 
         this.files.push(fileNew);
 
-        console.log('files', this.files);
 
         try {
           this.patientService.addFileToPatient(this.patientId, this.files);
@@ -95,18 +89,14 @@ export class UploadFileComponent implements OnInit {
   }
 
   deleteFile(item) {
-    console.log('file to delete ', item);
-
     this.patientService.deleteFileFromPatient(item);
 
     this.files.forEach(data => {
-      console.log('file name', this.files.indexOf(data));
       if (data.filename === item.filename) {
 
         const index = this.files.indexOf(data);
-        console.log('index', index);
-        this.files.splice(index);
 
+        this.files.splice(index);
       }
     });
   }

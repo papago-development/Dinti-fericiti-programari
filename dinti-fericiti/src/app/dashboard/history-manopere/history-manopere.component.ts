@@ -48,11 +48,9 @@ export class HistoryManopereComponent implements OnInit, OnChanges, OnDestroy {
 
   loadManopere() {
     this.manopereSubscription = this.manopereService.getItemFromDatabaseByCNP(this.patientId)
-                                                            .subscribe(data => {
-                                                              // this.manopere = data;
-                                                              this.dataSource.data = data as any[];
-                                                              console.log('plan manopera', this.manopere);
-    });
+      .subscribe(data => {
+        this.dataSource.data = data as any[];
+      });
   }
 
 }

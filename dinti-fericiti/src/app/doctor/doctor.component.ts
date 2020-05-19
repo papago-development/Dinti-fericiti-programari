@@ -85,7 +85,6 @@ export class DoctorComponent implements OnInit {
     this.appointmentService
       .getAppointmentByDoctor(this.userName)
       .subscribe(data => {
-        console.log('Events', data);
         this.events = data;
       });
   }
@@ -109,7 +108,6 @@ export class DoctorComponent implements OnInit {
       this.patientService.getPatientByName(event.namePacient).subscribe(res => {
         if (res.length > 0) {
           localStorage.setItem('pacientId', res.toString());
-          console.log('pacient id', res.toString());
         } else {
           localStorage.removeItem('pacientId');
         }
@@ -117,7 +115,6 @@ export class DoctorComponent implements OnInit {
 
       this.dialogRef = this.dialog.open(editContent);
       this.appointment = event;
-      console.log(event);
 
       // Set values from event to dialog
       this.updateForm.controls.namePacient.setValue(event.namePacient);
@@ -190,9 +187,7 @@ export class DoctorComponent implements OnInit {
 
               this.patientService
                 .updatePatient(this.pacientId, this.patient)
-                .then(() => {
-                  console.log('Successfully updated');
-                })
+                .then()
                 .catch(err => {
                   console.log(err);
                 });
@@ -201,7 +196,6 @@ export class DoctorComponent implements OnInit {
         } else {
           // Otherwise create a new patient in 'Patient' collection
           this.patientService.addPacient(this.patient);
-          console.log('Added');
         }
       });
 
@@ -220,7 +214,6 @@ export class DoctorComponent implements OnInit {
   updateAppointment() {
     if (this.updateForm.valid) {
       this.event = Object.assign({}, this.updateForm.value);
-      console.log('Update event', this.event);
 
       this.updatedPacient = {
         name: this.event.namePacient,
@@ -238,9 +231,7 @@ export class DoctorComponent implements OnInit {
       if (this.pacientId !== null) {
         this.patientService
           .updatePatient(this.pacientId, this.updatedPacient)
-          .then(() => {
-            console.log('successfully update');
-          })
+          .then()
           .catch(err => {
             console.log(err);
           });

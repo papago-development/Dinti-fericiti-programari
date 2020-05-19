@@ -32,7 +32,6 @@ export class PatientComponent implements OnInit, OnDestroy {
 
     this.sub = this.patientService.getPatientById(this.patientId).subscribe(data => {
       this.patient = data;
-      console.log(this.patient);
 
       // Set values for form field with information about patient
       this.form.controls.name.setValue(this.patient.name);
@@ -58,9 +57,7 @@ export class PatientComponent implements OnInit, OnDestroy {
   updatePatient() {
     this.patientToUpdate = Object.assign({}, this.form.value);
     this.patientService.updatePatient(this.patientId, this.patientToUpdate)
-    .then( res => {
-      console.log('Information updated');
-    })
+    .then()
     .catch(err => {
       console.log(err);
     });

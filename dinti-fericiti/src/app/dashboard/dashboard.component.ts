@@ -17,7 +17,6 @@ import { CustomEventTitleFormatter } from '../customTitle/customEventTitleFormat
 import { ILastAppointment } from '../models/ILastAppointment';
 import { Files } from '../models/files';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { NgLocalization } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -104,10 +103,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.selectedDoctor = this.doctorService.doctorName;
+
     this.loadAppointments();
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
+
   }
 
   ngOnDestroy() {
@@ -143,7 +145,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .getAppointments()
       .subscribe(data => {
         this.events = data;
-        console.log('events', this.events);
+        this.filteredEvents = this.events.filter(m => m.medic === this.selectedDoctor);
       });
   }
 
@@ -151,9 +153,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadDoctors() {
     this.loadDoctorsSubs = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
-      this.refresh.next();
-      console.log('doctors', this.doctors);
-
       // tslint:disable-next-line: forin
       for (const i in data) {
         this.checkboxes.push({ name: data[i].name, checked: true });
@@ -162,7 +161,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // Filter events after doctor
-  filterData(event, doctor) {
+  filterData($event, doctor) {
 
     this.selectedDoctor = doctor;
     this.doctorService.doctorName = this.selectedDoctor;
@@ -199,6 +198,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .getAppointments()
           .subscribe(data => {
             this.events = data;
+            this.filteredEvents = this.events;
             this.refresh.next();
           });
         break;
@@ -244,8 +244,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.event = Object.assign({}, this.form.value);
 
-      console.log('test', this.event);
-
       this.name = this.event.namePacient;
       this.pacient = {
         name: this.event.namePacient,
@@ -261,7 +259,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.doctorService
         .getEmailByDoctorName(this.event.medic)
         .subscribe(result => {
-          console.log('Email', result);
           this.email = result.toString();
 
           this.lastAppointment = {
@@ -272,14 +269,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
             lastDate: this.event.start
           };
 
-          console.log('last appointment', this.lastAppointment);
-
           // Add pacient to 'UltimeleProgramari' collection
           this.lastAppointmentService
             .addLastAppointment(this.lastAppointment)
-            .then(() => {
-              console.log('Successfully added!');
-            })
+            .then()
             .catch(err => {
               console.error(err);
             });
@@ -302,9 +295,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
                 this.pacientService
                   .updatePatient(this.pacientId, this.pacient)
-                  .then(() => {
-                    console.log('Successfully updated');
-                  })
+                  .then()
                   .catch(err => {
                     console.log(err);
                   });
@@ -313,17 +304,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
           // Otherwise create a new patient in 'Patient' collection
           this.pacientService.addPacient(this.pacient);
-          console.log('Added');
         }
       });
 
       // Add event/appointment to 'Programari' collection
-      console.log('event add', this.event);
       this.appointmentService
         .addAppointment(this.event)
         .then(() => {
           this.dialogRef.close();
-          location.reload();
+          this.refresh.next();
         })
         .catch(err => {
           console.log(err);
@@ -338,12 +327,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const filePath = '/' + this.name + '/' + file.name;
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
-
-
-    console.log('ref', ref.getDownloadURL);
-    console.log('Name', this.name);
-
-    console.log(this.files);
 
     task
       .then(() => {
@@ -365,12 +348,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Open dialog for editing
   openEditDialog({ event }: { event: Programare }, editContent) {
-    console.log('is updated', this.isUpdated);
     this.name = event.namePacient;
     this.pacientService.getPatientByName(event.namePacient).subscribe(res => {
       if (res.length > 0) {
         localStorage.setItem('pacientId', res.toString());
-        console.log('pacient id', res.toString());
       } else {
         localStorage.removeItem('pacientId');
       }
@@ -388,9 +369,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.updateForm.controls.consimtamant.setValue(event.consimtamant);
     // this.updateForm.controls.start.setValue(event.start);
     // this.updateForm.controls.end.setValue(event.end);
-
-    console.log('Edit event', event.id);
-    console.log('Edit event', event);
   }
 
   // Update an existing appointment
@@ -413,9 +391,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (this.pacientId !== null) {
         this.pacientService
           .updatePatient(this.pacientId, this.updatedPacient)
-          .then(() => {
-            console.log('successfully update');
-          })
+          .then()
           .catch(err => {
             console.log(err);
           });
@@ -428,6 +404,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .then(() => {
           this.dialogRef.close();
           this.isUpdated = false;
+          this.refresh.next();
         })
         .catch(err => {
           console.log(err);
@@ -439,7 +416,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   cancelEvent() {
     this.appointmentService.cancelAppointment(this.updatedEvent.id).then(() => {
       this.dialogRef.close();
-      location.reload();
+      this.refresh.next();
     });
   }
 

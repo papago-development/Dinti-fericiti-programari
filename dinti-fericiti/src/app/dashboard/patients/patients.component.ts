@@ -93,9 +93,7 @@ export class PatientsComponent implements OnInit {
   openDialog(addContent, id: any): void {
     this.dialogRef = this.dialog.open(addContent);
     this.patientService.getPatientById(id).subscribe(res => {
-      console.log('res', res);
       localStorage.setItem('pacientId', id);
-      console.log('pacient id', id);
       this.infoPatient = {
         name: res.name,
         phonePacient: res.phonePacient,
@@ -144,9 +142,7 @@ export class PatientsComponent implements OnInit {
 
               this.patientService
                 .updatePatient(this.pacientId, this.createPatient)
-                .then(() => {
-                  console.log('Successfully updated');
-                })
+                .then()
                 .catch(err => {
                   console.log(err);
                 });
@@ -155,7 +151,6 @@ export class PatientsComponent implements OnInit {
         } else {
           // Otherwise create a new patient in 'Patient' collection
           this.patientService.addPacient(this.createPatient);
-          console.log('Added');
         }
       });
 
@@ -167,8 +162,6 @@ export class PatientsComponent implements OnInit {
         .catch(err => {
           console.log(err);
         });
-
-      console.log('create patient', this.createPatient);
     }
   }
 

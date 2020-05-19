@@ -32,7 +32,6 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.patientId = this.route.snapshot.paramMap.get('id');
-    console.log('patient cnp', this.patientId);
     this.createForm();
     this.loadDoctors();
     this.loadPlanManopere();
@@ -76,7 +75,6 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
 
   addManopera() {
     this.manopera = Object.assign({}, this.manoperaForm.value);
-    console.log('Manopera form ', this.manopera);
     this.manoperaService.addManoperaToPatient(this.patientId, this.manopera);
     this.resetForm();
   }

@@ -29,15 +29,13 @@ export class HistoryAppointmentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.patientId = this.route.snapshot.paramMap.get('id');
-    console.log('pacient id', this.patientId);
+
     this.getPatientName();
   }
 
    getPatientName() {
       this.subs = this.patientService.getPatientById(this.patientId).subscribe(data => {
         this.patient = data;
-        console.log('patient', data);
-        console.log('1', this.patient.name);
 
         this.appointmentService.getAppointmentByPatientName(this.patient.name).subscribe(res => {
           this.dataSource.data = res as Programare[];

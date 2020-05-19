@@ -18,7 +18,6 @@ ngx-datetime-picker {
   margin-bottom: 20px;
 }
 
-
 @media only screen and (max-height: 570px) {
 
   .modal-header {
@@ -35,7 +34,6 @@ ngx-datetime-picker {
 .cal-day-view .cal-event{
   color:white !important;
 }
-
 
 #text {
   color: white !important;

@@ -80,7 +80,6 @@ export class AddPatientComponent implements OnInit {
   loadDoctors() {
     this.subscription = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
-      console.log('doctors', this.doctors);
     });
   }
 
@@ -89,14 +88,10 @@ export class AddPatientComponent implements OnInit {
    */
   addPatient() {
     this.patient = Object.assign({}, this.addPatientForm.value);
-    console.log('patient', this.patient);
     let patientToSave;
-
-
 
     if (this.patient.cnp === undefined) {
       var cnpRandom =  Math.floor(1000000000000 + Math.random() * 9000000000);
-      console.log('cnp random', cnpRandom);
       patientToSave = {
         name: this.patient.name,
         cnp: cnpRandom,
@@ -120,11 +115,7 @@ export class AddPatientComponent implements OnInit {
       };
     }
 
-
-    console.log('manopere', this.addPatientForm.get('manopere').value as FormArray);
-
     this.patientService.addPacient(patientToSave, this.addPatientForm.get('manopere').value as FormArray);
-    console.log('Add');
 
     setTimeout(() => {
       this.router.navigate(['patients']);
@@ -167,7 +158,6 @@ export class AddPatientComponent implements OnInit {
           filename: file.name
         });
 
-        console.log('files', this.files);
       });
     }).catch(err => console.log('Error', err));
   }
