@@ -1,4 +1,3 @@
-import { DoctorsNameEnum } from './../models/doctorName';
 import { LastAppointmentService } from './../services/last-appointment.service';
 import { Manopera } from './../models/manopera';
 import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from '@angular/core';
@@ -100,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private pacientService: PatientService,
     private dbStorage: AngularFireStorage,
     private lastAppointmentService: LastAppointmentService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.selectedDoctor = this.doctorService.doctorName;
@@ -109,7 +108,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadDoctors();
     this.createForm();
     this.createUpdateForm();
-
   }
 
   ngOnDestroy() {
@@ -144,8 +142,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadAppointmentsSubs = this.appointmentService
       .getAppointments()
       .subscribe(data => {
+        this.refresh.next();
         this.events = data;
-        this.filteredEvents = this.events.filter(m => m.medic === this.selectedDoctor);
+        // this.filteredEvents = this.events.filter(
+        //   m => m.medic === this.selectedDoctor
+        // );
       });
   }
 
@@ -153,7 +154,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadDoctors() {
     this.loadDoctorsSubs = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
+      this.refresh.next();
       // tslint:disable-next-line: forin
+      console.log('doctors', this.doctors);
       for (const i in data) {
         this.checkboxes.push({ name: data[i].name, checked: true });
       }
@@ -161,49 +164,95 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // Filter events after doctor
-  filterData($event, doctor) {
+  filterData(event, doctor) {
+    if (event.target.checked === false) {
+      this.obj = this.events;
+      this.checkboxes.forEach(val => {
+        if (val.name === doctor) {
+          this.checked = !this.checked;
+          console.log('checked', this.checked);
+        }
+        this.doctor = doctor;
+      });
 
-    this.selectedDoctor = doctor;
-    this.doctorService.doctorName = this.selectedDoctor;
+      this.obj.forEach(item => {
+        if (item.medic === this.doctor) {
+          const index = this.obj.indexOf(item);
+          console.log('index', index);
+          this.obj.splice(index, 1);
+        }
+      });
+      console.log('obj if', this.obj);
 
-    this.filteredEvents = this.events;
-
-    switch (this.selectedDoctor) {
-      case DoctorsNameEnum.AnaSandu:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.AndreeaBerendei:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.DianaEne:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.ErnaDupir:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.GeorgetaNicoletaDinu:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.IlonaPetrica:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.LauraPrie:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      case DoctorsNameEnum.RalucaCalu:
-        this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-        break;
-      default:
-        this.loadAppointmentsSubs = this.appointmentService
-          .getAppointments()
-          .subscribe(data => {
-            this.events = data;
-            this.filteredEvents = this.events;
-            this.refresh.next();
+      this.events = this.events.filter(m => m.medic !== this.doctor);
+      console.log('events', this.events);
+    } else {
+      this.checkboxes.forEach(val => {
+        if (val.name === doctor) {
+          val.checked = true;
+          this.checked = val.checked;
+          console.log('checked', this.checked);
+        }
+        this.doctor = doctor;
+      });
+      this.getAppointmentsSubs = this.appointmentService
+        .getAppointments()
+        .subscribe(data => {
+          this.filteredEvents = data.filter(m => m.medic === this.doctor);
+          this.filteredEvents.forEach(item => {
+            this.obj.push(item);
+            console.log('obj else', this.obj);
           });
-        break;
+          this.events = this.obj;
+          this.refresh.next();
+          console.log('events', this.events);
+        });
     }
   }
+
+  // filterData($event, doctor) {
+
+  //   this.selectedDoctor = doctor;
+  //   this.doctorService.doctorName = this.selectedDoctor;
+
+  //   this.filteredEvents = this.events;
+
+  //   switch (this.selectedDoctor) {
+  //     case DoctorsNameEnum.AnaSandu:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.AndreeaBerendei:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.DianaEne:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.ErnaDupir:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.GeorgetaNicoletaDinu:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.IlonaPetrica:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.LauraPrie:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     case DoctorsNameEnum.RalucaCalu:
+  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
+  //       break;
+  //     default:
+  //       this.loadAppointmentsSubs = this.appointmentService
+  //         .getAppointments()
+  //         .subscribe(data => {
+  //           this.events = data;
+  //           this.filteredEvents = this.events;
+  //           this.refresh.next();
+  //         });
+  //       break;
+  //   }
+  // }
 
   // Create form for adding new event/appointment
   createForm() {
@@ -321,7 +370,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onFileSelected(event) {
-
     // create a reference to the storage bucket location
     const file = event.target.files[0];
     const filePath = '/' + this.name + '/' + file.name;
@@ -340,7 +388,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.isUpdated = true;
         });
       })
-      .catch((err) => {
+      .catch(err => {
         this.isUpdated = false;
         console.log('Error', err);
       });
@@ -430,8 +478,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.form.controls.phonePacient.hasError('required')
       ? 'You must enter a value'
       : this.form.controls.phonePacient.hasError('maxlength')
-        ? 'Maximum length is 10 character'
-        : '';
+      ? 'Maximum length is 10 character'
+      : '';
   }
 
   getEmailErrorMessage() {

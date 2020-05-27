@@ -40,7 +40,6 @@ export class PatientService {
     }
   }
 
-
   // Get all patients from firebase collection 'Patienti'
   getAllPatients() {
     return this.db
@@ -181,5 +180,12 @@ export class PatientService {
 
   deleteFileFromPatient(urlPhoto) {
     return this.storage.ref(urlPhoto).delete();
+  }
+
+  /**
+   * Delete patient from firestore by id
+   */
+  deleteById(id) {
+    return this.db.collection('Pacienti').doc(id).delete();
   }
 }

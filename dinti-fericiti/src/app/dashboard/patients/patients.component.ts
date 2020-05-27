@@ -8,6 +8,7 @@ import { Doctor } from 'src/app/models/doctor';
 import { Programare } from 'src/app/models/programare';
 import { AppointmentService } from 'src/app/services/appointment.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-patients',
@@ -45,7 +46,8 @@ export class PatientsComponent implements OnInit {
               private fb: FormBuilder,
               private dialog: MatDialog,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private toastr: ToastrService) { }
 
   ngOnInit() {
     this.loadPatients();
@@ -211,5 +213,13 @@ export class PatientsComponent implements OnInit {
     return this.addAppointmentForm.controls.end.hasError('required')
       ? 'You must enter a value'
       : '';
+  }
+
+  deletePatient(id: any) {
+    this.patientService.deleteById(id).then(() => {
+      this.toastr.success('Pacientul a fost sters cu success.');
+    }).catch(error => {
+      console.error(error);
+    });
   }
 }

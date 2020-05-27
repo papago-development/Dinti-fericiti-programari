@@ -23,7 +23,8 @@ import {  MatInputModule,
           MatSortModule,
           MatCheckboxModule,
           MatIconModule,
-          MatStepperModule} from '@angular/material';
+          MatStepperModule,
+          MatTooltipModule} from '@angular/material';
 
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeRo from '@angular/common/locales/ro';
@@ -100,6 +101,7 @@ registerLocaleData(localeRo);
        MatCheckboxModule,
        MatIconModule,
        MatStepperModule,
+       MatTooltipModule,
        ToastrModule.forRoot(),
        OwlDateTimeModule,
        OwlNativeDateTimeModule,

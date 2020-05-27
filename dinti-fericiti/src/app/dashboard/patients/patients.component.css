@@ -8,12 +8,20 @@ table {
   right: 0;
 }
 
-#addAppointment {
-  clear: both;
-  float: right;
-  overflow: hidden;
 
+#addAppointment {
+  float: right;
 }
+
+#deletePatient {
+  float: right;
+  margin-left: 2px;
+}
+
+#button-text, #deletePatient {
+  display: inline;
+}
+
 
 #addPatient {
   float: right;

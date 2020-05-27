@@ -6,6 +6,7 @@ import { PatientService } from 'src/app/services/patient.service';
 import { Observable } from 'rxjs';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Patient } from 'src/app/models/patient';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-file',
@@ -62,30 +63,54 @@ export class UploadFileComponent implements OnInit {
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
 
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        ref.getDownloadURL().subscribe(data => {
+          this.url = data;
 
-    task.then(() => {
-      ref.getDownloadURL().subscribe(data => {
-        this.url = data;
+          const fileNew: Files = {
+            url: this.url,
+            filename: file.name
+          };
 
-        const fileNew: Files = {
-          url: this.url,
-          filename: file.name
-        };
+          this.files.push(fileNew);
 
-        this.files.push(fileNew);
+          try {
+            this.patientService.addFileToPatient(this.patientId, this.files);
+            this.updated = 'Fisierul a fost incarcat cu success';
+            setTimeout(() => {
+              this.updated = '';
+            }, 100);
+          } catch (error) {
+            console.log('Error', error);
+          }
+        });
+      })
+    ).subscribe();
+
+    // task.then(() => {
+    //   ref.getDownloadURL().subscribe(data => {
+    //     this.url = data;
+
+    //     const fileNew: Files = {
+    //       url: this.url,
+    //       filename: file.name
+    //     };
+
+    //     this.files.push(fileNew);
 
 
-        try {
-          this.patientService.addFileToPatient(this.patientId, this.files);
-          this.updated = 'Fisierul a fost incarcat cu success';
-          setTimeout(() => {
-            this.updated = '';
-          }, 100);
-        } catch (error) {
-          console.log('Error', error);
-        }
-      });
-    }).catch(err => console.log('Error', err));
+    //     try {
+    //       this.patientService.addFileToPatient(this.patientId, this.files);
+    //       this.updated = 'Fisierul a fost incarcat cu success';
+    //       setTimeout(() => {
+    //         this.updated = '';
+    //       }, 100);
+    //     } catch (error) {
+    //       console.log('Error', error);
+    //     }
+    //   });
+    // }).catch(err => console.log('Error', err));
   }
 
   deleteFile(item) {
