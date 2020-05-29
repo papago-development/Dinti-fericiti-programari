@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Patient } from '../models/patient';
 import { AngularFireStorage } from '@angular/fire/storage';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -19,15 +18,12 @@ export class PatientService {
     if (manopere === null) {
       this.db.collection('Pacienti').doc(`${pacient.cnp}`).set(pacient);
     } else {
-      console.log('patient', pacient);
-      console.log('Man esteeeeeee ' + JSON.stringify(manopere[0].manopera));
       this.db.collection('Pacienti').doc(`${pacient.cnp}`).set(pacient)
         .then(() => {
 
           // tslint:disable-next-line: max-line-length
 
         });
-      console.log('mna', typeof manopere);
       // tslint:disable-next-line: forin
       for (const key in manopere) {
         this.db.collection('Pacienti').doc(`${pacient.cnp}`).collection('PlanManopera')
@@ -93,8 +89,10 @@ export class PatientService {
       .snapshotChanges()
       .pipe(
         map(data => data.map(event => {
-          return event.payload.doc.data()['phonePacient']
-
+          return {
+            phone: event.payload.doc.data()['phonePacient'],
+            consimtamant: event.payload.doc.data()['consimtamant']
+          }
         }))
       );
   }

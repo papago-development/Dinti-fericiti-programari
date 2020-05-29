@@ -82,6 +82,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isUpdated: boolean;
   manopera: Manopera;
   selectedDoctor: any;
+  consimtamant: boolean;
 
   // Subscriptions
   loadAppointmentsSubs: Subscription;
@@ -144,9 +145,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.refresh.next();
         this.events = data;
-        // this.filteredEvents = this.events.filter(
-        //   m => m.medic === this.selectedDoctor
-        // );
       });
   }
 
@@ -155,8 +153,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadDoctorsSubs = this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
       this.refresh.next();
+
       // tslint:disable-next-line: forin
-      console.log('doctors', this.doctors);
       for (const i in data) {
         this.checkboxes.push({ name: data[i].name, checked: true });
       }
@@ -170,7 +168,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
           this.checked = !this.checked;
-          console.log('checked', this.checked);
         }
         this.doctor = doctor;
       });
@@ -178,20 +175,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.obj.forEach(item => {
         if (item.medic === this.doctor) {
           const index = this.obj.indexOf(item);
-          console.log('index', index);
           this.obj.splice(index, 1);
         }
       });
-      console.log('obj if', this.obj);
 
       this.events = this.events.filter(m => m.medic !== this.doctor);
-      console.log('events', this.events);
     } else {
       this.checkboxes.forEach(val => {
         if (val.name === doctor) {
           val.checked = true;
           this.checked = val.checked;
-          console.log('checked', this.checked);
         }
         this.doctor = doctor;
       });
@@ -201,58 +194,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.filteredEvents = data.filter(m => m.medic === this.doctor);
           this.filteredEvents.forEach(item => {
             this.obj.push(item);
-            console.log('obj else', this.obj);
           });
           this.events = this.obj;
           this.refresh.next();
-          console.log('events', this.events);
         });
     }
   }
-
-  // filterData($event, doctor) {
-
-  //   this.selectedDoctor = doctor;
-  //   this.doctorService.doctorName = this.selectedDoctor;
-
-  //   this.filteredEvents = this.events;
-
-  //   switch (this.selectedDoctor) {
-  //     case DoctorsNameEnum.AnaSandu:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.AndreeaBerendei:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.DianaEne:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.ErnaDupir:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.GeorgetaNicoletaDinu:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.IlonaPetrica:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.LauraPrie:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     case DoctorsNameEnum.RalucaCalu:
-  //       this.filteredEvents = this.filteredEvents.filter(m => m.medic === this.selectedDoctor);
-  //       break;
-  //     default:
-  //       this.loadAppointmentsSubs = this.appointmentService
-  //         .getAppointments()
-  //         .subscribe(data => {
-  //           this.events = data;
-  //           this.filteredEvents = this.events;
-  //           this.refresh.next();
-  //         });
-  //       break;
-  //   }
-  // }
 
   // Create form for adding new event/appointment
   createForm() {
@@ -511,9 +458,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.pacientService
       .getPhoneByPatientName(event.target['value'])
       .subscribe(data => {
-        const phone = data;
+        const phone = data[0].phone;
+        const consimtamant = data[0].consimtamant;
         if (phone !== null) {
-          this.phoneNumber = phone[0];
+          this.phoneNumber = phone;
+          this.consimtamant = consimtamant;
         }
       });
   }

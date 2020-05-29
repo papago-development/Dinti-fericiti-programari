@@ -57,7 +57,7 @@
         <input matInput #input formControlName="title" placeholder="Manopera">
         <mat-error *ngIf="!this.form.controls.title.valid">{{ getSubjectErrorMessage() }}</mat-error>
       </mat-form-field>
-      <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="isUpdated" [checked]="isUpdated">
+      <mat-checkbox color="primary" formControlName="consimtamant" [(ngModel)]="consimtamant" [checked]="isUpdated">
         Consimtamant</mat-checkbox>
 
       <label for="chooseFile" class="btn">Incarca document</label>

@@ -90,12 +90,15 @@ export class AddPatientComponent implements OnInit {
     this.patient = Object.assign({}, this.addPatientForm.value);
     let patientToSave;
 
+    console.log('patient', this.patient);
+
     if (this.patient.cnp === undefined) {
       var cnpRandom =  Math.floor(1000000000000 + Math.random() * 9000000000);
       patientToSave = {
         name: this.patient.name,
         cnp: cnpRandom,
         phonePacient: this.patient.phonePacient,
+        consimtamant: this.patient.consimtamant,
         medic: this.patient.medic,
         boli: this.patient.boli,
         alergi: this.patient.alergi,
@@ -107,6 +110,7 @@ export class AddPatientComponent implements OnInit {
         name: this.patient.name,
         cnp: this.patient.cnp,
         phonePacient: this.patient.phonePacient,
+        consimtamant: this.patient.consimtamant,
         medic: this.patient.medic,
         boli: this.patient.boli,
         alergi: this.patient.alergi,
@@ -127,7 +131,7 @@ export class AddPatientComponent implements OnInit {
     this.manopere.push(this.createManopereForm());
   }
 
-  cpn() {
+  cnp() {
     return this.addPatientForm.get('cnp');
   }
 

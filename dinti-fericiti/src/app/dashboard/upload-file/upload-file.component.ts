@@ -1,3 +1,4 @@
+import { UploadFileService } from './../../services/upload-file.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ActivatedRoute } from '@angular/router';
@@ -22,6 +23,7 @@ export class UploadFileComponent implements OnInit {
   patientId;
   updated = '';
   name: string;
+  filePath: any;
 
   dataSource = new MatTableDataSource<Patient>();
   displayedColumns: string[] = ['filename'];
@@ -32,9 +34,12 @@ export class UploadFileComponent implements OnInit {
   // variable for sorting the events for patient
   @ViewChild(MatSort) sort: MatSort;
 
+  
+
   constructor(private dbStorage: AngularFireStorage,
               private patientService: PatientService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private uploadService: UploadFileService) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -59,9 +64,9 @@ export class UploadFileComponent implements OnInit {
     // create a reference to the storage bucket location
     const file = event.target.files[0];
 
-    const filePath = '/' + this.name + '/' + file.name;
-    const ref = this.dbStorage.ref(filePath);
-    const task = this.dbStorage.upload(filePath, file);
+    this.filePath = '/' + this.name + '/' + file.name;
+    const ref = this.dbStorage.ref(this.filePath);
+    const task = this.dbStorage.upload(this.filePath, file);
 
     task.snapshotChanges().pipe(
       finalize(() => {
@@ -88,41 +93,16 @@ export class UploadFileComponent implements OnInit {
       })
     ).subscribe();
 
-    // task.then(() => {
-    //   ref.getDownloadURL().subscribe(data => {
-    //     this.url = data;
 
-    //     const fileNew: Files = {
-    //       url: this.url,
-    //       filename: file.name
-    //     };
-
-    //     this.files.push(fileNew);
-
-
-    //     try {
-    //       this.patientService.addFileToPatient(this.patientId, this.files);
-    //       this.updated = 'Fisierul a fost incarcat cu success';
-    //       setTimeout(() => {
-    //         this.updated = '';
-    //       }, 100);
-    //     } catch (error) {
-    //       console.log('Error', error);
-    //     }
-    //   });
-    // }).catch(err => console.log('Error', err));
   }
 
-  deleteFile(item) {
-    this.patientService.deleteFileFromPatient(item);
+  deleteFile(item, patientId) {
 
-    this.files.forEach(data => {
-      if (data.filename === item.filename) {
+    this.filePath = '/' + this.name;
+    this.uploadService.deleteFileFromDatabase(item, patientId).subscribe(() => {
+      this.uploadService.deleteFileFromStorage(item.filename, this.filePath);
 
-        const index = this.files.indexOf(data);
-
-        this.files.splice(index);
-      }
     });
+
   }
 }

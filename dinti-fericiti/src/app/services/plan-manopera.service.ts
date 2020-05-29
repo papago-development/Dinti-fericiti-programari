@@ -22,8 +22,19 @@ export class PlanManoperaService {
   }
 
   getPlanManopereByCNP(cnp): Observable<any> {
-    return this.db.collection('Pacienti').doc(`${cnp}`).collection('PlanManopera').valueChanges();
+    return this.db.collection('Pacienti').doc(`${cnp}`).collection('PlanManopera') .snapshotChanges().pipe(
+      map(data => data.map(event => {
+        return {
+          id: event.payload.doc.id,
+          medic: event.payload.doc.data()['medic'],
+          manopera: event.payload.doc.data()['manopera'],
+          isFinished: event.payload.doc.data()['isFinished']
+        };
+      })));
+  }
 
+  deletePlanManopera(manoperaId, patientId) {
+    return this.db.collection('Pacienti').doc(patientId).collection('PlanManopera').doc(manoperaId).delete();
   }
 
 }

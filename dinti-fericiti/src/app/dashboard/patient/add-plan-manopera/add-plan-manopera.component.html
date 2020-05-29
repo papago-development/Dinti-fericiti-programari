@@ -28,6 +28,7 @@
                 <td>Medic</td>
                 <td>Manopera</td>
                 <td>Efectuat</td>
+                <td></td>
               </tr>
             </thead>
             <tbody *ngFor="let item of planManopera | paginate: config; let i = index;">
@@ -36,6 +37,11 @@
                 <td>{{item.medic}}</td>
               <td>{{item.manopera}}</td>
               <td><mat-checkbox [value]="item.isFinished"></mat-checkbox></td>
+              <td>          <button mat-flat-button color="warn" id="deletePatient" #tooltip="matTooltip"
+                matTooltip="Sterge plan manopera" (click)="deleteManopera(item.id, patientId)">
+                  <span class="material-icons" id="delete-icon">
+                    delete
+                    </span></button></td>
               </tr>
             </tbody>
           </table>

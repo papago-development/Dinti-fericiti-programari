@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { PatientService } from './../../../services/patient.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanManopera } from './../../../models/planManopera';
@@ -32,7 +33,8 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   constructor(private planManoperaService: PlanManoperaService,
               private doctorService: DoctorService,
               private patientService: PatientService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private toastrService: ToastrService) {
                 this.config = {
                   itemsPerPage: 10,
                   currentPage: 1,
@@ -93,5 +95,14 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   onSelected(item: any, $event) {
+  }
+
+  deleteManopera(manoperaId, patientId) {
+
+    this.planManoperaService.deletePlanManopera(manoperaId, patientId).then(() => {
+      this.toastrService.success('Planul manoperei a fost sters cu success.');
+    }).catch(error => {
+      console.error(error);
+    });
   }
 }

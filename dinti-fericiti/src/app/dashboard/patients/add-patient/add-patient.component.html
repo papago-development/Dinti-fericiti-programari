@@ -41,6 +41,10 @@
             <mat-error *ngIf="addPatientForm.get('medic').invalid && addPatientForm.get('medic').touched"
               class="help-block">Selectarea unui medic este obligatorie</mat-error>
           </mat-form-field>
+
+            <mat-checkbox color="primary" formControlName="consimtamant">
+              Consimtamant</mat-checkbox>
+
         </div>
         <div>
           <button type="button" mat-button matStepperNext [disabled]="addPatientForm.get('medic').invalid || addPatientForm.get('phonePacient').invalid ||
