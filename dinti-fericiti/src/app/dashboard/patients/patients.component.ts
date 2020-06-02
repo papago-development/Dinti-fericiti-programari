@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
@@ -38,8 +38,6 @@ export class PatientsComponent implements OnInit {
   pacientExists: boolean;
   pacientId: string;
 
-
-
   constructor(private patientService: PatientService,
               private doctorService: DoctorService,
               private appointmentService: AppointmentService,
@@ -60,7 +58,7 @@ export class PatientsComponent implements OnInit {
   loadPatients() {
     this.patientService.getAllPatients().subscribe(data => {
       this.dataSource.data = data.sort((a, b) => {
-        return +new Date(a.start).getDate() - +new Date(b.start).getDate();
+        return a.name < b.name ? -1 : 1;
       }) as any[];
     });
 

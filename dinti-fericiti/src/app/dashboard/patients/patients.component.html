@@ -1,53 +1,54 @@
 <div class="container">
-  <!-- <div class="mat-elevation-z8"> -->
-    <mat-card>
+    <mat-card-title>
       Pacienti
-    </mat-card>
-    <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Cautare">
-    </mat-form-field>
-    <span id="addPatient">
-      <button class="mr-auto" mat-raised-button color="primary" (click)="addPatientPage()">Adauga pacient</button>
-    </span>
-    <table mat-table [dataSource]="dataSource" matSort>
+    </mat-card-title><br>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Cautare">
+  </mat-form-field>
+  <span id="addPatient">
+    <button class="mr-auto" mat-raised-button (click)="addPatientPage()">Adauga pacient</button>
+  </span>
+  <table mat-table [dataSource]="dataSource" matSort>
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nume pacient</th>
-        <td mat-cell *matCellDef="let item">{{ item.name }}</td>
-      </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nume pacient</th>
+      <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+    </ng-container>
 
-      <ng-container matColumnDef="phonePacient">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefon</th>
-        <td mat-cell *matCellDef="let item">{{ item.phonePacient }}</td>
-      </ng-container>
-      <ng-container matColumnDef="medic">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Medic</th>
-        <td mat-cell *matCellDef="let item">{{ item.medic }}</td>
-      </ng-container>
+    <ng-container matColumnDef="phonePacient">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefon</th>
+      <td mat-cell *matCellDef="let item">{{ item.phonePacient }}</td>
+    </ng-container>
+    <ng-container matColumnDef="medic">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Medic</th>
+      <td mat-cell *matCellDef="let item">{{ item.medic }}</td>
+    </ng-container>
 
-      <ng-container matColumnDef="action" >
-        <th mat-header-cell *matHeaderCellDef>Editeaza</th>
-        <td mat-cell *matCellDef="let item" id="action">
-          <i class="material-icons" [routerLink]="['/patient/', item.id]">edit</i>
-          <button mat-flat-button color="warn" id="deletePatient" #tooltip="matTooltip"
-          matTooltip="Sterge pacient" (click)="deletePatient(item.id)">
-            <span class="material-icons" id="delete-icon">
-              delete
-              </span></button>
-          <button class="button-text" mat-raised-button color="primary" id="addAppointment" (click)="openDialog(addContent, item.id)">
-            Adauga programare
-          </button>
-          <button class="button-text-mobile" mat-raised-button color="primary" id="addAppointment" (click)="openDialog(addContent, item.id)">
-              Programare
-            </button>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Editeaza</th>
+      <td mat-cell *matCellDef="let item" id="action">
+        <i class="material-icons" [routerLink]="['/patient/', item.id]">edit</i>
+        <button mat-flat-button color="warn" id="deletePatient" #tooltip="matTooltip" matTooltip="Sterge pacient"
+          (click)="deletePatient(item.id)">
+          <span class="material-icons" id="delete-icon">
+            delete
+          </span></button>
+        <button class="button-text" mat-raised-button color="primary" id="addAppointment"
+          (click)="openDialog(addContent, item.id)">
+          Adauga programare
+        </button>
+        <button class="button-text-mobile" mat-raised-button color="primary" id="addAppointment"
+          (click)="openDialog(addContent, item.id)">
+          Programare
+        </button>
 
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+</div>
 <!-- </div> -->
 
 <!-- Modal for adding a new appointment -->
@@ -94,8 +95,7 @@
     </mat-form-field>
     <div class="form-group">
       <input id="input-start-date" class="form-control" [owlDateTime]="dt1" [min]="8" [max]="22"
-        date-format="DD/MM/YYYY" formControlName="start" 
-        placeholder="Ora inceput">
+        date-format="DD/MM/YYYY" formControlName="start" placeholder="Ora inceput">
       <span class="trigger" [owlDateTimeTrigger]="dt1">
         <i class="material-icons">calendar_today</i>
       </span>

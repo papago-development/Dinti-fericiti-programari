@@ -8,6 +8,9 @@ table {
   right: 0;
 }
 
+mat-card-title {
+  text-align: center;
+}
 
 #addAppointment {
   float: right;
@@ -27,6 +30,11 @@ table {
   float: right;
   padding-top: 10px;
   padding-right: 25px;
+
+}
+
+#addPatient > button {
+  color: #6eae40;
 }
 
 i {

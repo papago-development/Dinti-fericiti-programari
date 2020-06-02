@@ -5,50 +5,48 @@
       Plan manopera pacient
     </mat-card-title>
     <mat-card-subtitle>
-        <form [formGroup]="planManoperaForm">
-            <mat-form-field>
-              <mat-label>Manopera</mat-label>
-              <input matInput #input formControlName="manopera" placeholder="Manopera">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Medic</mat-label>
-              <mat-select formControlName="medic">
-                <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
-                  {{ doctor.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <button type="button" mat-raised-button color="primary" (click)="add()">+</button>
-          </form>
-          <table  class="table table-responsive"
-                  *ngIf="planManopera.length > 0">
-            <thead>
-              <tr>
-                <td></td>
-                <td>Medic</td>
-                <td>Manopera</td>
-                <td>Efectuat</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody *ngFor="let item of planManopera | paginate: config; let i = index;">
-              <tr>
-                <td>{{i + 1}}</td>
-                <td>{{item.medic}}</td>
-              <td>{{item.manopera}}</td>
-              <td><mat-checkbox [value]="item.isFinished"></mat-checkbox></td>
-              <td>          <button mat-flat-button color="warn" id="deletePatient" #tooltip="matTooltip"
-                matTooltip="Sterge plan manopera" (click)="deleteManopera(item.id, patientId)">
-                  <span class="material-icons" id="delete-icon">
-                    delete
-                    </span></button></td>
-              </tr>
-            </tbody>
-          </table>
-          <pagination-controls  (pageChange)="pageChange($event)"
-                                directionLinks="true"
-                                autoHide="true"></pagination-controls>
+      <form [formGroup]="planManoperaForm">
+        <mat-form-field>
+          <mat-label>Manopera</mat-label>
+          <input matInput #input formControlName="manopera" placeholder="Manopera">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Medic</mat-label>
+          <mat-select formControlName="medic">
+            <mat-option *ngFor="let doctor of doctors" [value]="doctor.name">
+              {{ doctor.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button type="button" mat-raised-button color="primary" (click)="add()">+</button>
+      </form>
+      <table class="table table-responsive" *ngIf="planManopera.length > 0">
+        <thead>
+          <tr style="background-color: gray; color:white;">
+            <td></td>
+            <td>Medic</td>
+            <td>Manopera</td>
+            <td>Efectuat</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of planManopera | paginate: config; let i = index;">
+          <tr>
+            <td>{{i + 1}}</td>
+            <td>{{item.medic}}</td>
+            <td>{{item.manopera}}</td>
+            <td>
+              <mat-checkbox [value]="item.isFinished"></mat-checkbox>
+            </td>
+            <td id="deleteButton">               
+                <mat-icon color="warn" #tooltip="matTooltip"
+                matTooltip="Sterge plan manopera" (click)="deleteManopera(item.id, patientId)">delete</mat-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls (pageChange)="pageChange($event)" directionLinks="true" autoHide="true">
+      </pagination-controls>
     </mat-card-subtitle>
   </mat-card>
 </div>
-
