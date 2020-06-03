@@ -47,6 +47,7 @@ export class PatientService {
             return {
               id: patient.payload.doc.id,
               medic: patient.payload.doc.data()['medic'],
+              cnp: patient.payload.doc.data()['cnp'],
               // tslint:disable-next-line: no-string-literal
               title: patient.payload.doc.data()['title'],
               // tslint:disable-next-line: no-string-literal
@@ -95,6 +96,19 @@ export class PatientService {
           }
         }))
       );
+  }
+
+  // check if cnp exists in database
+  checkCnp(cnp) {
+    // return this.db.collection('Pacienti').doc(cnp).valueChanges();
+    return this.db.firestore.doc(`Pacienti/${cnp}`).get()
+    .then(docSnapshot => {
+      if (docSnapshot.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
   // Update patient information

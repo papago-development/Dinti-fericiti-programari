@@ -70,9 +70,11 @@ export class AddPlanManoperaComponent implements OnInit, OnChanges {
   }
 
   loadManopere() {
+    console.log('plan', this.patientId);
     this.planManoperaService.getPlanManopereByCNP(this.patientId)
       .subscribe(data => {
         this.planManopera = data;
+        console.log('plan', this.planManopera);
         data.forEach(element => {
           this.planManoperaCounter += 1;
         });

@@ -1,7 +1,7 @@
 import { PatientService } from 'src/app/services/patient.service';
 import { Patient } from 'src/app/models/patient';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray, ValidatorFn, AbstractControl } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/models/doctor';
@@ -29,7 +29,7 @@ export class AddPatientComponent implements OnInit {
   isOptional = false;
   manopereForm: FormGroup;
   manopere: FormArray;
-  cnpPatient: string;
+
 
 
   url: Observable<string | null>;
@@ -40,10 +40,13 @@ export class AddPatientComponent implements OnInit {
   // tslint:disable-next-line: no-input-rename
   planManoperaList: PlanManopera[] = [];
 
+  @Input() cnpPatient: string = null;
+  cnpExists: boolean;
+
   constructor(private patientService: PatientService,
-              private doctorService: DoctorService,
-              private dbStorage: AngularFireStorage,
-              private router: Router) { }
+    private doctorService: DoctorService,
+    private dbStorage: AngularFireStorage,
+    private router: Router) { }
 
   ngOnInit() {
     this.createForm();
@@ -57,24 +60,24 @@ export class AddPatientComponent implements OnInit {
   createForm() {
     this.addPatientForm = new FormGroup({
 
-        name: new FormControl(null, Validators.required),
-        // tslint:disable-next-line: max-line-length
-        cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
-        phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
-        medic: new FormControl(null, Validators.required),
-        boli: new FormControl(null),
-        alergi: new FormControl(null),
-        consimtamant: new FormControl(null),
-        manopere: new FormArray([this.createManopereForm() ])
+      name: new FormControl(null, Validators.required),
+      // tslint:disable-next-line: max-line-length
+      cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13), this.checkCnpPatient.bind(this)]),
+      phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
+      medic: new FormControl(null, Validators.required),
+      boli: new FormControl(null),
+      alergi: new FormControl(null),
+      consimtamant: new FormControl(null),
+      manopere: new FormArray([this.createManopereForm()])
     });
   }
 
   createManopereForm() {
-    return  this.manopereForm = new FormGroup({
-          manopera: new FormControl(null, Validators.required),
-          medic: new FormControl(null),
-          isFinished: new FormControl(false)
-     });
+    return this.manopereForm = new FormGroup({
+      manopera: new FormControl(null, Validators.required),
+      medic: new FormControl(null),
+      isFinished: new FormControl(false)
+    });
   }
 
   loadDoctors() {
@@ -93,7 +96,7 @@ export class AddPatientComponent implements OnInit {
     console.log('patient', this.patient);
 
     if (this.patient.cnp === undefined) {
-      var cnpRandom =  Math.floor(1000000000000 + Math.random() * 9000000000);
+      const cnpRandom = Math.floor(1000000000000 + Math.random() * 9000000000);
       patientToSave = {
         name: this.patient.name,
         cnp: cnpRandom,
@@ -106,7 +109,7 @@ export class AddPatientComponent implements OnInit {
         start: new Date()
       };
     } else {
-       patientToSave = {
+      patientToSave = {
         name: this.patient.name,
         cnp: this.patient.cnp,
         phonePacient: this.patient.phonePacient,
@@ -135,7 +138,7 @@ export class AddPatientComponent implements OnInit {
     return this.addPatientForm.get('cnp');
   }
 
-  public  hasError(controlName: string, errorName: string) {
+  public hasError(controlName: string, errorName: string) {
     return this.addPatientForm.controls[controlName].hasError(errorName);
   }
 
@@ -164,5 +167,17 @@ export class AddPatientComponent implements OnInit {
 
       });
     }).catch(err => console.log('Error', err));
+  }
+
+  // checkCnpPatient() {
+  //   this.patientService.checkCnp(event.target['value']).then(data => this.cnpExists = data);
+  // }
+
+  checkCnpPatient(control: FormControl): {[s: string]: boolean} {
+    this.patientService.checkCnp(control.value).then(data => this.cnpExists = data);
+    if (this.cnpExists !== true) {
+      return { 'alreadyExist' : true };
+    }
+    return null;
   }
 }
