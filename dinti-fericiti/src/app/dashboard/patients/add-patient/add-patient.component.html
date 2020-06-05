@@ -14,12 +14,12 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>CNP</mat-label>
-            <input matInput #input formControlName="cnp" placeholder="CNP" [(ngModel)]="cnpPatient" >
-            <mat-hint align="end">CNP-ul trebuie sa contina 13 caractere</mat-hint>
+            <input matInput #cnp formControlName="cnp" placeholder="CNP" [(ngModel)]="cnpPatient" (change)="checkCnpPatient()">
+            <mat-hint align="end">{{cnp.value.length }} / 13</mat-hint>
             <mat-error *ngIf="hasError('cnp', 'pattern')" class="help-block">CNP-ul poate contine doar cifre</mat-error>
             <mat-error *ngIf="hasError('cnp', 'maxlength')" class="help-block">CNP-ul are mai mult de 13 caractere
             </mat-error>
-            <mat-error *ngIf="this.cnpExists === true" class="help-block"> CNP-ul exista in baza de date.</mat-error>
+            <mat-error *ngIf="this.cnpFromDb === true"> CNP-ul exista in baza de date.</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Telefon pacient</mat-label>
@@ -62,8 +62,8 @@
             <input matInput #input formControlName="boli" placeholder="Boli">
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Alergi</mat-label>
-            <input matInput #input formControlName="alergi" placeholder="Alergi">
+            <mat-label>Alergii</mat-label>
+            <input matInput #input formControlName="alergi" placeholder="Alergii">
           </mat-form-field>
           <div >
             <label for="chooseFile" class="btn">Incarca document</label>

@@ -9,6 +9,7 @@ import { DoctorService } from 'src/app/services/doctor.service';
 import { PlanManopera } from 'src/app/models/planManopera';
 import { Files } from 'src/app/models/files';
 import { AngularFireStorage } from '@angular/fire/storage/storage';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-patient',
@@ -29,7 +30,7 @@ export class AddPatientComponent implements OnInit {
   isOptional = false;
   manopereForm: FormGroup;
   manopere: FormArray;
-
+  //cnpPatient: any;
 
 
   url: Observable<string | null>;
@@ -41,17 +42,20 @@ export class AddPatientComponent implements OnInit {
   planManoperaList: PlanManopera[] = [];
 
   @Input() cnpPatient: string = null;
-  cnpExists: boolean;
+  @Input() cnpFromDb: boolean;
+  exists: boolean;
 
   constructor(private patientService: PatientService,
     private doctorService: DoctorService,
     private dbStorage: AngularFireStorage,
+    private toastrService: ToastrService,
     private router: Router) { }
 
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
     this.percent = 0;
+
   }
 
   /**
@@ -62,7 +66,7 @@ export class AddPatientComponent implements OnInit {
 
       name: new FormControl(null, Validators.required),
       // tslint:disable-next-line: max-line-length
-      cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13), this.checkCnpPatient.bind(this)]),
+      cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
       phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
       medic: new FormControl(null, Validators.required),
       boli: new FormControl(null),
@@ -169,15 +173,34 @@ export class AddPatientComponent implements OnInit {
     }).catch(err => console.log('Error', err));
   }
 
-  // checkCnpPatient() {
-  //   this.patientService.checkCnp(event.target['value']).then(data => this.cnpExists = data);
-  // }
+  checkCnpPatient() {
+    return this.patientService.checkCnp(event.target['value']).subscribe(data => {
+      if (data.length === 0) {
+        this.cnpFromDb = false;
+      } else {
+        this.cnpFromDb = true;
+        this.toastrService.error('CNP-ul exista in baza de date', "" ,{
+          positionClass: 'toast-top-left' 
+       });
 
-  checkCnpPatient(control: FormControl): {[s: string]: boolean} {
-    this.patientService.checkCnp(control.value).then(data => this.cnpExists = data);
-    if (this.cnpExists !== true) {
-      return { 'alreadyExist' : true };
-    }
-    return null;
+      }
+    });
+
+
   }
+
+  // checkCnpPatient(control: FormControl): {[s: string]: boolean} {
+  //   this.patientService.checkCnp(control.value).then(data => this.cnpFromDb = data);
+  //   console.log('cnp exists', this.cnpFromDb);
+
+  //   this.cnpPatient = control.value;
+  //   console.log('cnp patient', this.cnpPatient);
+  //   console.log('cnp from db', this.cnpFromDb);
+  //   if (this.cnpFromDb !== true) {
+  //     return { 'alreadyExist' : true };
+  //   } else {
+  //     return {'alreadyExist': false };
+  //   }
+  //   return null;
+  // }
 }

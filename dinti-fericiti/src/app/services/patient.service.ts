@@ -99,16 +99,22 @@ export class PatientService {
   }
 
   // check if cnp exists in database
-  checkCnp(cnp) {
-    // return this.db.collection('Pacienti').doc(cnp).valueChanges();
-    return this.db.firestore.doc(`Pacienti/${cnp}`).get()
-    .then(docSnapshot => {
-      if (docSnapshot.exists) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+  checkCnp(cnp): Observable<any> {
+    return this.db.collection('Pacienti', ref => ref.where('cnp', '==', cnp)).snapshotChanges()
+    .pipe(map(data => data.map(patient => {
+      return {
+        cnp: patient.payload.doc.data()['cnp']
+      };
+    })));
+    // return this.db.firestore.doc(`Pacienti/${cnp}`).get()
+    // .then(docSnapshot => {
+    //   console.log('doc', docSnapshot);
+    //   if (docSnapshot.exists) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // });
   }
 
   // Update patient information
