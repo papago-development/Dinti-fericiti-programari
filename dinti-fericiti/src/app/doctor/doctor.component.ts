@@ -16,7 +16,7 @@ import { CustomDateFormatter } from '../customDate/customDateFormatter';
   selector: 'app-doctor',
   templateUrl: './doctor.component.html',
   styleUrls: ['./doctor.component.css'],
-  providers:[
+  providers: [
     {
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter

@@ -20,7 +20,7 @@ export class ManoperaService {
                 .then(snap => {
                   snap.forEach(doc => {
                     const data = doc.data() as Manopera;
-                    console.log('Data' + JSON.stringify(data));
+
                   });
                 });
   }
@@ -31,15 +31,6 @@ export class ManoperaService {
 
   getItemFromDatabaseByCNP(cnp) {
     return this.db.collection('Pacienti').doc(`${cnp}`).collection('Manopera').valueChanges();
-    // .pipe(
-    //     // tap(doctors => console.log('Doctors', doctors)),
-    //     map(data =>
-    //       data.map(item => {
-    //         const manopere = [];
-    //         manopere.push(item);
-    //         return manopere;
-    //       })
-    //     )
-    //   );
+
   }
 }

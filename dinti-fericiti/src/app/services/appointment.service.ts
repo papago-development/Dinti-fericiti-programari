@@ -60,7 +60,6 @@ export class AppointmentService {
   // Cancel an appointmnent
   cancelAppointment(id) {
     return this.db.collection('Programari').doc(id).delete().then( () => {
-      console.log('Successfully deleted');
     }).catch( e => {
       console.log(e);
     });

@@ -51,10 +51,6 @@ export class UploadFileService {
       .catch(err => console.log('Error', err));
   }
 
-  // deleteFileFromDatabase(file, patientId) {
-  //   return this.db.collection('Pacienti').doc(patientId).delete(this.files);
-  // }
-
   deleteFileFromStorage(file, filePath) {
     const storageRef = this.dbStorage.ref(filePath);
     return storageRef.child(file).delete();

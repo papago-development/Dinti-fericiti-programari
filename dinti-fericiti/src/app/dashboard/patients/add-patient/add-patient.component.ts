@@ -12,13 +12,12 @@ import { AngularFireStorage } from '@angular/fire/storage/storage';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-add-patient',
-  templateUrl: './add-patient.component.html',
-  styleUrls: ['./add-patient.component.css'],
+  selector: "app-add-patient",
+  templateUrl: "./add-patient.component.html",
+  styleUrls: ["./add-patient.component.css"],
   encapsulation: ViewEncapsulation.None
 })
 export class AddPatientComponent implements OnInit {
-
   // Properties
   addPatientForm: FormGroup;
   patient: Patient;
@@ -30,9 +29,6 @@ export class AddPatientComponent implements OnInit {
   isOptional = false;
   manopereForm: FormGroup;
   manopere: FormArray;
-  //cnpPatient: any;
-
-
   url: Observable<string | null>;
   files: Array<Files> = [];
   uploadProgress: Observable<number>;
@@ -45,17 +41,18 @@ export class AddPatientComponent implements OnInit {
   @Input() cnpFromDb: boolean;
   exists: boolean;
 
-  constructor(private patientService: PatientService,
+  constructor(
+    private patientService: PatientService,
     private doctorService: DoctorService,
     private dbStorage: AngularFireStorage,
     private toastrService: ToastrService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.createForm();
     this.loadDoctors();
     this.percent = 0;
-
   }
 
   /**
@@ -63,11 +60,18 @@ export class AddPatientComponent implements OnInit {
    */
   createForm() {
     this.addPatientForm = new FormGroup({
-
       name: new FormControl(null, Validators.required),
       // tslint:disable-next-line: max-line-length
-      cnp: new FormControl(null, [Validators.pattern('\^[0-9]*$'), Validators.minLength(13), Validators.maxLength(13)]),
-      phonePacient: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
+      cnp: new FormControl(null, [
+        Validators.pattern("^[0-9]*$"),
+        Validators.minLength(13),
+        Validators.maxLength(13)
+      ]),
+      phonePacient: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]),
       medic: new FormControl(null, Validators.required),
       boli: new FormControl(null),
       alergi: new FormControl(null),
@@ -77,11 +81,11 @@ export class AddPatientComponent implements OnInit {
   }
 
   createManopereForm() {
-    return this.manopereForm = new FormGroup({
+    return (this.manopereForm = new FormGroup({
       manopera: new FormControl(null, Validators.required),
       medic: new FormControl(null),
       isFinished: new FormControl(false)
-    });
+    }));
   }
 
   loadDoctors() {
@@ -96,8 +100,6 @@ export class AddPatientComponent implements OnInit {
   addPatient() {
     this.patient = Object.assign({}, this.addPatientForm.value);
     let patientToSave;
-
-    console.log('patient', this.patient);
 
     if (this.patient.cnp === undefined) {
       const cnpRandom = Math.floor(1000000000000 + Math.random() * 9000000000);
@@ -125,21 +127,18 @@ export class AddPatientComponent implements OnInit {
         start: new Date()
       };
     }
-
-    this.patientService.addPacient(patientToSave, this.addPatientForm.get('manopere').value as FormArray);
+    this.patientService.addPacient(patientToSave, this.addPatientForm.get(
+      "manopere"
+    ).value as FormArray);
 
     setTimeout(() => {
-      this.router.navigate(['patients']);
+      this.router.navigate(["patients"]);
     }, 100);
   }
 
   addManopere() {
-    this.manopere = this.addPatientForm.get('manopere') as FormArray;
+    this.manopere = this.addPatientForm.get("manopere") as FormArray;
     this.manopere.push(this.createManopereForm());
-  }
-
-  cnp() {
-    return this.addPatientForm.get('cnp');
   }
 
   public hasError(controlName: string, errorName: string) {
@@ -149,58 +148,40 @@ export class AddPatientComponent implements OnInit {
   onFileSelected(event) {
     // create a reference to the storage bucket location
     const file = event.target.files[0];
-    const filePath = '/' + file.name;
+    const filePath = "/" + file.name;
     const ref = this.dbStorage.ref(filePath);
     const task = this.dbStorage.upload(filePath, file);
-
 
     this.uploadProgress = task.percentageChanges();
     this.uploadProgress.subscribe(data => {
       this.percent = data;
     });
-    task.then(() => {
-      ref.getDownloadURL().subscribe(data => {
-        this.url = data;
+    task
+      .then(() => {
+        ref.getDownloadURL().subscribe(data => {
+          this.url = data;
 
-
-
-        this.files.push({
-          url: this.url,
-          filename: file.name
+          this.files.push({
+            url: this.url,
+            filename: file.name
+          });
         });
-
-      });
-    }).catch(err => console.log('Error', err));
+      })
+      .catch(err => console.log("Error", err));
   }
 
   checkCnpPatient() {
-    return this.patientService.checkCnp(event.target['value']).subscribe(data => {
-      if (data.length === 0) {
-        this.cnpFromDb = false;
-      } else {
-        this.cnpFromDb = true;
-        this.toastrService.error('CNP-ul exista in baza de date', "" ,{
-          positionClass: 'toast-top-left' 
-       });
-
-      }
-    });
-
-
+    return this.patientService
+      .checkCnp(event.target["value"])
+      .subscribe(data => {
+        if (data.length === 0) {
+          this.cnpFromDb = false;
+        } else {
+          this.cnpFromDb = true;
+          this.toastrService.error("CNP-ul exista in baza de date", "", {
+            positionClass: "toast-top-left"
+          });
+        }
+      });
   }
-
-  // checkCnpPatient(control: FormControl): {[s: string]: boolean} {
-  //   this.patientService.checkCnp(control.value).then(data => this.cnpFromDb = data);
-  //   console.log('cnp exists', this.cnpFromDb);
-
-  //   this.cnpPatient = control.value;
-  //   console.log('cnp patient', this.cnpPatient);
-  //   console.log('cnp from db', this.cnpFromDb);
-  //   if (this.cnpFromDb !== true) {
-  //     return { 'alreadyExist' : true };
-  //   } else {
-  //     return {'alreadyExist': false };
-  //   }
-  //   return null;
-  // }
 }

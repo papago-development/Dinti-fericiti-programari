@@ -165,7 +165,7 @@ export class PatientsComponent implements OnInit {
     }
   }
 
-  addPatientPage() {
+  navigateToAddPatientPage() {
     this.router.navigate(['addPatient']);
   }
 

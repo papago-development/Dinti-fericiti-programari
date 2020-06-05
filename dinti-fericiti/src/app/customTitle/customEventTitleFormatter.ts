@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CustomEventTitleFormatter extends CalendarEventTitleFormatter {
-  /**
-   *
-   */
+
   constructor() {
     super();
   }

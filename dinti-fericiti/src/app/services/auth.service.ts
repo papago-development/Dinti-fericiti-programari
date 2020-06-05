@@ -43,11 +43,8 @@ export class AuthService {
           // tslint:disable-next-line: no-shadowed-variable
           .then(user => {
             user.get().then(x => {
-              // return the user data
-              // console.log(x.data());
 
               this.currentUser = x.data();
-              //  console.log('Current user', this.currentUser);
 
               // Set currentUser status
               this.setUserStatus(this.currentUser);
@@ -68,8 +65,7 @@ export class AuthService {
           snap.forEach(userRef => {
 
               this.currentUser = userRef.data();
-              console.log('current user from service', this.currentUser);
-
+              
               // Set the user status
               this.setUserStatus(this.currentUser);
 

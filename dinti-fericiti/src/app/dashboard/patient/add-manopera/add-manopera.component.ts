@@ -72,7 +72,6 @@ export class AddManoperaComponent implements OnInit, OnDestroy {
     });
   }
 
-
   addManopera() {
     this.manopera = Object.assign({}, this.manoperaForm.value);
     this.manoperaService.addManoperaToPatient(this.patientId, this.manopera);

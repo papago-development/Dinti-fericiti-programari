@@ -21,8 +21,7 @@ export class PatientComponent implements OnInit, OnDestroy {
   sub: Subscription;
 
   constructor(private patientService: PatientService, private route: ActivatedRoute,
-              private fb: FormBuilder) {
-               }
+              private fb: FormBuilder) { }
 
   ngOnInit() {
 

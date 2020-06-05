@@ -65,16 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   obj: Array<any> = [];
   refresh: Subject<any> = new Subject();
   email: any = [];
-  colorsArray: any[] = [
-    '#ad2121',
-    '#FFB6C1',
-    '#d16c19',
-    '#e3bc08',
-    '#8B008B',
-    '#006400',
-    '#1e90ff',
-    '#5A2C2B'
-  ];
+  colorsArray: any[] = [ '#ad2121', '#FFB6C1', '#d16c19', '#e3bc08', '#8B008B', '#006400', '#1e90ff', '#5A2C2B' ];
 
   // Properties
   files: Array<Files> = [];
@@ -112,17 +103,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.loadAppointments) {
       this.loadAppointmentsSubs.unsubscribe();
-    }
-
-    if (this.loadDoctorsSubs) {
       this.loadDoctorsSubs.unsubscribe();
-    }
-
-    if (this.doctorsSubs) {
       this.doctorsSubs.unsubscribe();
-    }
   }
 
   // Open dialog for adding a new event
@@ -362,8 +345,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.updateForm.controls.medic.setValue(event.medic);
     this.updateForm.controls.emailPacient.setValue(event.emailPacient);
     this.updateForm.controls.consimtamant.setValue(event.consimtamant);
-    // this.updateForm.controls.start.setValue(event.start);
-    // this.updateForm.controls.end.setValue(event.end);
   }
 
   // Update an existing appointment
@@ -453,6 +434,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       : '';
   }
 
+  /**
+   * In this method the name of patient is checked.
+   * If exists then 'phoneNumber' and 'consimtamant' will be filled in appointment form.
+   */
   checkPatient() {
     console.log('Name', event.target['value']);
     this.pacientService

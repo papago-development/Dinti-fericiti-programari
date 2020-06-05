@@ -106,15 +106,6 @@ export class PatientService {
         cnp: patient.payload.doc.data()['cnp']
       };
     })));
-    // return this.db.firestore.doc(`Pacienti/${cnp}`).get()
-    // .then(docSnapshot => {
-    //   console.log('doc', docSnapshot);
-    //   if (docSnapshot.exists) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // });
   }
 
   // Update patient information
@@ -130,7 +121,7 @@ export class PatientService {
   }
 
   getPatientEventById(id) {
-    return       this.db.collection('Pacienti')
+    return this.db.collection('Pacienti')
       .doc(id)
       .snapshotChanges()
       .pipe(
@@ -165,7 +156,7 @@ export class PatientService {
       .then(snap => {
         snap.forEach(doc => {
           const data = doc.data() as Patient;
-          console.log('Data' + JSON.stringify(data));
+
         });
       });
   }
